@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, BrainCircuit, SearchX, LineChart } from 'lucide-react';
+import { ArrowRight, BrainCircuit, SearchX, LineChart, Users, FileCheck, Calendar, Award, TrendingUp, Shield } from 'lucide-react';
 import ThreeScene from '../components/ThreeScene';
 import { Link } from 'react-router-dom';
 
@@ -24,7 +24,9 @@ const LandingPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
             >
-                {/* Logo text placement similar to image top-left (handled by nav usually, but emphasizing brand here) */}
+                <div className="inline-block px-4 py-2 bg-neon-blue/10 border border-neon-blue/20 rounded-full mb-6">
+                  <span className="text-neon-blue text-sm font-semibold">Campus Internship & Placement Platform</span>
+                </div>
                 
                 <h1 className="text-6xl md:text-8xl font-bold leading-[1.1] tracking-tight mb-8">
                     Turning silent <br />
@@ -37,58 +39,206 @@ const LandingPage: React.FC = () => {
                     </span>
                 </h1>
 
-                <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-xl leading-relaxed font-light">
-                    Stop guessing why you weren't shortlisted. Get instant, AI-generated explanations for every placement decision. This isn't just a portal; it's your career intelligence engine.
+                <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl leading-relaxed font-light">
+                    A complete campus-centric platform that streamlines internships, industrial training, and placements. 
+                    AI-powered insights help students understand rejections and improve their profiles. 
+                    One-click applications, mentor approvals, and real-time tracking for all stakeholders.
                 </p>
                 
-                <Link to="/dashboard">
-                    <button className="px-8 py-4 rounded-full bg-white text-black font-bold text-lg hover:scale-105 transition-transform flex items-center gap-3 group">
-                        Access Dashboard
+                <div className="flex flex-wrap gap-4">
+                  <Link to="/login">
+                    <button className="px-8 py-4 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple font-bold text-lg hover:scale-105 transition-transform flex items-center gap-3 group shadow-lg shadow-neon-blue/50">
+                        Get Started
                         <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
-                </Link>
+                  </Link>
+                  <a href="#features">
+                    <button className="px-8 py-4 rounded-full border border-white/20 font-semibold text-lg hover:bg-white/10 transition-all">
+                        Explore Features
+                    </button>
+                  </a>
+                </div>
             </motion.div>
         </div>
       </section>
 
-      {/* Features Section with Parallax */}
-      <section className="relative z-10 py-32 px-6 bg-black/50 backdrop-blur-sm">
+      {/* Key Features Overview */}
+      <section id="features" className="relative z-10 py-32 px-6 bg-black/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
-            <div className="mb-20">
-                <h2 className="text-4xl font-bold mb-4">The Black Box, <span className="text-neon-teal">Solved.</span></h2>
-                <p className="text-slate-400 max-w-2xl">Traditional portals are static. WhyNot is a feedback loop designed to improve your employability in real-time.</p>
+            <div className="mb-20 text-center">
+                <h2 className="text-5xl font-bold mb-6">Complete Campus Placement <span className="text-neon-teal">Ecosystem</span></h2>
+                <p className="text-slate-400 max-w-3xl mx-auto text-lg">
+                  From internship hunting to placement offers, we've digitized every step. No more scattered WhatsApp groups, 
+                  email chains, or manual spreadsheets. Everything in one transparent, AI-powered platform.
+                </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <motion.div style={{ y: 0 }} className="glass-panel p-8 rounded-2xl border-t border-neon-blue/20">
+            {/* Core Features Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="glass-panel p-8 rounded-2xl border-t border-neon-blue/20 hover:scale-105 transition-transform"
+                >
                     <div className="w-14 h-14 bg-neon-blue/10 rounded-xl flex items-center justify-center mb-6 text-neon-blue">
                         <SearchX className="w-8 h-8" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-3">No More Silence</h3>
+                    <h3 className="text-2xl font-bold mb-3">AI Rejection Analysis</h3>
                     <p className="text-slate-400">
-                        "Not Selected" is not an answer. We force transparency by analyzing the exact gap between your profile and the job description.
+                        "Not Selected" is not an answer. Get personalized, AI-generated explanations for every rejection. 
+                        Understand skill gaps, CGPA requirements, and how to improve for next time.
                     </p>
                 </motion.div>
 
-                <motion.div style={{ y: y1 }} className="glass-panel p-8 rounded-2xl border-t border-neon-purple/20 relative top-12">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="glass-panel p-8 rounded-2xl border-t border-neon-purple/20 hover:scale-105 transition-transform"
+                >
                     <div className="w-14 h-14 bg-neon-purple/10 rounded-xl flex items-center justify-center mb-6 text-neon-purple">
-                        <BrainCircuit className="w-8 h-8" />
+                        <FileCheck className="w-8 h-8" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-3">Gemini Powered</h3>
+                    <h3 className="text-2xl font-bold mb-3">One-Click Applications</h3>
                     <p className="text-slate-400">
-                        Our Explanation Engine uses Google Gemini 1.5 Pro to generate personalized, factual, and constructive feedback for every rejection.
+                        Maintain one digital profile with resume, skills, and preferences. Apply to opportunities with a single click. 
+                        Automated matching shows you the best-fit roles.
                     </p>
                 </motion.div>
 
-                <motion.div style={{ y: y2 }} className="glass-panel p-8 rounded-2xl border-t border-neon-teal/20 relative top-24">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="glass-panel p-8 rounded-2xl border-t border-neon-teal/20 hover:scale-105 transition-transform"
+                >
                     <div className="w-14 h-14 bg-neon-teal/10 rounded-xl flex items-center justify-center mb-6 text-neon-teal">
-                        <LineChart className="w-8 h-8" />
+                        <Users className="w-8 h-8" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-3">Readiness Index</h3>
+                    <h3 className="text-2xl font-bold mb-3">Mentor Approvals</h3>
                     <p className="text-slate-400">
-                        Track your career readiness in real-time. See how your skills stack up against live market demands.
+                        Faculty mentors receive automated approval requests. Track applications, approve interviews, 
+                        and monitor student progress all in one dashboard.
                     </p>
                 </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="glass-panel p-8 rounded-2xl border-t border-rose-400/20 hover:scale-105 transition-transform"
+                >
+                    <div className="w-14 h-14 bg-rose-400/10 rounded-xl flex items-center justify-center mb-6 text-rose-400">
+                        <Calendar className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3">Smart Scheduling</h3>
+                    <p className="text-slate-400">
+                        Interview calendars sync with academic timetables. Automated notifications for all stakeholders. 
+                        No more email ping-pong or missed deadlines.
+                    </p>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="glass-panel p-8 rounded-2xl border-t border-amber-400/20 hover:scale-105 transition-transform"
+                >
+                    <div className="w-14 h-14 bg-amber-400/10 rounded-xl flex items-center justify-center mb-6 text-amber-400">
+                        <Award className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3">Auto Certificates</h3>
+                    <p className="text-slate-400">
+                        Training supervisors log feedback directly. System automatically generates completion certificates 
+                        and updates employability records for future recruiters.
+                    </p>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  className="glass-panel p-8 rounded-2xl border-t border-emerald-400/20 hover:scale-105 transition-transform"
+                >
+                    <div className="w-14 h-14 bg-emerald-400/10 rounded-xl flex items-center justify-center mb-6 text-emerald-400">
+                        <TrendingUp className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-3">Real-Time Analytics</h3>
+                    <p className="text-slate-400">
+                        Placement officers see live dashboards: unplaced students, upcoming interviews, skill gap analysis. 
+                        Data-driven decisions replace manual spreadsheets.
+                    </p>
+                </motion.div>
+            </div>
+
+            {/* How It Works Section */}
+            <div id="how-it-works" className="mb-20">
+                <h2 className="text-4xl font-bold mb-12 text-center">How It <span className="text-neon-purple">Works</span></h2>
+                
+                <div className="space-y-8">
+                  <div className="flex gap-6 items-start">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center font-bold text-xl flex-shrink-0">1</div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-2">Create Your Profile</h3>
+                      <p className="text-slate-400">Students maintain one comprehensive profile with skills, resume, CGPA, and preferences. Update once per semester.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-6 items-start">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-neon-purple to-rose-500 flex items-center justify-center font-bold text-xl flex-shrink-0">2</div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-2">Browse Smart-Matched Opportunities</h3>
+                      <p className="text-slate-400">Placement cell posts verified opportunities. AI recommends best-fit roles based on your skills, CGPA, and preferences.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-6 items-start">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-rose-500 to-amber-400 flex items-center justify-center font-bold text-xl flex-shrink-0">3</div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-2">One-Click Apply & Track</h3>
+                      <p className="text-slate-400">Apply with one click. Mentor receives approval request. Track every stage: applied → approved → interview → offer.</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-6 items-start">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-amber-400 to-emerald-400 flex items-center justify-center font-bold text-xl flex-shrink-0">4</div>
+                    <div>
+                      <h3 className="text-xl font-bold mb-2">Get AI-Powered Insights</h3>
+                      <p className="text-slate-400">Rejected? Get instant AI explanations. Understand why and what to improve. Turn failures into learning opportunities.</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            {/* Security & Privacy */}
+            <div id="about" className="glass-panel p-12 rounded-2xl border border-white/10 text-center">
+                <div className="w-16 h-16 bg-neon-blue/10 rounded-xl flex items-center justify-center mb-6 text-neon-blue mx-auto">
+                    <Shield className="w-10 h-10" />
+                </div>
+                <h3 className="text-3xl font-bold mb-4">Secure & Budget-Friendly</h3>
+                <p className="text-slate-400 max-w-3xl mx-auto text-lg mb-6">
+                  Built for public institutions with tight budgets. Role-based access ensures employers see only relevant candidates. 
+                  GDPR-compliant data privacy. Leverage existing campus infrastructure with minimal setup.
+                </p>
+                <div className="flex flex-wrap gap-8 justify-center text-sm text-slate-300">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-neon-teal rounded-full"></div>
+                    <span>Role-Based Access</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-neon-purple rounded-full"></div>
+                    <span>Data Privacy Compliant</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-neon-blue rounded-full"></div>
+                    <span>Low/No License Cost</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-rose-400 rounded-full"></div>
+                    <span>Campus Infrastructure</span>
+                  </div>
+                </div>
             </div>
             
             <div className="h-40"></div>
