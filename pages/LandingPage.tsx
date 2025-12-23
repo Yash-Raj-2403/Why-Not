@@ -10,7 +10,7 @@ const LandingPage: React.FC = () => {
   const y2 = useTransform(scrollYProgress, [0, 1], [0, -200]);
 
   return (
-    <div className="relative w-full overflow-hidden bg-black text-white">
+      <div className="relative w-full overflow-hidden bg-black text-white">
         {/* 3D Background Container */}
         <div className="fixed inset-0 z-0">
             <ThreeScene />
@@ -20,15 +20,25 @@ const LandingPage: React.FC = () => {
       <section className="relative z-10 h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24">
         <div className="max-w-4xl w-full">
             <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                initial={{ opacity: 0, y: 150, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
             >
-                <div className="inline-block px-4 py-2 bg-neon-blue/10 border border-neon-blue/20 rounded-full mb-6">
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.3, y: -50 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.3, type: "spring", bounce: 0.5 }}
+                  className="inline-block px-4 py-2 bg-neon-blue/10 border border-neon-blue/20 rounded-full mb-6"
+                >
                   <span className="text-neon-blue text-sm font-semibold">Campus Internship & Placement Platform</span>
-                </div>
+                </motion.div>
                 
-                <h1 className="text-6xl md:text-8xl font-bold leading-[1.1] tracking-tight mb-8">
+                <motion.h1 
+                  initial={{ opacity: 0, y: 100, rotateX: 45 }}
+                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ duration: 1.2, delay: 0.5, type: "spring", stiffness: 60 }}
+                  className="text-6xl md:text-8xl font-bold leading-[1.1] tracking-tight mb-8"
+                >
                     Turning silent <br />
                     <span className="bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
                         rejections
@@ -37,15 +47,25 @@ const LandingPage: React.FC = () => {
                     <span className="bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 bg-clip-text text-transparent">
                         actionable insight.
                     </span>
-                </h1>
+                </motion.h1>
 
-                <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl leading-relaxed font-light">
+                <motion.p 
+                  initial={{ opacity: 0, x: -100, y: 30 }}
+                  animate={{ opacity: 1, x: 0, y: 0 }}
+                  transition={{ duration: 1, delay: 0.8 }}
+                  className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl leading-relaxed font-light"
+                >
                     A complete campus-centric platform that streamlines internships, industrial training, and placements. 
                     AI-powered insights help students understand rejections and improve their profiles. 
                     One-click applications, mentor approvals, and real-time tracking for all stakeholders.
-                </p>
+                </motion.p>
                 
-                <div className="flex flex-wrap gap-4">
+                <motion.div 
+                  initial={{ opacity: 0, y: 50, scale: 0.7 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 1.1, type: "spring", bounce: 0.4 }}
+                  className="flex flex-wrap gap-4"
+                >
                   <Link to="/login">
                     <button className="px-8 py-4 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple font-bold text-lg hover:scale-105 transition-transform flex items-center gap-3 group shadow-lg shadow-neon-blue/50">
                         Get Started
@@ -57,7 +77,7 @@ const LandingPage: React.FC = () => {
                         Explore Features
                     </button>
                   </a>
-                </div>
+                </motion.div>
             </motion.div>
         </div>
       </section>
@@ -76,99 +96,123 @@ const LandingPage: React.FC = () => {
             {/* Core Features Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
                 <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="glass-panel p-8 rounded-2xl border-t border-neon-blue/20 hover:scale-105 transition-transform"
+                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ duration: 1, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-neon-blue/30 transition-all duration-300 hover:shadow-lg hover:shadow-neon-blue/20 hover:-translate-y-2"
                 >
-                    <div className="w-14 h-14 bg-neon-blue/10 rounded-xl flex items-center justify-center mb-6 text-neon-blue">
-                        <SearchX className="w-8 h-8" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-neon-blue/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative z-10">
+                      <div className="w-14 h-14 bg-gradient-to-br from-neon-blue/20 to-neon-blue/5 rounded-xl flex items-center justify-center mb-6 text-neon-blue backdrop-blur-sm border border-neon-blue/20">
+                          <SearchX className="w-8 h-8" />
+                      </div>
+                      <h3 className="text-2xl font-bold mb-3">AI Rejection Analysis</h3>
+                      <p className="text-slate-400">
+                          "Not Selected" is not an answer. Get personalized, AI-generated explanations for every rejection. 
+                          Understand skill gaps, CGPA requirements, and how to improve for next time.
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-bold mb-3">AI Rejection Analysis</h3>
-                    <p className="text-slate-400">
-                        "Not Selected" is not an answer. Get personalized, AI-generated explanations for every rejection. 
-                        Understand skill gaps, CGPA requirements, and how to improve for next time.
-                    </p>
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                  className="glass-panel p-8 rounded-2xl border-t border-neon-purple/20 hover:scale-105 transition-transform"
+                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ duration: 1, delay: 0.15, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-neon-purple/30 transition-all duration-300 hover:shadow-lg hover:shadow-neon-purple/20 hover:-translate-y-2"
                 >
-                    <div className="w-14 h-14 bg-neon-purple/10 rounded-xl flex items-center justify-center mb-6 text-neon-purple">
-                        <FileCheck className="w-8 h-8" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-neon-purple/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative z-10">
+                      <div className="w-14 h-14 bg-gradient-to-br from-slate-700/40 to-slate-800/20 rounded-xl flex items-center justify-center mb-6 text-white backdrop-blur-sm border border-white/20">
+                          <FileCheck className="w-8 h-8" />
+                      </div>
+                      <h3 className="text-2xl font-bold mb-3">One-Click Applications</h3>
+                      <p className="text-slate-400">
+                          Maintain one digital profile with resume, skills, and preferences. Apply to opportunities with a single click. 
+                          Automated matching shows you the best-fit roles.
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-bold mb-3">One-Click Applications</h3>
-                    <p className="text-slate-400">
-                        Maintain one digital profile with resume, skills, and preferences. Apply to opportunities with a single click. 
-                        Automated matching shows you the best-fit roles.
-                    </p>
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  className="glass-panel p-8 rounded-2xl border-t border-neon-teal/20 hover:scale-105 transition-transform"
+                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ duration: 1, delay: 0.3, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-neon-teal/30 transition-all duration-300 hover:shadow-lg hover:shadow-neon-teal/20 hover:-translate-y-2"
                 >
-                    <div className="w-14 h-14 bg-neon-teal/10 rounded-xl flex items-center justify-center mb-6 text-neon-teal">
-                        <Users className="w-8 h-8" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-neon-teal/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative z-10">
+                      <div className="w-14 h-14 bg-gradient-to-br from-neon-teal/20 to-neon-teal/5 rounded-xl flex items-center justify-center mb-6 text-neon-teal backdrop-blur-sm border border-neon-teal/20">
+                          <Users className="w-8 h-8" />
+                      </div>
+                      <h3 className="text-2xl font-bold mb-3">Mentor Approvals</h3>
+                      <p className="text-slate-400">
+                          Faculty mentors receive automated approval requests. Track applications, approve interviews, 
+                          and monitor student progress all in one dashboard.
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-bold mb-3">Mentor Approvals</h3>
-                    <p className="text-slate-400">
-                        Faculty mentors receive automated approval requests. Track applications, approve interviews, 
-                        and monitor student progress all in one dashboard.
-                    </p>
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="glass-panel p-8 rounded-2xl border-t border-rose-400/20 hover:scale-105 transition-transform"
+                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ duration: 1, delay: 0.15, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-rose-400/30 transition-all duration-300 hover:shadow-lg hover:shadow-rose-400/20 hover:-translate-y-2"
                 >
-                    <div className="w-14 h-14 bg-rose-400/10 rounded-xl flex items-center justify-center mb-6 text-rose-400">
-                        <Calendar className="w-8 h-8" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-rose-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative z-10">
+                      <div className="w-14 h-14 bg-gradient-to-br from-rose-400/20 to-rose-400/5 rounded-xl flex items-center justify-center mb-6 text-rose-400 backdrop-blur-sm border border-rose-400/20">
+                          <Calendar className="w-8 h-8" />
+                      </div>
+                      <h3 className="text-2xl font-bold mb-3">Smart Scheduling</h3>
+                      <p className="text-slate-400">
+                          Interview calendars sync with academic timetables. Automated notifications for all stakeholders. 
+                          No more email ping-pong or missed deadlines.
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-bold mb-3">Smart Scheduling</h3>
-                    <p className="text-slate-400">
-                        Interview calendars sync with academic timetables. Automated notifications for all stakeholders. 
-                        No more email ping-pong or missed deadlines.
-                    </p>
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="glass-panel p-8 rounded-2xl border-t border-amber-400/20 hover:scale-105 transition-transform"
+                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ duration: 1, delay: 0.3, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-amber-400/30 transition-all duration-300 hover:shadow-lg hover:shadow-amber-400/20 hover:-translate-y-2"
                 >
-                    <div className="w-14 h-14 bg-amber-400/10 rounded-xl flex items-center justify-center mb-6 text-amber-400">
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative z-10">
+                      <div className="w-14 h-14 bg-gradient-to-br from-amber-400/20 to-amber-400/5 rounded-xl flex items-center justify-center mb-6 text-amber-400 backdrop-blur-sm border border-amber-400/20">
                         <Award className="w-8 h-8" />
+                      </div>
+                      <h3 className="text-2xl font-bold mb-3">Auto Certificates</h3>
+                      <p className="text-slate-400">
+                          Training supervisors log feedback directly. System automatically generates completion certificates 
+                          and updates employability records for future recruiters.
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-bold mb-3">Auto Certificates</h3>
-                    <p className="text-slate-400">
-                        Training supervisors log feedback directly. System automatically generates completion certificates 
-                        and updates employability records for future recruiters.
-                    </p>
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.5 }}
-                  className="glass-panel p-8 rounded-2xl border-t border-emerald-400/20 hover:scale-105 transition-transform"
+                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: false, amount: 0.2 }}
+                  transition={{ duration: 1, delay: 0.15, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-400/30 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-400/20 hover:-translate-y-2"
                 >
-                    <div className="w-14 h-14 bg-emerald-400/10 rounded-xl flex items-center justify-center mb-6 text-emerald-400">
-                        <TrendingUp className="w-8 h-8" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="relative z-10">
+                      <div className="w-14 h-14 bg-gradient-to-br from-emerald-400/20 to-emerald-400/5 rounded-xl flex items-center justify-center mb-6 text-emerald-400 backdrop-blur-sm border border-emerald-400/20">
+                          <TrendingUp className="w-8 h-8" />
+                      </div>
+                      <h3 className="text-2xl font-bold mb-3">Real-Time Analytics</h3>
+                      <p className="text-slate-400">
+                          Placement officers see live dashboards: unplaced students, upcoming interviews, skill gap analysis. 
+                          Data-driven decisions replace manual spreadsheets.
+                      </p>
                     </div>
-                    <h3 className="text-2xl font-bold mb-3">Real-Time Analytics</h3>
-                    <p className="text-slate-400">
-                        Placement officers see live dashboards: unplaced students, upcoming interviews, skill gap analysis. 
-                        Data-driven decisions replace manual spreadsheets.
-                    </p>
                 </motion.div>
             </div>
 

@@ -1,34 +1,31 @@
 import React, { useState } from 'react';
-import { Routes, Route, useLocation, Link } from 'react-router-dom';
+import { Routes, Route, useLocation, Link, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import StudentDashboard from './pages/StudentDashboard';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AnimatePresence } from 'framer-motion';
 import { UserRole } from './types';
+import { useAuth } from './contexts/AuthContext';
 
 const App: React.FC = () => {
   const location = useLocation();
+  const { user, loading } = useAuth();
   
-  // Mock user state - in production, this would come from authentication context
-  // Set role to undefined to test unauthenticated access
-  const [currentUser, setCurrentUser] = useState<{
-    role?: UserRole;
-    name?: string;
-    avatar?: string;
-    notifications?: number;
-  }>({
-    // Change this to test different user roles
-    // Set to undefined for testing unauthenticated state
-    role: undefined, // UserRole.STUDENT
-    name: undefined, // 'Priya Sharma'
-    avatar: undefined, // 'https://i.pravatar.cc/150?img=5'
-    notifications: undefined // 3
-  });
-
   // Determine if we show the sidebar (only on dashboard)
   const isDashboard = location.pathname.includes('/dashboard');
+  
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neon-blue"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col text-slate-100 font-sans selection:bg-neon-purple selection:text-white">
@@ -39,22 +36,24 @@ const App: React.FC = () => {
       
       {/* Header Navigation */}
       <Header 
-        userRole={currentUser.role}
-        userName={currentUser.name}
-        userAvatar={currentUser.avatar}
-        notifications={currentUser.notifications}
+        userRole={user?.role}
+        userName={user?.name}
+        userAvatar={user?.avatar}
+        notifications={user?.notifications}
       />
 
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
           
           {/* Protected Routes */}
           <Route 
             path="/dashboard" 
             element={
-              <ProtectedRoute userRole={currentUser.role} requiredRole={UserRole.STUDENT}>
+              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
                 <StudentDashboard />
               </ProtectedRoute>
             } 
@@ -63,7 +62,7 @@ const App: React.FC = () => {
           <Route 
             path="/opportunities" 
             element={
-              <ProtectedRoute userRole={currentUser.role} requiredRole={UserRole.STUDENT}>
+              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
                 <div className="pt-24 px-6">Opportunities Page (Protected)</div>
               </ProtectedRoute>
             } 
@@ -72,7 +71,7 @@ const App: React.FC = () => {
           <Route 
             path="/applications" 
             element={
-              <ProtectedRoute userRole={currentUser.role} requiredRole={UserRole.STUDENT}>
+              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
                 <div className="pt-24 px-6">Applications Page (Protected)</div>
               </ProtectedRoute>
             } 
@@ -81,7 +80,7 @@ const App: React.FC = () => {
           <Route 
             path="/profile" 
             element={
-              <ProtectedRoute userRole={currentUser.role}>
+              <ProtectedRoute userRole={user?.role}>
                 <div className="pt-24 px-6">Profile Page (Protected)</div>
               </ProtectedRoute>
             } 
@@ -91,7 +90,7 @@ const App: React.FC = () => {
           <Route 
             path="/placement/*" 
             element={
-              <ProtectedRoute userRole={currentUser.role} requiredRole={UserRole.PLACEMENT_OFFICER}>
+              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.PLACEMENT_OFFICER}>
                 <div className="pt-24 px-6">Placement Officer Dashboard (Protected)</div>
               </ProtectedRoute>
             } 
@@ -101,7 +100,7 @@ const App: React.FC = () => {
           <Route 
             path="/mentor/*" 
             element={
-              <ProtectedRoute userRole={currentUser.role} requiredRole={UserRole.FACULTY_MENTOR}>
+              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.FACULTY_MENTOR}>
                 <div className="pt-24 px-6">Faculty Mentor Dashboard (Protected)</div>
               </ProtectedRoute>
             } 
@@ -111,7 +110,7 @@ const App: React.FC = () => {
           <Route 
             path="/employer/*" 
             element={
-              <ProtectedRoute userRole={currentUser.role} requiredRole={UserRole.EMPLOYER}>
+              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.EMPLOYER}>
                 <div className="pt-24 px-6">Employer Dashboard (Protected)</div>
               </ProtectedRoute>
             } 
@@ -121,7 +120,7 @@ const App: React.FC = () => {
           <Route 
             path="/supervisor/*" 
             element={
-              <ProtectedRoute userRole={currentUser.role} requiredRole={UserRole.TRAINING_SUPERVISOR}>
+              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.TRAINING_SUPERVISOR}>
                 <div className="pt-24 px-6">Training Supervisor Dashboard (Protected)</div>
               </ProtectedRoute>
             } 
@@ -131,7 +130,7 @@ const App: React.FC = () => {
           <Route 
             path="/settings" 
             element={
-              <ProtectedRoute userRole={currentUser.role}>
+              <ProtectedRoute userRole={user?.role}>
                 <div className="pt-24 px-6">Settings Page (Protected)</div>
               </ProtectedRoute>
             } 

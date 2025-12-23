@@ -9,6 +9,16 @@ export enum ApplicationStatus {
   COMPLETED = 'COMPLETED'
 }
 
+export interface AuthUser {
+  id: string;
+  email: string;
+  role: UserRole;
+  name: string;
+  avatar?: string;
+  department?: string;
+  notifications?: number;
+}
+
 export enum UserRole {
   STUDENT = 'STUDENT',
   PLACEMENT_OFFICER = 'PLACEMENT_OFFICER',

@@ -7,10 +7,11 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8.2-blue.svg)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1.18-38B2AC.svg)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-6.2.0-646CFF.svg)](https://vitejs.dev/)
+[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E.svg)](https://supabase.com/)
 
 **Turning silent rejections into actionable insights.**
 
-A comprehensive campus-centric platform that streamlines internships, industrial training, and placements with AI-powered insights and automated workflows.
+A comprehensive campus-centric platform that streamlines internships, industrial training, and placements with AI-powered insights, multi-user authentication, and automated workflows.
 
 </div>
 
@@ -74,25 +75,40 @@ WhyNot is an integrated, role-based software portal that:
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 19, TypeScript, Tailwind CSS v4
+### Frontend
+- **Framework**: React 19 with TypeScript
+- **Styling**: Tailwind CSS v4
 - **Routing**: React Router DOM v7
 - **Animations**: Framer Motion
 - **3D Graphics**: Three.js, React Three Fiber
-- **AI Integration**: Google Gemini 1.5 Pro
-- **Build Tool**: Vite 6
 - **Icons**: Lucide React
+
+### Backend & Database
+- **Backend as a Service**: Supabase
+- **Authentication**: Supabase Auth (Email/Password)
+- **Database**: PostgreSQL (via Supabase)
+- **Row Level Security**: Enabled for all tables
+
+### AI & APIs
+- **AI Integration**: Google Gemini 1.5 Pro
+- **API Client**: @google/genai
+
+### Build Tools
+- **Build Tool**: Vite 6
+- **Package Manager**: npm
 
 ---
 
-## 📦 Installation
+## 📦 Installation & Setup
 
 ### Prerequisites
 
 - Node.js 18+ 
 - npm or yarn
 - Google Gemini API Key
+- Supabase Account
 
-### Setup
+### Quick Start
 
 1. **Clone the repository**
    ```bash
@@ -110,16 +126,31 @@ WhyNot is an integrated, role-based software portal that:
    Create a `.env` file in the root directory:
    ```env
    GEMINI_API_KEY=your_gemini_api_key_here
+   VITE_SUPABASE_URL=your_supabase_project_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
 
-4. **Run the development server**
+4. **Set up Supabase Database**
+   
+   - Go to your Supabase Dashboard
+   - Navigate to SQL Editor
+   - Copy all content from `setup.sql` and run it
+   - This will create all necessary tables and Row Level Security policies
+
+5. **Run the development server**
    ```bash
    npm run dev
    ```
 
-5. **Open your browser**
+6. **Open your browser**
    
    Navigate to `http://localhost:3000`
+
+7. **Create your first user**
+   
+   - Visit `/signup` to create an account
+   - Select your role (Student, Placement Officer, etc.)
+   - Start using the platform!
 
 ---
 
@@ -133,6 +164,19 @@ WhyNot1/
 │   ├── ProtectedRoute.tsx  # Route protection wrapper
 │   ├── ExplanationModal.tsx  # AI explanation modal
 │   └── ThreeScene.tsx   # 3D background scene
+├── contexts/            # React Context providers
+│   └── AuthContext.tsx  # Authentication state management
+├── pages/               # Page components
+│   ├── LandingPage.tsx  # Public landing page
+│   ├── LoginPage.tsx    # User login
+│   ├── SignupPage.tsx   # User registration
+│   └── StudentDashboard.tsx  # Student dashboard
+├── services/            # External service integrations
+│   ├── geminiService.ts      # Google Gemini AI integration
+│   └── supabaseClient.ts     # Supabase configuration
+├── setup.sql            # Database schema setup
+├── types.ts             # TypeScript type definitions
+└── App.tsx              # Main application component
 ├── pages/               # Page components
 │   ├── LandingPage.tsx  # Public landing page
 │   └── StudentDashboard.tsx  # Student dashboard
@@ -148,51 +192,93 @@ WhyNot1/
 
 ---
 
-## 👥 User Roles
+## 👥 User Roles & Authentication
 
-The platform supports 5 distinct user roles:
+The platform supports **5 distinct user roles** with complete authentication:
 
-1. **Student** - Apply, track applications, get AI insights
-2. **Placement Officer** - Post opportunities, manage students, view analytics
-3. **Faculty Mentor** - Approve applications, guide mentees
-4. **Employer** - Post jobs, review candidates, schedule interviews
-5. **Training Supervisor** - Manage interns, provide feedback, generate certificates
+| Role | Access Path | Key Features |
+|------|-------------|--------------|
+| **Student** | `/dashboard` | Apply for opportunities, track applications, get AI insights on rejections |
+| **Placement Officer** | `/placement/*` | Post opportunities, manage applications, view analytics dashboard |
+| **Faculty Mentor** | `/mentor/*` | Approve student applications, monitor mentees progress |
+| **Employer** | `/employer/*` | Post job openings, review candidates, schedule interviews |
+| **Training Supervisor** | `/supervisor/*` | Manage interns, provide feedback, auto-generate certificates |
 
-### Testing Different Roles
+### Authentication Features
 
-To test different user roles during development, modify `App.tsx`:
+- ✅ **Email/Password Authentication** via Supabase Auth
+- ✅ **Role-Based Access Control** with protected routes
+- ✅ **Session Management** with persistent login
+- ✅ **User Profile Management** in PostgreSQL database
+- ✅ **Secure Logout** across all devices
 
-```typescript
-const [currentUser, setCurrentUser] = useState({
-  role: UserRole.STUDENT,  // Change this to test different roles
-  name: 'Priya Sharma',
-  avatar: 'https://i.pravatar.cc/150?img=5',
-  notifications: 3
-});
-```
+### Getting Started
 
-Available roles: `STUDENT`, `PLACEMENT_OFFICER`, `FACULTY_MENTOR`, `EMPLOYER`, `TRAINING_SUPERVISOR`
+1. **Sign Up**: Visit `/signup` and select your role
+2. **Login**: Use `/login` with your credentials
+3. **Dashboard**: Automatically redirected based on your role
 
 ---
 
 ## 🔒 Security & Privacy
 
-- ✅ **Role-Based Access Control**: Users only see data relevant to their role
+- ✅ **Row Level Security (RLS)**: Database policies ensure users only access their own data
+- ✅ **Protected Routes**: Automatic redirect to login for unauthorized access
+- ✅ **Role-Based Permissions**: Fine-grained access control per user type
 - ✅ **Data Privacy Compliant**: GDPR-ready with strict data handling
-- ✅ **Secure Authentication**: Protected routes with automatic redirects
-- ✅ **Environment Variables**: Sensitive keys stored in `.env` (gitignored)
+- ✅ **Secure Authentication**: Supabase Auth with JWT tokens
+- ✅ **Environment Variables**: All sensitive keys stored securely
 
 ---
 
-## 🗄️ Database Integration
+## 🗄️ Database Schema
 
-**Note**: Database credentials will be integrated soon. Current version uses mock data for development and testing.
+The application uses **PostgreSQL** via Supabase with the following tables:
+
+- **profiles** - Core user information for all user types
+- **student_profiles** - Extended student data (CGPA, skills, resume)
+- **opportunities** - Job/internship postings
+- **applications** - Student applications with status tracking
+- **feedback** - Supervisor feedback and ratings
+- **notifications** - User notification system
+
+All tables have **Row Level Security** enabled with role-based policies.
+
+Run `setup.sql` in Supabase SQL Editor to initialize the database.
+
+---
+
+## � Current Status
+
+### ✅ Completed
+- Multi-user authentication system (5 roles)
+- Role-based routing and protected routes
+- Supabase integration with PostgreSQL
+- Database schema with RLS policies
+- Login and Signup pages
+- Landing page with 3D animations
+- AI-powered rejection insights (Gemini)
+- Responsive UI with Tailwind CSS v4
+
+### 🔄 In Progress
+- Role-specific dashboards
+- Opportunity posting and browsing
+- Application workflow system
+- Real-time notifications
+- Profile management pages
+
+### 📋 Planned
+- AI-powered opportunity matching
+- Interview scheduling system
+- Certificate generation
+- Analytics dashboard
+- Mobile app version
 
 ---
 
 ## 📝 Available Scripts
 
-- `npm run dev` - Start development server
+- `npm run dev` - Start development server (default: http://localhost:3000)
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build
 
@@ -208,9 +294,21 @@ Available roles: `STUDENT`, `PLACEMENT_OFFICER`, `FACULTY_MENTOR`, `EMPLOYER`, `
 
 ---
 
+## 📧 Contact
+
+For questions or support, please open an issue on GitHub.
+
+---
+
 ## 📄 License
 
 This project is licensed under the MIT License.
+
+---
+
+<div align="center">
+Made with ❤️ for students everywhere
+</div>
 
 ---
 

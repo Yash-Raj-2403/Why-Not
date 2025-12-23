@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Briefcase, ChevronRight, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import ExplanationModal from '../components/ExplanationModal';
 import { StudentProfile, Application, ApplicationStatus, JobOpportunity } from '../types';
+import PageTransition from '../components/PageTransition';
 
 // Mock Data
 const MOCK_STUDENT: StudentProfile = {
@@ -117,11 +118,12 @@ const StudentDashboard: React.FC = () => {
   };
 
   return (
-    <motion.div 
-        initial={{ opacity: 0 }} 
-        animate={{ opacity: 1 }} 
-        exit={{ opacity: 0 }}
-        className="pt-24 px-6 max-w-7xl mx-auto min-h-screen"
+    <PageTransition>
+      <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          exit={{ opacity: 0 }}
+          className="pt-24 px-6 max-w-7xl mx-auto min-h-screen"
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
@@ -227,6 +229,7 @@ const StudentDashboard: React.FC = () => {
         student={MOCK_STUDENT}
       />
     </motion.div>
+    </PageTransition>
   );
 };
 

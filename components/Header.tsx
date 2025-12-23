@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Home, Briefcase, Users, FileText, Settings, LogOut, Bell, Calendar, BarChart3, UserCheck, BookOpen } from 'lucide-react';
 import { UserRole } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 
 interface HeaderProps {
   userRole?: UserRole;
@@ -17,8 +18,19 @@ const Header: React.FC<HeaderProps> = ({
   notifications = 0
 }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const isLoggedIn = !!userRole;
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Failed to logout:', error);
+    }
+  };
 
   // Get navigation items based on user role
   const getNavigationItems = () => {
@@ -73,7 +85,7 @@ const Header: React.FC<HeaderProps> = ({
   const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
 
   return (
-    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isLoggedIn ? 'bg-black/50 backdrop-blur-md border-b border-white/5' : 'bg-transparent'}`}>
+    <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-black/40 backdrop-blur-xl border-b border-white/20 shadow-lg shadow-black/20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center py-6">
           {/* Logo */}
@@ -92,24 +104,24 @@ const Header: React.FC<HeaderProps> = ({
           <nav className="hidden md:flex items-center gap-6">
             {!isLoggedIn ? (
               <>
-                <Link to="/#features" className="text-sm text-slate-300 hover:text-white transition-colors">
+                <Link to="/#features" className="text-sm font-medium text-white/90 hover:text-white hover:scale-105 transition-all">
                   Features
                 </Link>
-                <Link to="/#how-it-works" className="text-sm text-slate-300 hover:text-white transition-colors">
+                <Link to="/#how-it-works" className="text-sm font-medium text-white/90 hover:text-white hover:scale-105 transition-all">
                   How It Works
                 </Link>
-                <Link to="/#about" className="text-sm text-slate-300 hover:text-white transition-colors">
+                <Link to="/#about" className="text-sm font-medium text-white/90 hover:text-white hover:scale-105 transition-all">
                   About
                 </Link>
                 <Link 
                   to="/login" 
-                  className="px-6 py-2.5 rounded-full border border-white/20 text-sm font-semibold tracking-wide hover:bg-white/10 transition-all"
+                  className="px-6 py-2.5 rounded-full border border-white/30 backdrop-blur-sm bg-white/5 text-sm font-semibold tracking-wide text-white hover:bg-white/15 hover:border-white/50 hover:shadow-lg hover:shadow-white/20 transition-all hover:scale-105"
                 >
                   Login
                 </Link>
                 <Link 
                   to="/signup" 
-                  className="px-6 py-2.5 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple text-sm font-semibold tracking-wide hover:shadow-lg hover:shadow-neon-blue/50 transition-all"
+                  className="px-6 py-2.5 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple text-white text-sm font-semibold tracking-wide shadow-lg shadow-neon-blue/30 hover:shadow-xl hover:shadow-neon-blue/60 hover:scale-105 transition-all"
                 >
                   Get Started
                 </Link>
@@ -171,7 +183,10 @@ const Header: React.FC<HeaderProps> = ({
                         Settings
                       </Link>
                       <hr className="my-2 border-white/10" />
-                      <button className="flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors w-full">
+                      <button 
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors w-full"
+                      >
                         <LogOut size={16} />
                         Logout
                       </button>
@@ -221,14 +236,14 @@ const Header: React.FC<HeaderProps> = ({
                 </Link>
                 <Link 
                   to="/login" 
-                  className="block w-full px-6 py-2.5 text-center rounded-full border border-white/20 text-sm font-semibold tracking-wide mt-4"
+                  className="block w-full px-6 py-2.5 text-center rounded-full border border-white/30 backdrop-blur-sm bg-white/5 text-sm font-semibold tracking-wide text-white hover:bg-white/15 hover:border-white/50 hover:shadow-lg hover:shadow-white/20 transition-all mt-4"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link 
                   to="/signup" 
-                  className="block w-full px-6 py-2.5 text-center rounded-full bg-gradient-to-r from-neon-blue to-neon-purple text-sm font-semibold tracking-wide"
+                  className="block w-full px-6 py-2.5 text-center rounded-full bg-gradient-to-r from-neon-blue to-neon-purple text-white text-sm font-semibold tracking-wide shadow-lg shadow-neon-blue/30 hover:shadow-xl hover:shadow-neon-blue/60 transition-all"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Get Started
@@ -279,7 +294,10 @@ const Header: React.FC<HeaderProps> = ({
                 
                 <button 
                   className="flex items-center gap-3 text-sm text-red-400 hover:text-red-300 transition-colors py-2 w-full"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleLogout();
+                  }}
                 >
                   <LogOut size={16} />
                   Logout
