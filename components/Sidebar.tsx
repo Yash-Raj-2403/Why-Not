@@ -86,14 +86,23 @@ const Sidebar: React.FC<SidebarProps> = ({
   const showExpanded = isExpanded || isHovered;
 
   return (
-    <motion.aside
-      initial={{ x: -280 }}
-      animate={{ x: 0, width: showExpanded ? 280 : 80 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="fixed left-0 top-0 h-screen bg-slate-950/95 backdrop-blur-xl border-r border-white/10 z-50 overflow-hidden"
-    >
+    <>
+      {/* Hover trigger area - invisible zone on left edge */}
+      <div
+        className="fixed left-0 top-0 w-12 h-screen z-50"
+        onMouseEnter={() => setIsHovered(true)}
+      />
+      
+      <motion.aside
+        initial={{ x: -280 }}
+        animate={{ 
+          x: isHovered || isExpanded ? 0 : -280, 
+          width: showExpanded ? 280 : 80
+        }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        onMouseLeave={() => setIsHovered(false)}
+        className="fixed left-0 top-0 h-screen bg-slate-950/95 backdrop-blur-xl border-r border-white/10 z-50 overflow-hidden shadow-2xl"
+      >
       {/* Motion Blur Overlay on Hover */}
       <AnimatePresence>
         {isHovered && (
@@ -250,6 +259,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
     </motion.aside>
+    </>
   );
 };
 

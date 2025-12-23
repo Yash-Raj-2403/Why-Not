@@ -42,7 +42,6 @@ const App: React.FC = () => {
   // Show navigation based on auth state and page type
   const showSidebar = isAuthenticated && !isLanding && !isAuthPage;
   const showHeader = !isAuthenticated && !isLanding;
-  const showFooter = !isLanding;
 
   // Show loading state while checking authentication
   if (loading) {
@@ -83,7 +82,7 @@ const App: React.FC = () => {
       )}
 
       {/* Main content wrapper */}
-      <div className={`flex-1 flex flex-col ${showSidebar ? 'ml-20' : ''}`}>
+      <div className="flex-1 flex flex-col">
         {/* Header for non-authenticated users (excluding landing) */}
         {showHeader && (
           <Header 
@@ -245,11 +244,10 @@ const App: React.FC = () => {
           <Route 
             path="/supervisor/*" 
             element={
-              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.TRAINING_SUPERVISOR}>
-                <div className="pt-24 px-6">Training Supervisor Dashboard (Protected)</div>
-        {/* Footer */}
-        {showFooter && <Footer />}
-      </div
+              <ProtectedRoute userRole={user?.role}>
+                <div className="pt-8 px-6">Training Supervisor Dashboard (Protected)</div>
+              </ProtectedRoute>
+            } 
           />
           
           {/* Settings Route - accessible to all authenticated users */}
@@ -266,9 +264,7 @@ const App: React.FC = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AnimatePresence>
-
-      {/* Footer */}
-      <Footer />
+      </div>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, BrainCircuit, SearchX, LineChart, Users, FileCheck, Calendar, Award, TrendingUp, Shield } from 'lucide-react';
 import ThreeScene from '../components/ThreeScene';
+import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 
 const LandingPage: React.FC = () => {
@@ -63,7 +64,7 @@ const LandingPage: React.FC = () => {
                 >
                   <Link to="/login">
                     <button className="px-8 py-4 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple font-bold text-lg hover:scale-105 transition-transform flex items-center gap-3 group shadow-lg shadow-neon-blue/50">
-                        Get Started
+                        Login
                         <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                   </Link>
@@ -253,6 +254,9 @@ const LandingPage: React.FC = () => {
             <div className="h-20"></div>
         </div>
       </section>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
