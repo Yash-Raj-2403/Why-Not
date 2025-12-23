@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../services/supabaseClient';
+import { api } from '../services/api';
 import { AuthUser, UserRole } from '../types';
 
 interface AuthContextType {
@@ -52,13 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-      if (error) throw error;
+      const data = await api.getStudentProfile(userId);
 
       if (data) {
         setUser({
@@ -68,7 +63,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           name: data.name,
           avatar: data.avatar,
           department: data.department,
-          notifications: 0, // You can fetch this from another table
+          notifications: 0,
+          major: data.major,
+          year: data.year,
+          semester: data.semester,
+          cgpa: data.cgpa,
+          skills: data.skills,
+          preferences: data.preferences,
         });
       }
     } catch (error) {

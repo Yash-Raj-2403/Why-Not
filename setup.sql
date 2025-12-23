@@ -10,6 +10,11 @@ DROP TABLE IF EXISTS public.opportunities CASCADE;
 DROP TABLE IF EXISTS public.student_profiles CASCADE;
 DROP TABLE IF EXISTS public.profiles CASCADE;
 
+-- Note: Test user account must be created via Supabase Auth signup
+-- Email: tester@test.com
+-- Password: 12345678
+-- The profile and student_profile will be auto-created on first login
+
 -- Drop the trigger function if it exists
 DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
 
@@ -169,9 +174,9 @@ CREATE TABLE IF NOT EXISTS public.notifications (
   user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   message TEXT NOT NULL,
-  type TEXT CHECK (type IN ('APPLICATION', 'INTERVIEW', 'APPROVAL', 'FEEDBACK', 'SYSTEM')),
+  type TEXT CHECK (type IN ('application_status', 'new_opportunity', 'interview_scheduled', 'profile_update', 'general')),
   read BOOLEAN DEFAULT FALSE,
-  link TEXT,
+  related_id TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -184,6 +189,10 @@ CREATE POLICY "Users can view their own notifications"
 CREATE POLICY "Users can update their own notifications"
   ON public.notifications FOR UPDATE
   USING (user_id = auth.uid());
+
+CREATE POLICY "System can insert notifications"
+  ON public.notifications FOR INSERT
+  WITH CHECK (true);
 
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$

@@ -17,21 +17,16 @@ const LandingPage: React.FC = () => {
         </div>
 
       {/* Hero Section */}
-      <section className="relative z-10 h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24">
+      <section className="relative z-10 min-h-screen flex flex-col justify-center pt-32 px-6 md:px-12 lg:px-24">
         <div className="max-w-4xl w-full">
             <motion.div
                 initial={{ opacity: 0, y: 150, scale: 0.8 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
             >
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.3, y: -50 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.3, type: "spring", bounce: 0.5 }}
-                  className="inline-block px-4 py-2 bg-neon-blue/10 border border-neon-blue/20 rounded-full mb-6"
-                >
+                <div className="inline-block px-4 py-2 bg-neon-blue/10 border border-neon-blue/20 rounded-full mb-6">
                   <span className="text-neon-blue text-sm font-semibold">Campus Internship & Placement Platform</span>
-                </motion.div>
+                </div>
                 
                 <motion.h1 
                   initial={{ opacity: 0, y: 100, rotateX: 45 }}
@@ -99,7 +94,7 @@ const LandingPage: React.FC = () => {
                   initial={{ opacity: 0, y: 100, scale: 0.8 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: false, amount: 0.2 }}
-                  transition={{ duration: 1, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-neon-blue/30 transition-all duration-300 hover:shadow-lg hover:shadow-neon-blue/20 hover:-translate-y-2"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-neon-blue/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -119,7 +114,7 @@ const LandingPage: React.FC = () => {
                   initial={{ opacity: 0, y: 100, scale: 0.8 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: false, amount: 0.2 }}
-                  transition={{ duration: 1, delay: 0.15, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-neon-purple/30 transition-all duration-300 hover:shadow-lg hover:shadow-neon-purple/20 hover:-translate-y-2"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-neon-purple/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -139,7 +134,7 @@ const LandingPage: React.FC = () => {
                   initial={{ opacity: 0, y: 100, scale: 0.8 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: false, amount: 0.2 }}
-                  transition={{ duration: 1, delay: 0.3, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-neon-teal/30 transition-all duration-300 hover:shadow-lg hover:shadow-neon-teal/20 hover:-translate-y-2"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-neon-teal/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -159,7 +154,7 @@ const LandingPage: React.FC = () => {
                   initial={{ opacity: 0, y: 100, scale: 0.8 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: false, amount: 0.2 }}
-                  transition={{ duration: 1, delay: 0.15, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-rose-400/30 transition-all duration-300 hover:shadow-lg hover:shadow-rose-400/20 hover:-translate-y-2"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-rose-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -179,7 +174,7 @@ const LandingPage: React.FC = () => {
                   initial={{ opacity: 0, y: 100, scale: 0.8 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: false, amount: 0.2 }}
-                  transition={{ duration: 1, delay: 0.3, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-amber-400/30 transition-all duration-300 hover:shadow-lg hover:shadow-amber-400/20 hover:-translate-y-2"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-amber-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -199,7 +194,7 @@ const LandingPage: React.FC = () => {
                   initial={{ opacity: 0, y: 100, scale: 0.8 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: false, amount: 0.2 }}
-                  transition={{ duration: 1, delay: 0.15, ease: "easeOut", type: "spring", stiffness: 50 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-400/30 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-400/20 hover:-translate-y-2"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -217,75 +212,45 @@ const LandingPage: React.FC = () => {
             </div>
 
             {/* How It Works Section */}
-            <div id="how-it-works" className="mb-20">
-                <h2 className="text-4xl font-bold mb-12 text-center">How It <span className="text-neon-purple">Works</span></h2>
+            <div id="how-it-works" className="mb-40">
+                <h2 className="text-4xl font-bold mb-16 text-center">How It <span className="text-neon-purple">Works</span></h2>
                 
-                <div className="space-y-8">
-                  <div className="flex gap-6 items-start">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center font-bold text-xl flex-shrink-0">1</div>
+                <div className="space-y-16 max-w-4xl mx-auto">
+                  <div className="flex flex-col items-center text-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-2xl shadow-lg shadow-cyan-500/20">1</div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">Create Your Profile</h3>
-                      <p className="text-slate-400">Students maintain one comprehensive profile with skills, resume, CGPA, and preferences. Update once per semester.</p>
+                      <h3 className="text-2xl font-bold mb-3">Create Your Profile</h3>
+                      <p className="text-slate-400 text-lg max-w-2xl">Students maintain one comprehensive profile with skills, resume, CGPA, and preferences. Update once per semester.</p>
                     </div>
                   </div>
 
-                  <div className="flex gap-6 items-start">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-neon-purple to-rose-500 flex items-center justify-center font-bold text-xl flex-shrink-0">2</div>
+                  <div className="flex flex-col items-center text-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-neon-purple to-rose-500 flex items-center justify-center font-bold text-2xl shadow-lg shadow-neon-purple/20">2</div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">Browse Smart-Matched Opportunities</h3>
-                      <p className="text-slate-400">Placement cell posts verified opportunities. AI recommends best-fit roles based on your skills, CGPA, and preferences.</p>
+                      <h3 className="text-2xl font-bold mb-3">Browse Smart-Matched Opportunities</h3>
+                      <p className="text-slate-400 text-lg max-w-2xl">Placement cell posts verified opportunities. AI recommends best-fit roles based on your skills, CGPA, and preferences.</p>
                     </div>
                   </div>
 
-                  <div className="flex gap-6 items-start">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-rose-500 to-amber-400 flex items-center justify-center font-bold text-xl flex-shrink-0">3</div>
+                  <div className="flex flex-col items-center text-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-rose-500 to-amber-400 flex items-center justify-center font-bold text-2xl shadow-lg shadow-rose-500/20">3</div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">One-Click Apply & Track</h3>
-                      <p className="text-slate-400">Apply with one click. Mentor receives approval request. Track every stage: applied → approved → interview → offer.</p>
+                      <h3 className="text-2xl font-bold mb-3">One-Click Apply & Track</h3>
+                      <p className="text-slate-400 text-lg max-w-2xl">Apply with one click. Mentor receives approval request. Track every stage: applied → approved → interview → offer.</p>
                     </div>
                   </div>
 
-                  <div className="flex gap-6 items-start">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-amber-400 to-emerald-400 flex items-center justify-center font-bold text-xl flex-shrink-0">4</div>
+                  <div className="flex flex-col items-center text-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-amber-400 to-emerald-400 flex items-center justify-center font-bold text-2xl shadow-lg shadow-amber-400/20">4</div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">Get AI-Powered Insights</h3>
-                      <p className="text-slate-400">Rejected? Get instant AI explanations. Understand why and what to improve. Turn failures into learning opportunities.</p>
+                      <h3 className="text-2xl font-bold mb-3">Get AI-Powered Insights</h3>
+                      <p className="text-slate-400 text-lg max-w-2xl">Rejected? Get instant AI explanations. Understand why and what to improve. Turn failures into learning opportunities.</p>
                     </div>
-                  </div>
-                </div>
-            </div>
-
-            {/* Security & Privacy */}
-            <div id="about" className="glass-panel p-12 rounded-2xl border border-white/10 text-center">
-                <div className="w-16 h-16 bg-neon-blue/10 rounded-xl flex items-center justify-center mb-6 text-neon-blue mx-auto">
-                    <Shield className="w-10 h-10" />
-                </div>
-                <h3 className="text-3xl font-bold mb-4">Secure & Budget-Friendly</h3>
-                <p className="text-slate-400 max-w-3xl mx-auto text-lg mb-6">
-                  Built for public institutions with tight budgets. Role-based access ensures employers see only relevant candidates. 
-                  GDPR-compliant data privacy. Leverage existing campus infrastructure with minimal setup.
-                </p>
-                <div className="flex flex-wrap gap-8 justify-center text-sm text-slate-300">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-neon-teal rounded-full"></div>
-                    <span>Role-Based Access</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-neon-purple rounded-full"></div>
-                    <span>Data Privacy Compliant</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-neon-blue rounded-full"></div>
-                    <span>Low/No License Cost</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-rose-400 rounded-full"></div>
-                    <span>Campus Infrastructure</span>
                   </div>
                 </div>
             </div>
             
-            <div className="h-40"></div>
+            <div className="h-20"></div>
         </div>
       </section>
     </div>

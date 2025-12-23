@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Home, Briefcase, Users, FileText, Settings, LogOut, Bell, Calendar, BarChart3, UserCheck, BookOpen } from 'lucide-react';
 import { UserRole } from '../types';
 import { useAuth } from '../contexts/AuthContext';
+import NotificationBell from './NotificationBell';
 
 interface HeaderProps {
   userRole?: UserRole;
@@ -144,14 +145,7 @@ const Header: React.FC<HeaderProps> = ({
                 ))}
                 
                 {/* Notifications */}
-                <button className="relative p-2 text-slate-300 hover:text-white transition-colors">
-                  <Bell size={20} />
-                  {notifications > 0 && (
-                    <span className="absolute top-0 right-0 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center">
-                      {notifications}
-                    </span>
-                  )}
-                </button>
+                <NotificationBell />
 
                 {/* User Profile Dropdown */}
                 <div className="relative group">

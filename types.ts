@@ -16,7 +16,16 @@ export interface AuthUser {
   name: string;
   avatar?: string;
   department?: string;
+  phone?: string;
   notifications?: number;
+  // Student specific fields
+  major?: string;
+  year?: number;
+  semester?: number;
+  cgpa?: number;
+  skills?: Skill[];
+  preferences?: any;
+  resume?: string;
 }
 
 export enum UserRole {

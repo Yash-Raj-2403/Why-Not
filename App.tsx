@@ -4,9 +4,20 @@ import LandingPage from './pages/LandingPage';
 import StudentDashboard from './pages/StudentDashboard';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import ProfileSetupPage from './pages/ProfileSetupPage';
+import OpportunitiesPage from './pages/OpportunitiesPage';
+import ApplicationsPage from './pages/ApplicationsPage';
+import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/SettingsPage';
+import PlacementDashboard from './pages/PlacementDashboard';
+import PostOpportunityPage from './pages/PostOpportunityPage';
+import ManageOpportunitiesPage from './pages/ManageOpportunitiesPage';
+import ApplicationsManagementPage from './pages/ApplicationsManagementPage';
+import NotFoundPage from './pages/NotFoundPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 import { AnimatePresence } from 'framer-motion';
 import { UserRole } from './types';
 import { useAuth } from './contexts/AuthContext';
@@ -17,7 +28,8 @@ const App: React.FC = () => {
   
   // Determine if we show the sidebar (only on dashboard)
   const isDashboard = location.pathname.includes('/dashboard');
-  
+  const isLanding = location.pathname === '/';
+
   // Show loading state while checking authentication
   if (loading) {
     return (
@@ -27,10 +39,16 @@ const App: React.FC = () => {
     );
   }
 
+  // Redirect to profile setup if student profile is incomplete
+  const isProfileIncomplete = user && user.role === UserRole.STUDENT && (!user.cgpa || !user.skills || user.skills.length === 0);
+  if (isProfileIncomplete && location.pathname !== '/profile-setup' && location.pathname !== '/login') {
+    return <Navigate to="/profile-setup" replace />;
+  }
+
   return (
-    <div className="min-h-screen flex flex-col text-slate-100 font-sans selection:bg-neon-purple selection:text-white">
-      {/* Dynamic Background for Dashboard pages, Landing handles its own bg */}
-      {isDashboard && (
+    <div className="min-h-screen flex flex-col bg-black text-slate-100 font-sans selection:bg-neon-purple selection:text-white">
+      {/* Dynamic Background for App pages (excluding Landing) */}
+      {!isLanding && (
           <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black -z-50" />
       )}
       
@@ -60,10 +78,19 @@ const App: React.FC = () => {
           />
           
           <Route 
+            path="/profile-setup" 
+            element={
+              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
+                <ProfileSetupPage />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
             path="/opportunities" 
             element={
               <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
-                <div className="pt-24 px-6">Opportunities Page (Protected)</div>
+                <OpportunitiesPage />
               </ProtectedRoute>
             } 
           />
@@ -72,7 +99,7 @@ const App: React.FC = () => {
             path="/applications" 
             element={
               <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
-                <div className="pt-24 px-6">Applications Page (Protected)</div>
+                <ApplicationsPage />
               </ProtectedRoute>
             } 
           />
@@ -81,17 +108,41 @@ const App: React.FC = () => {
             path="/profile" 
             element={
               <ProtectedRoute userRole={user?.role}>
-                <div className="pt-24 px-6">Profile Page (Protected)</div>
+                <ProfilePage />
               </ProtectedRoute>
             } 
           />
           
           {/* Placement Officer Routes */}
           <Route 
-            path="/placement/*" 
+            path="/placement/dashboard" 
             element={
               <ProtectedRoute userRole={user?.role} requiredRole={UserRole.PLACEMENT_OFFICER}>
-                <div className="pt-24 px-6">Placement Officer Dashboard (Protected)</div>
+                <PlacementDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/placement/post" 
+            element={
+              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.PLACEMENT_OFFICER}>
+                <PostOpportunityPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/placement/opportunities" 
+            element={
+              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.PLACEMENT_OFFICER}>
+                <ManageOpportunitiesPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/placement/applications" 
+            element={
+              <ProtectedRoute userRole={user?.role} requiredRole={UserRole.PLACEMENT_OFFICER}>
+                <ApplicationsManagementPage />
               </ProtectedRoute>
             } 
           />
@@ -131,13 +182,13 @@ const App: React.FC = () => {
             path="/settings" 
             element={
               <ProtectedRoute userRole={user?.role}>
-                <div className="pt-24 px-6">Settings Page (Protected)</div>
+                <SettingsPage />
               </ProtectedRoute>
             } 
           />
           
-          {/* Catch all - redirect to landing page */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* 404 Not Found */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AnimatePresence>
 
@@ -147,4 +198,5 @@ const App: React.FC = () => {
   );
 };
 
+export default App;
 export default App;

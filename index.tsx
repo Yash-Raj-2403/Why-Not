@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import { HashRouter } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { ToastProvider } from './contexts/ToastContext';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -13,10 +15,14 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <HashRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </HashRouter>
+    <ErrorBoundary>
+      <HashRouter>
+        <AuthProvider>
+          <ToastProvider>
+            <App />
+          </ToastProvider>
+        </AuthProvider>
+      </HashRouter>
+    </ErrorBoundary>
   </React.StrictMode>
 );
