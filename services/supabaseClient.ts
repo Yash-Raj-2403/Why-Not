@@ -3,16 +3,25 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Create a placeholder client for development if credentials are missing
-const isDevelopment = !supabaseUrl || !supabaseAnonKey || 
-  supabaseUrl.includes('placeholder') || 
-  supabaseAnonKey.includes('placeholder');
+// Fail loudly if environment variables are missing
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    '❌ Missing Supabase credentials!\n' +
+    'Please create a .env file with:\n' +
+    '  VITE_SUPABASE_URL=your_project_url\n' +
+    '  VITE_SUPABASE_ANON_KEY=your_anon_key\n' +
+    'Get these from: https://supabase.com/dashboard'
+  );
+}
 
-export const supabase = isDevelopment
-  ? createClient(
-      'https://placeholder.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDUxMjU0MDAsImV4cCI6MTk2MDcwMTQwMH0.placeholder'
-    )
-  : createClient(supabaseUrl, supabaseAnonKey);
+if (supabaseUrl.includes('placeholder') || supabaseAnonKey.includes('placeholder')) {
+  throw new Error(
+    '❌ Placeholder Supabase credentials detected!\n' +
+    'Please update your .env file with real credentials from:\n' +
+    'https://supabase.com/dashboard'
+  );
+}
 
-console.log(isDevelopment ? '⚠️  Running in development mode without Supabase' : '✓ Supabase connected');
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+console.log('✓ Supabase client initialized');
