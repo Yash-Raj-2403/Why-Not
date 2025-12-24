@@ -76,7 +76,7 @@ const ApplicationsManagementPage: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     const colors: any = {
-      APPLIED: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+      APPLIED: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
       SHORTLISTED: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
       INTERVIEW_SCHEDULED: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
       REJECTED: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
@@ -92,7 +92,7 @@ const ApplicationsManagementPage: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="pt-8 px-6 max-w-7xl mx-auto min-h-screen">
+      <div className="pt-24 pb-12 px-6 max-w-7xl mx-auto min-h-screen">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Applications Management</h1>
           <p className="text-slate-400">Review and manage student applications</p>

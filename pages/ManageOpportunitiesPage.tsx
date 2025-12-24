@@ -55,7 +55,7 @@ const ManageOpportunitiesPage: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="pt-8 px-6 max-w-7xl mx-auto min-h-screen">
+      <div className="pt-24 pb-12 px-6 max-w-7xl mx-auto min-h-screen">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Manage Opportunities</h1>
           <p className="text-slate-400">View and manage all posted opportunities</p>
@@ -110,7 +110,7 @@ const ManageOpportunitiesPage: React.FC = () => {
                         {opp.status}
                       </span>
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        opp.type === 'INTERNSHIP' ? 'bg-blue-500/10 text-blue-400' : 'bg-purple-500/10 text-purple-400'
+                        opp.type === 'INTERNSHIP' ? 'bg-teal-500/10 text-teal-400' : 'bg-purple-500/10 text-purple-400'
                       }`}>
                         {opp.type}
                       </span>

@@ -218,7 +218,7 @@ const LandingPage: React.FC = () => {
                 
                 <div className="space-y-16 max-w-4xl mx-auto">
                   <div className="flex flex-col items-center text-center gap-4">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center font-bold text-2xl shadow-lg shadow-cyan-500/20">1</div>
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 flex items-center justify-center font-bold text-2xl shadow-lg shadow-cyan-500/20">1</div>
                     <div>
                       <h3 className="text-2xl font-bold mb-3">Create Your Profile</h3>
                       <p className="text-slate-400 text-lg max-w-2xl">Students maintain one comprehensive profile with skills, resume, CGPA, and preferences. Update once per semester.</p>

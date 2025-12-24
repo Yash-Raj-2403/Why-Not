@@ -17,9 +17,10 @@ export default {
           300: 'rgba(255, 255, 255, 0.05)',
         },
         neon: {
-          blue: '#00f3ff',
+          blue: '#0aff99',  // Changed to teal/green
           purple: '#bc13fe',
           teal: '#0aff99',
+          pink: '#ff006e',
         }
       },
       animation: {

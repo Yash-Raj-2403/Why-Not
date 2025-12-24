@@ -85,7 +85,7 @@ const CandidateSearchPage: React.FC = () => {
   if (loading) {
     return (
       <PageTransition>
-        <div className="min-h-screen pt-8 px-6 pb-12">
+        <div className="min-h-screen pt-24 px-6 pb-12">
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
               <h1 className="text-4xl font-bold mb-2 gradient-text">Browse Candidates</h1>

@@ -67,7 +67,7 @@ const OpportunitiesPage: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="pt-8 px-6 max-w-7xl mx-auto min-h-screen">
+      <div className="pt-24 pb-12 px-6 max-w-7xl mx-auto min-h-screen">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar Filters */}
           <div className="w-full md:w-64 space-y-6">
@@ -156,7 +156,7 @@ const OpportunitiesPage: React.FC = () => {
                           <div className="flex items-center gap-3 mb-1">
                             <h3 className="text-xl font-bold text-white">{opp.title}</h3>
                             <span className={`text-xs px-2 py-0.5 rounded border ${
-                              opp.type === 'INTERNSHIP' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                              opp.type === 'INTERNSHIP' ? 'bg-teal-500/10 text-teal-400 border-teal-500/20' : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
                             }`}>
                               {opp.type}
                             </span>

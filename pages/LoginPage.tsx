@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Lock, Mail, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Lock, Mail, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import PageTransition from '../components/PageTransition';
+import ParticleBackground from '../components/ParticleBackground';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const LoginPage: React.FC = () => {
 
     try {
       await signIn(email, password);
-      navigate('/dashboard');
+      // Don't navigate here - let App.tsx handle routing based on user role
     } catch (err: any) {
       setError(err.message || 'Failed to sign in. Please check your credentials.');
     } finally {
@@ -32,29 +33,34 @@ const LoginPage: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-950 to-black px-6">
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neon-blue/10 via-transparent to-transparent -z-10" />
+      <div className="relative min-h-screen flex items-center justify-center px-6 bg-black overflow-hidden">
+      {/* Particle Background */}
+      <div className="fixed inset-0 z-0">
+        <ParticleBackground />
+      </div>
+      
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neon-purple/5 via-transparent to-transparent pointer-events-none" />
       
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="relative z-10 w-full max-w-md"
       >
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 backdrop-blur-sm bg-black/30 rounded-2xl p-6 border border-white/5">
           <Link to="/" className="inline-flex items-center gap-2 group">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-blue to-neon-purple p-[2px]">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-blue to-neon-purple p-[2px] shadow-lg shadow-neon-blue/50">
               <div className="w-full h-full rounded-xl bg-black flex items-center justify-center">
                 <span className="text-xl font-bold gradient-text">W</span>
               </div>
             </div>
-            <span className="text-3xl font-bold tracking-tight text-white/90">
+            <span className="text-3xl font-bold tracking-tight text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
               WhyNot
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-white mt-6 mb-2">Welcome Back</h1>
-          <p className="text-slate-400">Sign in to your account</p>
+          <h1 className="text-2xl font-bold text-white mt-6 mb-2 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">Welcome Back</h1>
+          <p className="text-slate-300 drop-shadow-[0_0_4px_rgba(0,0,0,0.8)]">Sign in to your account</p>
         </div>
 
         {/* Login Form */}
@@ -138,36 +144,63 @@ const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-neon-blue to-neon-purple font-semibold text-white hover:scale-[1.02] transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="relative w-full py-4 px-6 rounded-xl bg-gradient-to-r from-neon-blue to-neon-purple font-bold text-white text-lg
+                hover:scale-[1.02] hover:shadow-2xl hover:shadow-neon-blue/50 
+                active:scale-[0.98]
+                transition-all duration-300
+                disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+                before:absolute before:inset-0 before:rounded-xl before:bg-gradient-to-r before:from-neon-purple before:to-neon-blue before:opacity-0 hover:before:opacity-100 before:transition-opacity before:-z-10
+                overflow-hidden
+                shadow-lg shadow-neon-purple/30"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {loading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  <>
+                    Sign In
+                    <ArrowRight className="w-5 h-5" />
+                  </>
+                )}
+              </span>
             </button>
           </form>
 
           {/* Sign Up Link */}
-          <div className="mt-6 text-center">
-            <p className="text-slate-400">
-              Don't have an account?{' '}
-              <Link
-                to="/signup"
-                className="text-neon-blue hover:text-neon-purple transition-colors font-semibold"
-              >
-                Sign up
-              </Link>
-            </p>
+          <div className="mt-6">
+            <div className="bg-black/30 border border-white/10 rounded-lg p-4 text-center hover:border-neon-blue/30 transition-colors">
+              <p className="text-slate-400 text-sm">
+                Don't have an account?{' '}
+                <Link
+                  to="/signup"
+                  className="text-neon-blue hover:text-neon-purple transition-colors font-semibold inline-flex items-center gap-1"
+                >
+                  Sign up
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </p>
+            </div>
           </div>
 
           {/* Demo Credentials */}
           <div className="mt-6 pt-6 border-t border-white/10">
-            <p className="text-xs text-slate-500 text-center mb-3">Demo Credentials:</p>
-            <div className="space-y-2 text-xs">
-              <div className="flex justify-between items-center p-2 bg-black/30 rounded">
-                <span className="text-slate-400">Student:</span>
-                <span className="text-slate-300">student@demo.com / demo123</span>
+            <div className="bg-gradient-to-br from-neon-blue/5 to-neon-purple/5 border border-neon-blue/20 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-2 h-2 rounded-full bg-neon-blue animate-pulse"></div>
+                <p className="text-sm font-semibold text-slate-300">Demo Credentials</p>
               </div>
-              <div className="flex justify-between items-center p-2 bg-black/30 rounded">
-                <span className="text-slate-400">Placement:</span>
-                <span className="text-slate-300">placement@demo.com / demo123</span>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between items-center p-3 bg-black/40 border border-white/5 rounded-lg hover:border-neon-blue/30 transition-colors">
+                  <span className="text-slate-400 font-medium">Student:</span>
+                  <span className="text-slate-200 font-mono">student@demo.com / demo123</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-black/40 border border-white/5 rounded-lg hover:border-neon-purple/30 transition-colors">
+                  <span className="text-slate-400 font-medium">Placement:</span>
+                  <span className="text-slate-200 font-mono">placement@demo.com / demo123</span>
+                </div>
               </div>
             </div>
           </div>

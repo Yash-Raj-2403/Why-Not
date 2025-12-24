@@ -1,9 +1,56 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Linkedin, Twitter, Mail, Heart } from 'lucide-react';
+import { Github, Linkedin, Twitter, Mail, Heart, User, BarChart3, BookOpen, Settings, HelpCircle, Shield } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { UserRole } from '../types';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const { user } = useAuth();
+
+  // Role-specific quick links
+  const getQuickLinks = () => {
+    if (!user) return [];
+    
+    switch (user.role) {
+      case UserRole.STUDENT:
+        return [
+          { label: 'Opportunities', path: '/opportunities' },
+          { label: 'My Applications', path: '/applications' },
+          { label: 'Analytics', path: '/analytics' },
+          { label: 'Settings', path: '/settings' },
+        ];
+      
+      case UserRole.PLACEMENT_OFFICER:
+        return [
+          { label: 'Post Opportunity', path: '/placement/post' },
+          { label: 'Applications', path: '/placement/applications' },
+          { label: 'Analytics', path: '/placement/analytics' },
+          { label: 'Students', path: '/placement/students' },
+        ];
+      
+      case UserRole.FACULTY_MENTOR:
+        return [
+          { label: 'My Mentees', path: '/mentor/mentees' },
+          { label: 'Approvals', path: '/mentor/approvals' },
+          { label: 'Resources', path: '/mentor/resources' },
+          { label: 'Guidelines', path: '/mentor/guidelines' },
+        ];
+      
+      case UserRole.EMPLOYER:
+        return [
+          { label: 'Post Job', path: '/employer/post' },
+          { label: 'Candidates', path: '/employer/candidates' },
+          { label: 'Interviews', path: '/employer/interviews' },
+          { label: 'Analytics', path: '/employer/analytics' },
+        ];
+      
+      default:
+        return [];
+    }
+  };
+
+  const quickLinks = getQuickLinks();
 
   return (
     <footer className="relative bg-black/50 backdrop-blur-md border-t border-white/5 mt-auto">
@@ -59,58 +106,78 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
-              Quick Links
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/#features" className="text-slate-400 hover:text-white text-sm transition-colors">
-                  Features
-                </Link>
-              </li>
-              <li>
-                <Link to="/#how-it-works" className="text-slate-400 hover:text-white text-sm transition-colors">
-                  How It Works
-                </Link>
-              </li>
-              <li>
-                <Link to="/dashboard" className="text-slate-400 hover:text-white text-sm transition-colors">
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link to="/#about" className="text-slate-400 hover:text-white text-sm transition-colors">
-                  About Us
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Quick Links - Role Specific */}
+          {user && quickLinks.length > 0 ? (
+            <div>
+              <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
+                Quick Access
+              </h3>
+              <ul className="space-y-2">
+                {quickLinks.map((link) => (
+                  <li key={link.path}>
+                    <Link to={link.path} className="text-slate-400 hover:text-neon-blue text-sm transition-colors">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <div>
+              <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
+                Quick Links
+              </h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link to="/#features" className="text-slate-400 hover:text-white text-sm transition-colors">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/#how-it-works" className="text-slate-400 hover:text-white text-sm transition-colors">
+                    How It Works
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/login" className="text-slate-400 hover:text-white text-sm transition-colors">
+                    Login
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/#about" className="text-slate-400 hover:text-white text-sm transition-colors">
+                    About Us
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
 
-          {/* Resources */}
+          {/* Resources & Support */}
           <div>
             <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
-              Resources
+              Support
             </h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-slate-400 hover:text-white text-sm transition-colors">
-                  Documentation
-                </a>
+                <Link to="/help" className="text-slate-400 hover:text-neon-blue text-sm transition-colors flex items-center gap-2">
+                  <HelpCircle size={14} />
+                  Help Center
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-slate-400 hover:text-white text-sm transition-colors">
+                <Link to="/privacy" className="text-slate-400 hover:text-neon-blue text-sm transition-colors flex items-center gap-2">
+                  <Shield size={14} />
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-slate-400 hover:text-white text-sm transition-colors">
+                <Link to="/terms" className="text-slate-400 hover:text-neon-blue text-sm transition-colors">
                   Terms of Service
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-slate-400 hover:text-white text-sm transition-colors">
+                <a href="mailto:support@whynot.com" className="text-slate-400 hover:text-neon-blue text-sm transition-colors flex items-center gap-2">
+                  <Mail size={14} />
                   Contact Support
                 </a>
               </li>

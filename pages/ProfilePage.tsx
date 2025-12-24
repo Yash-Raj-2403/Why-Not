@@ -19,8 +19,17 @@ const ProfilePage: React.FC = () => {
     cgpa: user?.cgpa || 0,
     major: user?.major || '',
     year: user?.year || 0,
-    semester: user?.semester || 0
+    semester: user?.semester || 0,
+    skills: user?.skills || [],
+    preferences: {
+      roles: user?.preferences?.roles || [],
+      locations: user?.preferences?.locations || [],
+      minStipend: user?.preferences?.minStipend || 0
+    }
   });
+  const [newSkill, setNewSkill] = useState({ name: '', level: 'Beginner' });
+  const [newLocation, setNewLocation] = useState('');
+  const [newRole, setNewRole] = useState('');
 
   const handleSave = async () => {
     setSaving(true);
@@ -40,13 +49,15 @@ const ProfilePage: React.FC = () => {
       // Update student_profiles table
       const { error: studentError } = await supabase
         .from('student_profiles')
-        .update({
+        .upsert({
+          id: user!.id,
           cgpa: formData.cgpa,
           major: formData.major,
           year: formData.year,
-          semester: formData.semester
-        })
-        .eq('id', user!.id);
+          semester: formData.semester,
+          skills: formData.skills,
+          preferences: formData.preferences
+        }, { onConflict: 'id' });
 
       if (studentError) throw studentError;
 
@@ -69,9 +80,78 @@ const ProfilePage: React.FC = () => {
       cgpa: user?.cgpa || 0,
       major: user?.major || '',
       year: user?.year || 0,
-      semester: user?.semester || 0
+      semester: user?.semester || 0,
+      skills: user?.skills || [],
+      preferences: {
+        roles: user?.preferences?.roles || [],
+        locations: user?.preferences?.locations || [],
+        minStipend: user?.preferences?.minStipend || 0
+      }
     });
     setEditMode(false);
+  };
+
+  const handleAddSkill = () => {
+    if (newSkill.name.trim()) {
+      setFormData({
+        ...formData,
+        skills: [...formData.skills, newSkill]
+      });
+      setNewSkill({ name: '', level: 'Beginner' });
+    }
+  };
+
+  const handleRemoveSkill = (index: number) => {
+    setFormData({
+      ...formData,
+      skills: formData.skills.filter((_, i) => i !== index)
+    });
+  };
+
+  const handleAddLocation = () => {
+    if (newLocation.trim() && !formData.preferences.locations.includes(newLocation)) {
+      setFormData({
+        ...formData,
+        preferences: {
+          ...formData.preferences,
+          locations: [...formData.preferences.locations, newLocation]
+        }
+      });
+      setNewLocation('');
+    }
+  };
+
+  const handleRemoveLocation = (location: string) => {
+    setFormData({
+      ...formData,
+      preferences: {
+        ...formData.preferences,
+        locations: formData.preferences.locations.filter(l => l !== location)
+      }
+    });
+  };
+
+  const handleAddRole = () => {
+    if (newRole.trim() && !formData.preferences.roles.includes(newRole)) {
+      setFormData({
+        ...formData,
+        preferences: {
+          ...formData.preferences,
+          roles: [...formData.preferences.roles, newRole]
+        }
+      });
+      setNewRole('');
+    }
+  };
+
+  const handleRemoveRole = (role: string) => {
+    setFormData({
+      ...formData,
+      preferences: {
+        ...formData.preferences,
+        roles: formData.preferences.roles.filter(r => r !== role)
+      }
+    });
   };
 
   const handleResumeUpload = async (url: string) => {
@@ -86,7 +166,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="pt-8 px-6 max-w-4xl mx-auto min-h-screen">
+      <div className="pt-24 pb-12 px-6 max-w-4xl mx-auto min-h-screen">
         <div className="mb-8 flex justify-between items-end">
           <div>
             <h1 className="text-3xl font-bold mb-2">My Profile</h1>
@@ -227,7 +307,7 @@ const ProfilePage: React.FC = () => {
                       />
                     </div>
                   ) : (
-                    <span className="font-medium">{user.year ? `${user.year} Year` : '-'} / {user.semester ? `Sem ${user.semester}` : '-'}</span>
+                    <span className="font-medium">Year {user.year}, Sem {user.semester}</span>
                   )}
                 </div>
                 <div className="flex justify-between py-3 border-b border-white/5">
@@ -262,17 +342,104 @@ const ProfilePage: React.FC = () => {
                 </h3>
                 
                 <div className="space-y-4">
-                  <div className="flex justify-between py-3 border-b border-white/5">
-                    <span className="text-slate-400">Preferred Roles</span>
-                    <span className="font-medium text-right">{user.preferences?.roles?.join(', ') || 'Not set'}</span>
+                  <div className="py-3 border-b border-white/5">
+                    <span className="text-slate-400 block mb-2">Preferred Roles</span>
+                    {editMode ? (
+                      <div className="space-y-2">
+                        <div className="flex gap-2">
+                          <input 
+                            type="text"
+                            value={newRole}
+                            onChange={(e) => setNewRole(e.target.value)}
+                            placeholder="Add role (e.g., Frontend Developer)"
+                            className="flex-1 bg-white/5 border border-white/10 rounded px-3 py-2 text-sm"
+                            onKeyPress={(e) => e.key === 'Enter' && handleAddRole()}
+                          />
+                          <button 
+                            onClick={handleAddRole}
+                            className="px-4 py-2 bg-neon-purple/20 text-neon-purple rounded hover:bg-neon-purple/30 text-sm"
+                          >
+                            Add
+                          </button>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {formData.preferences.roles.map((role: string, index: number) => (
+                            <span key={index} className="px-3 py-1 rounded-full bg-white/5 text-sm flex items-center gap-2">
+                              {role}
+                              <X 
+                                size={14} 
+                                className="cursor-pointer hover:text-red-400" 
+                                onClick={() => handleRemoveRole(role)}
+                              />
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <span className="font-medium">{user.preferences?.roles?.join(', ') || 'Not set'}</span>
+                    )}
                   </div>
-                  <div className="flex justify-between py-3 border-b border-white/5">
-                    <span className="text-slate-400">Preferred Locations</span>
-                    <span className="font-medium text-right">{user.preferences?.locations?.join(', ') || 'Not set'}</span>
+                  <div className="py-3 border-b border-white/5">
+                    <span className="text-slate-400 block mb-2">Preferred Locations</span>
+                    {editMode ? (
+                      <div className="space-y-2">
+                        <div className="flex gap-2">
+                          <input 
+                            type="text"
+                            value={newLocation}
+                            onChange={(e) => setNewLocation(e.target.value)}
+                            placeholder="Add location (e.g., Bangalore)"
+                            className="flex-1 bg-white/5 border border-white/10 rounded px-3 py-2 text-sm"
+                            onKeyPress={(e) => e.key === 'Enter' && handleAddLocation()}
+                          />
+                          <button 
+                            onClick={handleAddLocation}
+                            className="px-4 py-2 bg-neon-purple/20 text-neon-purple rounded hover:bg-neon-purple/30 text-sm"
+                          >
+                            Add
+                          </button>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {formData.preferences.locations.map((location: string, index: number) => (
+                            <span key={index} className="px-3 py-1 rounded-full bg-white/5 text-sm flex items-center gap-2">
+                              {location}
+                              <X 
+                                size={14} 
+                                className="cursor-pointer hover:text-red-400" 
+                                onClick={() => handleRemoveLocation(location)}
+                              />
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <span className="font-medium">{user.preferences?.locations?.join(', ') || 'Not set'}</span>
+                    )}
                   </div>
                   <div className="flex justify-between py-3 border-b border-white/5">
                     <span className="text-slate-400">Expected Stipend</span>
-                    <span className="font-medium">₹{user.preferences?.minStipend?.toLocaleString() || 0}+</span>
+                    {editMode ? (
+                      <div className="flex items-center gap-2">
+                        <span>₹</span>
+                        <input 
+                          type="number"
+                          min="0"
+                          step="1000"
+                          value={formData.preferences.minStipend}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            preferences: {
+                              ...formData.preferences,
+                              minStipend: parseInt(e.target.value) || 0
+                            }
+                          })}
+                          className="font-medium bg-white/5 border border-white/10 rounded px-2 py-1 text-sm w-32 text-right"
+                        />
+                        <span>+</span>
+                      </div>
+                    ) : (
+                      <span className="font-medium">₹{user.preferences?.minStipend?.toLocaleString() || 0}+</span>
+                    )}
                   </div>
                 </div>
               </div>

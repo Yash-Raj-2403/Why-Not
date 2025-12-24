@@ -77,7 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchUserProfile = async (userId: string) => {
     try {
       const data = await api.getStudentProfile(userId);
-
+      
       if (data) {
         setUser({
           id: data.id,
@@ -95,16 +95,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           preferences: data.preferences,
         });
       } else {
-        // If no profile data, clear user and session
+        // If no profile data, we don't sign out immediately to allow for profile creation/recovery
         console.warn('No profile found for user:', userId);
         setUser(null);
-        await supabase.auth.signOut();
+        // Do not sign out here, as it prevents profile creation flows
+        // await supabase.auth.signOut(); 
+        throw new Error('Profile not found');
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
-      // Clear user on error
       setUser(null);
-      await supabase.auth.signOut().catch(console.error);
+      throw error;
     } finally {
       setLoading(false);
     }

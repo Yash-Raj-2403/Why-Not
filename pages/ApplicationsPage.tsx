@@ -29,7 +29,7 @@ const ApplicationsPage: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'APPLIED': return 'text-blue-400 bg-blue-400/10 border-blue-400/20';
+      case 'APPLIED': return 'text-cyan-400 bg-cyan-400/10 border-cyan-400/20';
       case 'APPROVED': return 'text-purple-400 bg-purple-400/10 border-purple-400/20';
       case 'INTERVIEW': return 'text-amber-400 bg-amber-400/10 border-amber-400/20';
       case 'OFFER': return 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20';
@@ -51,7 +51,7 @@ const ApplicationsPage: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="pt-8 px-6 max-w-7xl mx-auto min-h-screen">
+      <div className="pt-24 pb-12 px-6 max-w-7xl mx-auto min-h-screen">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">My Applications</h1>
           <p className="text-slate-400">Track the status of your internship and placement applications.</p>

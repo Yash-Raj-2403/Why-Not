@@ -96,7 +96,7 @@ const MentorDashboard: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen pt-8 px-6 pb-12">
+      <div className="min-h-screen pt-24 px-6 pb-12">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-8">
@@ -129,8 +129,8 @@ const MentorDashboard: React.FC = () => {
               className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-lg p-6"
             >
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-500/10 rounded-lg">
-                  <Users className="text-blue-400" size={24} />
+                <div className="p-3 bg-cyan-500/10 rounded-lg">
+                  <Users className="text-cyan-400" size={24} />
                 </div>
                 <div>
                   <p className="text-sm text-slate-400">My Mentees</p>

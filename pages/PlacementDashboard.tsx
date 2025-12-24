@@ -78,9 +78,9 @@ const PlacementDashboard: React.FC = () => {
       value: stats.activeOpportunities, 
       total: stats.totalOpportunities,
       icon: Briefcase, 
-      color: 'from-blue-500 to-cyan-500',
-      bgColor: 'bg-blue-500/10',
-      borderColor: 'border-blue-500/20'
+      color: 'from-teal-500 to-cyan-500',
+      bgColor: 'bg-teal-500/10',
+      borderColor: 'border-teal-500/20'
     },
     { 
       title: 'Total Applications', 
@@ -104,7 +104,7 @@ const PlacementDashboard: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     const styles: any = {
-      APPLIED: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+      APPLIED: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
       SHORTLISTED: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
       INTERVIEW_SCHEDULED: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
       REJECTED: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
@@ -115,7 +115,7 @@ const PlacementDashboard: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="pt-8 px-6 max-w-7xl mx-auto min-h-screen">
+      <div className="pt-24 pb-12 px-6 max-w-7xl mx-auto min-h-screen">
         <div className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold mb-2">Placement Officer Dashboard</h1>

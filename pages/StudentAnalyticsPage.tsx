@@ -146,7 +146,7 @@ const StudentAnalyticsPage: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     const colors: any = {
-      APPLIED: 'bg-blue-500',
+      APPLIED: 'bg-cyan-500',
       SHORTLISTED: 'bg-purple-500',
       INTERVIEW_SCHEDULED: 'bg-amber-500',
       REJECTED: 'bg-rose-500',
@@ -168,7 +168,7 @@ const StudentAnalyticsPage: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen pt-8 px-6 pb-12">
+      <div className="min-h-screen pt-24 px-6 pb-12">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
@@ -193,8 +193,8 @@ const StudentAnalyticsPage: React.FC = () => {
               className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-lg p-6"
             >
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-500/10 rounded-lg">
-                  <Users className="text-blue-400" size={24} />
+                <div className="p-3 bg-cyan-500/10 rounded-lg">
+                  <Users className="text-cyan-400" size={24} />
                 </div>
                 <div>
                   <p className="text-sm text-slate-400">Total Students</p>

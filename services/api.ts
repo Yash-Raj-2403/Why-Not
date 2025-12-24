@@ -4,34 +4,37 @@ import { OpportunityType } from '../types';
 export const api = {
   async getStudentProfile(userId: string) {
     try {
-      const { data: profile, error: profileError } = await supabase
+      // Fetch base profile first
+      const { data: profiles, error: profileError } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', userId)
-        .single();
+        .eq('id', userId);
 
       if (profileError) {
         console.error('Profile fetch error:', profileError);
         throw profileError;
       }
 
-      if (!profile) {
+      if (!profiles || profiles.length === 0) {
         throw new Error('Profile not found');
       }
 
-      const { data: studentProfile, error: studentError } = await supabase
-        .from('student_profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
+      const profile = profiles[0];
 
-      // PGRST116 is "not found" error - this is okay, not all users have student profiles
-      if (studentError && studentError.code !== 'PGRST116') {
-        console.error('Student profile fetch error:', studentError);
-        throw studentError;
+      // Fetch student profile separately if needed
+      let studentData = {};
+      if (profile.role === 'STUDENT') {
+        const { data: studentProfiles, error: studentError } = await supabase
+          .from('student_profiles')
+          .select('*')
+          .eq('id', userId);
+          
+        if (studentProfiles && studentProfiles.length > 0) {
+          studentData = studentProfiles[0];
+        }
       }
 
-      return { ...profile, ...studentProfile };
+      return { ...profile, ...studentData };
     } catch (error) {
       console.error('getStudentProfile failed:', error);
       throw error;
@@ -60,24 +63,14 @@ export const api = {
     }
 
     if (Object.keys(studentData).length > 0) {
-      // Check if student profile exists
-      const { data: existing } = await supabase
+      // Use upsert to handle both insert and update
+      const { error } = await supabase
         .from('student_profiles')
-        .select('id')
-        .eq('id', userId)
-        .single();
-
-      if (existing) {
-        const { error } = await supabase
-          .from('student_profiles')
-          .update(studentData)
-          .eq('id', userId);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from('student_profiles')
-          .insert({ id: userId, ...studentData });
-        if (error) throw error;
+        .upsert({ id: userId, ...studentData }, { onConflict: 'id' });
+      
+      if (error) {
+        console.error('Student profile upsert error:', error);
+        throw error;
       }
     }
   },

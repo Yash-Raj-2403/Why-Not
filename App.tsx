@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage';
 import StudentDashboard from './pages/StudentDashboard';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ProfileSetupPage from './pages/ProfileSetupPage';
 import OpportunitiesPage from './pages/OpportunitiesPage';
 import ApplicationsPage from './pages/ApplicationsPage';
@@ -40,8 +41,8 @@ const App: React.FC = () => {
   const isAuthenticated = !!user;
   
   // Show navigation based on auth state and page type
-  const showSidebar = isAuthenticated && !isLanding && !isAuthPage;
-  const showHeader = !isAuthenticated && !isLanding;
+  const showSidebar = false; // Disabled as per user request
+  const showHeader = !isLanding; // Show header on all pages except landing (or maybe even on landing)
 
   // Show loading state while checking authentication
   if (loading) {
@@ -52,10 +53,25 @@ const App: React.FC = () => {
     );
   }
 
-  // Redirect to profile setup if student profile is incomplete
-  const isProfileIncomplete = user && user.role === UserRole.STUDENT && (!user.cgpa || !user.skills || user.skills.length === 0);
-  if (isProfileIncomplete && location.pathname !== '/profile-setup' && location.pathname !== '/login') {
-    return <Navigate to="/profile-setup" replace />;
+  // Redirect to profile setup if student profile is incomplete - DISABLED
+  // Allow users to access dashboard even with incomplete profile
+  // const isProfileIncomplete = user && user.role === UserRole.STUDENT && !user.cgpa;
+  
+  // if (isProfileIncomplete && location.pathname !== '/profile-setup' && location.pathname !== '/login' && location.pathname !== '/signup') {
+  //   return <Navigate to="/profile-setup" replace />;
+  // }
+
+  // Redirect authenticated users from auth pages to their dashboard
+  if (user && (location.pathname === '/login' || location.pathname === '/signup')) {
+    if (user.role === UserRole.STUDENT) {
+      return <Navigate to="/dashboard" replace />;
+    } else if (user.role === UserRole.PLACEMENT_OFFICER) {
+      return <Navigate to="/placement-dashboard" replace />;
+    } else if (user.role === UserRole.FACULTY_MENTOR) {
+      return <Navigate to="/mentor-dashboard" replace />;
+    } else if (user.role === UserRole.EMPLOYER) {
+      return <Navigate to="/employer-dashboard" replace />;
+    }
   }
 
   return (
@@ -72,18 +88,18 @@ const App: React.FC = () => {
         </Suspense>
       )}
       
-      {/* Sidebar for authenticated users */}
-      {showSidebar && (
+      {/* Sidebar for authenticated users - DISABLED */}
+      {/* {showSidebar && (
         <Sidebar 
           userRole={user?.role}
           userName={user?.name}
           userAvatar={user?.avatar}
         />
-      )}
+      )} */}
 
       {/* Main content wrapper */}
       <div className="flex-1 flex flex-col">
-        {/* Header for non-authenticated users (excluding landing) */}
+        {/* Header for all users (excluding landing if desired, but logic above handles it) */}
         {showHeader && (
           <Header 
             userRole={user?.role}
@@ -99,6 +115,7 @@ const App: React.FC = () => {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           
           {/* Protected Routes */}
           <Route 
@@ -264,6 +281,9 @@ const App: React.FC = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AnimatePresence>
+      
+      {/* Footer - Show on all pages except landing */}
+      {!isLanding && <Footer />}
       </div>
     </div>
   );

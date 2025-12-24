@@ -45,16 +45,17 @@ CREATE POLICY "Users can update their own profile"
   ON public.profiles FOR UPDATE
   USING (auth.uid() = id);
 
-CREATE POLICY "Users can insert their own profile"
+-- Allow profile creation during signup (more permissive for signup flow)
+CREATE POLICY "Allow profile creation"
   ON public.profiles FOR INSERT
-  WITH CHECK (auth.uid() = id);
+  WITH CHECK (true);
 
 CREATE TABLE IF NOT EXISTS public.student_profiles (
   id UUID REFERENCES public.profiles(id) ON DELETE CASCADE PRIMARY KEY,
   major TEXT,
   year INTEGER,
   semester INTEGER,
-  cgpa DECIMAL(3,2),
+  cgpa DECIMAL(4,2),
   resume_url TEXT,
   cover_letter TEXT,
   skills JSONB DEFAULT '[]'::jsonb,
@@ -68,6 +69,16 @@ ALTER TABLE public.student_profiles ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Students can view their own profile"
   ON public.student_profiles FOR SELECT
   USING (auth.uid() = id);
+
+CREATE POLICY "Students can insert their own profile"
+  ON public.student_profiles FOR INSERT
+  WITH CHECK (auth.uid() = id);
+
+-- Allow users to insert their own profile if it doesn't exist (more permissive for initial setup)
+-- This is redundant with the above if auth.uid() is correctly set, but sometimes helpful for debugging
+-- CREATE POLICY "Allow insert for authenticated users"
+--   ON public.student_profiles FOR INSERT
+--   WITH CHECK (auth.role() = 'authenticated');
 
 CREATE POLICY "Students can update their own profile"
   ON public.student_profiles FOR UPDATE
@@ -223,19 +234,27 @@ CREATE TRIGGER update_applications_updated_at
   EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================================================
--- TEST DATA SEEDS
+-- TEST DATA SEEDS (OPTIONAL)
 -- ============================================================================
--- NOTE: To use these seeds, you need to:
--- 1. Create the test user in Supabase Auth first (email: tester@test.com, password: 12345678)
--- 2. Get the user's UUID from auth.users
--- 3. Replace '00000000-0000-0000-0000-000000000001' with the actual UUID in the INSERT statements below
+-- NOTE: These INSERT statements are COMMENTED OUT by default.
+-- To use test data:
+-- 1. First, sign up users through the app's signup page (e.g., student@demo.com, placement@demo.com)
+-- 2. Get their UUIDs from the Supabase Auth dashboard
+-- 3. Replace the UUIDs below and uncomment the sections you need
+-- 4. Run only the relevant INSERT statements
 
--- Test Student Profile
+-- IMPORTANT: Tables are created above. You can now:
+-- - Sign up new users through the app
+-- - Users will automatically get profile entries
+-- - Create opportunities through the app UI
+
+/*
+-- Test Student Profile (UNCOMMENT AFTER CREATING AUTH USER)
 INSERT INTO public.profiles (id, email, name, role, department, phone)
 VALUES (
-  'c58fcc19-fc64-46e5-a819-47ab9f999d92',
-  'tester@test.com',
-  'Test Student',
+  'REPLACE_WITH_ACTUAL_UUID',
+  'student@demo.com',
+  'Demo Student',
   'STUDENT',
   'Computer Science',
   '+91-9876543210'
@@ -243,7 +262,7 @@ VALUES (
 
 INSERT INTO public.student_profiles (id, major, year, semester, cgpa, skills, preferences)
 VALUES (
-  'c58fcc19-fc64-46e5-a819-47ab9f999d92',
+  'REPLACE_WITH_ACTUAL_UUID',
   'Computer Science & Engineering',
   3,
   6,
@@ -262,7 +281,7 @@ VALUES (
   }'::jsonb
 );
 
--- Sample Opportunities
+-- Sample Opportunities (UNCOMMENT IF NEEDED)
 INSERT INTO public.opportunities (id, title, description, type, company_name, department, required_skills, min_cgpa, stipend_min, stipend_max, location, duration, deadline, status)
 VALUES 
   (
@@ -346,13 +365,13 @@ VALUES
     'ACTIVE'
   );
 
--- Sample Applications (2 accepted, 1 rejected for AI testing)
+-- Sample Applications (UNCOMMENT IF NEEDED)
 INSERT INTO public.applications (id, opportunity_id, student_id, status, cover_letter, rejection_reason)
 VALUES 
   (
     '20000000-0000-0000-0000-000000000001',
     '10000000-0000-0000-0000-000000000001',
-    'c58fcc19-fc64-46e5-a819-47ab9f999d92',
+    'REPLACE_WITH_ACTUAL_UUID',
     'SHORTLISTED',
     'I am excited to apply for this position as I have been working with React for over a year...',
     NULL
@@ -360,7 +379,7 @@ VALUES
   (
     '20000000-0000-0000-0000-000000000002',
     '10000000-0000-0000-0000-000000000004',
-    'c58fcc19-fc64-46e5-a819-47ab9f999d92',
+    'REPLACE_WITH_ACTUAL_UUID',
     'INTERVIEW_SCHEDULED',
     'My experience with Python and passion for automation makes me a great fit for this role...',
     NULL
@@ -368,9 +387,10 @@ VALUES
   (
     '20000000-0000-0000-0000-000000000003',
     '10000000-0000-0000-0000-000000000005',
-    'c58fcc19-fc64-46e5-a819-47ab9f999d92',
+    'REPLACE_WITH_ACTUAL_UUID',
     'REJECTED',
     'I am deeply interested in machine learning and have completed several online courses...',
     'While your foundational programming skills are strong, this role requires advanced expertise in TensorFlow, PyTorch, and production ML systems. Your current skill set (JavaScript, React, basic Python) shows great web development capability, but lacks the specialized ML frameworks and deep learning experience needed. Additionally, the role requires a minimum CGPA of 8.5, and your current 7.8 CGPA, while respectable, does not meet this threshold. We recommend completing advanced ML certifications, building ML projects using TensorFlow/PyTorch, and focusing on improving your academic performance to strengthen future applications.'
   );
+*/
 

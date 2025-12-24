@@ -76,7 +76,7 @@ const EmployerDashboard: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     const colors: any = {
-      APPLIED: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+      APPLIED: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
       SHORTLISTED: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
       INTERVIEW_SCHEDULED: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
       REJECTED: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
@@ -95,7 +95,7 @@ const EmployerDashboard: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen pt-8 px-6 pb-12">
+      <div className="min-h-screen pt-24 px-6 pb-12">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
@@ -129,8 +129,8 @@ const EmployerDashboard: React.FC = () => {
               className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-lg p-6"
             >
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-500/10 rounded-lg">
-                  <Briefcase className="text-blue-400" size={24} />
+                <div className="p-3 bg-cyan-500/10 rounded-lg">
+                  <Briefcase className="text-cyan-400" size={24} />
                 </div>
                 <div>
                   <p className="text-sm text-slate-400">Active Jobs</p>

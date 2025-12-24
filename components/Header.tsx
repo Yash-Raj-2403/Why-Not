@@ -39,42 +39,21 @@ const Header: React.FC<HeaderProps> = ({
       case UserRole.STUDENT:
         return [
           { label: 'Dashboard', path: '/dashboard', icon: Home },
-          { label: 'Opportunities', path: '/opportunities', icon: Briefcase },
-          { label: 'My Applications', path: '/applications', icon: FileText },
-          { label: 'Profile', path: '/profile', icon: Users },
         ];
       
       case UserRole.PLACEMENT_OFFICER:
         return [
           { label: 'Dashboard', path: '/placement/dashboard', icon: Home },
-          { label: 'Post Opportunity', path: '/placement/post', icon: Briefcase },
-          { label: 'Applications', path: '/placement/applications', icon: FileText },
-          { label: 'Analytics', path: '/placement/analytics', icon: BarChart3 },
-          { label: 'Students', path: '/placement/students', icon: Users },
         ];
       
       case UserRole.FACULTY_MENTOR:
         return [
           { label: 'Dashboard', path: '/mentor/dashboard', icon: Home },
-          { label: 'My Mentees', path: '/mentor/mentees', icon: Users },
-          { label: 'Approvals', path: '/mentor/approvals', icon: UserCheck },
-          { label: 'Resources', path: '/mentor/resources', icon: BookOpen },
         ];
       
       case UserRole.EMPLOYER:
         return [
           { label: 'Dashboard', path: '/employer/dashboard', icon: Home },
-          { label: 'Post Job', path: '/employer/post', icon: Briefcase },
-          { label: 'Candidates', path: '/employer/candidates', icon: Users },
-          { label: 'Interviews', path: '/employer/interviews', icon: Calendar },
-        ];
-      
-      case UserRole.TRAINING_SUPERVISOR:
-        return [
-          { label: 'Dashboard', path: '/supervisor/dashboard', icon: Home },
-          { label: 'My Interns', path: '/supervisor/interns', icon: Users },
-          { label: 'Feedback', path: '/supervisor/feedback', icon: FileText },
-          { label: 'Certificates', path: '/supervisor/certificates', icon: UserCheck },
         ];
       
       default:
@@ -88,32 +67,24 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-black/40 backdrop-blur-xl border-b border-white/20 shadow-lg shadow-black/20">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex justify-between items-center py-6">
+        <div className="flex justify-between items-center py-3">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-neon-blue to-neon-purple p-[2px]">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-neon-blue to-neon-purple p-[2px]">
               <div className="w-full h-full rounded-lg bg-black flex items-center justify-center">
-                <span className="text-sm font-bold gradient-text">W</span>
+                <span className="text-xs font-bold gradient-text">W</span>
               </div>
             </div>
-            <span className="text-2xl font-bold tracking-tight text-white/90 group-hover:text-white transition-colors">
+            <span className="text-xl font-bold tracking-tight text-white/90 group-hover:text-white transition-colors">
               WhyNot
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-4">
             {!isLoggedIn ? (
               <>
-                <Link to="/#features" className="text-sm font-medium text-white/90 hover:text-white hover:scale-105 transition-all">
-                  Features
-                </Link>
-                <Link to="/#how-it-works" className="text-sm font-medium text-white/90 hover:text-white hover:scale-105 transition-all">
-                  How It Works
-                </Link>
-                <Link to="/#about" className="text-sm font-medium text-white/90 hover:text-white hover:scale-105 transition-all">
-                  About
-                </Link>
+                {/* Removed Features, How It Works, About links as requested */}
                 <Link 
                   to="/login" 
                   className="px-6 py-2.5 rounded-full border border-white/30 backdrop-blur-sm bg-white/5 text-sm font-semibold tracking-wide text-white hover:bg-white/15 hover:border-white/50 hover:shadow-lg hover:shadow-white/20 transition-all hover:scale-105"

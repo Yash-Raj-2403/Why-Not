@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { UserRole } from '../types';
 
 const ProfileSetupPage: React.FC = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, refreshUser } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -71,10 +71,18 @@ const ProfileSetupPage: React.FC = () => {
         skills: formData.skills,
         preferences: formData.preferences
       });
-      navigate('/dashboard');
-    } catch (error) {
+      
+      // Wait a moment for database to propagate
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Refresh user data to update context
+      await refreshUser();
+      
+      // Navigate to dashboard
+      navigate('/dashboard', { replace: true });
+    } catch (error: any) {
       console.error('Error updating profile:', error);
-      alert('Failed to update profile');
+      alert(`Failed to update profile: ${error.message || error.error_description || JSON.stringify(error)}`);
     }
   };
 
