@@ -138,10 +138,11 @@ CREATE TABLE IF NOT EXISTS public.applications (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   opportunity_id UUID REFERENCES public.opportunities(id) ON DELETE CASCADE,
   student_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
-  status TEXT DEFAULT 'APPLIED' CHECK (status IN ('APPLIED', 'SHORTLISTED', 'INTERVIEW_SCHEDULED', 'REJECTED', 'OFFERED', 'ACCEPTED', 'COMPLETED')),
+  status TEXT DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'SHORTLISTED', 'INTERVIEW_SCHEDULED', 'ACCEPTED', 'REJECTED')),
   cover_letter TEXT,
   rejection_reason TEXT,
   interview_date TIMESTAMPTZ,
+  interview_time TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(opportunity_id, student_id)
@@ -397,6 +398,8 @@ VALUES
   );
 
 -- Sample Applications (UNCOMMENT IF NEEDED)
+-- NOTE: Replace 'REPLACE_WITH_ACTUAL_UUID' with actual student user ID from auth.users
+-- Updated statuses: PENDING, SHORTLISTED, INTERVIEW_SCHEDULED, ACCEPTED, REJECTED
 INSERT INTO public.applications (id, opportunity_id, student_id, status, cover_letter, rejection_reason)
 VALUES 
   (
@@ -589,3 +592,34 @@ CREATE POLICY "Placement officers can view all resume analyses"
 CREATE INDEX idx_resume_analyses_user ON public.resume_analyses(user_id);
 CREATE INDEX idx_resume_analyses_date ON public.resume_analyses(analyzed_at DESC);
 
+-- ============================================================================
+-- DATABASE MIGRATION: Phase 5 Application Status Update
+-- ============================================================================
+-- Run this section ONLY if you have existing data with old status values
+-- This will migrate old statuses to new simplified status values
+-- Safe to run multiple times (idempotent)
+
+/*
+-- Migrate APPLIED to PENDING
+UPDATE public.applications 
+SET status = 'PENDING' 
+WHERE status = 'APPLIED';
+
+-- Migrate OFFERED to ACCEPTED
+UPDATE public.applications 
+SET status = 'ACCEPTED' 
+WHERE status = 'OFFERED';
+
+-- Migrate COMPLETED to ACCEPTED (if any exist)
+UPDATE public.applications 
+SET status = 'ACCEPTED' 
+WHERE status = 'COMPLETED';
+
+-- Verify migration: Should only return 5 distinct statuses
+SELECT DISTINCT status FROM public.applications;
+-- Expected: PENDING, SHORTLISTED, INTERVIEW_SCHEDULED, ACCEPTED, REJECTED
+
+-- Check for any invalid statuses (should return 0 rows)
+SELECT id, status FROM public.applications 
+WHERE status NOT IN ('PENDING', 'SHORTLISTED', 'INTERVIEW_SCHEDULED', 'ACCEPTED', 'REJECTED');
+*/

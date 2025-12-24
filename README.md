@@ -11,7 +11,7 @@
 
 **Turning silent rejections into actionable insights.**
 
-*A comprehensive campus placement platform streamlining internships and placements with AI-powered insights, role-based dashboards, and automated workflows.*
+*A streamlined campus placement platform connecting students with opportunities through AI-powered rejection analysis, intelligent matching, and simplified application tracking.*
 
 [Features](#-features) • [Quick Start](#-quick-start) • [Tech Stack](#️-tech-stack) • [Documentation](#-documentation) • [Deployment](DEPLOYMENT.md)
 
@@ -46,8 +46,9 @@ Campus placement processes face critical systemic challenges:
 |-----------|------------------------|
 | **📧 Scattered Communication** | WhatsApp groups, email threads, manual office visits |
 | **📊 Manual Tracking** | Placement cells manually maintaining spreadsheets |
-| **🔒 Zero Transparency** | Students miss deadlines, mentors lose application trails |
+| **🔒 Zero Transparency** | Students miss deadlines, unclear application statuses |
 | **❌ Silent Rejections** | No feedback or improvement guidance for rejected candidates |
+| **🔄 Complex Workflows** | Multiple approval layers slow down placement process |
 
 > **97% of students** never receive feedback on why they were rejected from opportunities, leading to repeated mistakes and decreased confidence.
 
@@ -60,11 +61,12 @@ WhyNot provides an **integrated, intelligent placement ecosystem** with:
 | Feature | Impact |
 |---------|--------|
 | 🎯 **Smart Matching** | AI-powered skill & CGPA-based opportunity recommendations (avg 73% match accuracy) |
-| 🤖 **AI Insights** | Personalized rejection explanations via Google Gemini 2.0 Flash |
-| 🔄 **Automated Workflows** | Application → Mentor Approval → Interview → Offer tracking |
+| 🤖 **AI Rejection Coach** | Personalized rejection analysis via Google Gemini 2.0 Flash with actionable insights |
+| 🔄 **Streamlined Workflow** | Direct application submission: PENDING → SHORTLISTED → INTERVIEW → ACCEPTED/REJECTED |
 | 📊 **Live Analytics** | Real-time placement dashboards with CSV export |
 | 📄 **Resume Hub** | Secure cloud storage with Supabase (PDF, 10MB limit) |
 | 🔔 **Real-time Notifications** | WebSocket-powered instant updates |
+| 📅 **Smart Calendar** | Centralized deadline and interview tracking |
 
 ---
 
@@ -86,13 +88,15 @@ WhyNot provides an **integrated, intelligent placement ecosystem** with:
 
 - 🔄 **One-Click Applications**
   - Apply with pre-filled cover letter templates
-  - Real-time status tracking: APPLIED → INTERVIEW → OFFER
-  - Application timeline with visual progress
+  - Real-time status tracking: PENDING → SHORTLISTED → INTERVIEW_SCHEDULED → ACCEPTED/REJECTED
+  - Application timeline with visual progress and status cards
 
 - 🤖 **AI Rejection Coach**
+  - Automatic prompt when application is rejected (purple card on Applications page)
   - Get personalized improvement insights via Gemini 2.0 Flash
-  - Understand skill gaps and CGPA requirements
+  - Understand skill gaps, CGPA requirements, and missing qualifications
   - Actionable suggestions for future applications
+  - Single or bulk rejection analysis
 
 - 📈 **Career Readiness Score**
   - Employability index calculation:
@@ -123,66 +127,16 @@ WhyNot provides an **integrated, intelligent placement ecosystem** with:
   - Application status distribution
   - Unplaced students table with filters
 
-- 📅 **Interview Scheduling**
+- 📅 **Application Management**
+  - Update application statuses: PENDING, SHORTLISTED, INTERVIEW_SCHEDULED, ACCEPTED, REJECTED
   - Schedule interviews with date/time picker
-  - Online (meeting link) or offline (location) modes
-  - Automatic notifications to students
+  - Direct workflow without intermediary approvals
+  - Automatic notifications to students on status changes
 
-- 🎯 **Bulk Operations**
-  - Update application statuses efficiently
-  - Shortlist, reject, schedule, or make offers
-  - Send notifications automatically
-
-</details>
-
-<details>
-<summary><b>👨‍🏫 For Faculty Mentors</b></summary>
-<br/>
-
-- ✅ **Approval Workflow**
-  - Review student applications awaiting approval
-  - Approve or reject with structured feedback
-  - Comment box for rejection reasons
-
-- 👨‍🎓 **Mentee Dashboard**
-  - Monitor assigned students' application progress
-  - View mentee profiles, skills, and applications
-  - Track approval history
-
-- 📊 **Performance Stats**
-  - Pending approvals count
-  - Active mentees count
-  - Total approvals processed
-
-- 💬 **Feedback System**
-  - Provide structured comments on applications
-  - Notifications sent to students automatically
-
-</details>
-
-<details>
-<summary><b>🏢 For Employers</b></summary>
-<br/>
-
-- 💼 **Job Posting**
-  - Create internship/placement opportunities
-  - Define detailed requirements and qualifications
-  - Set application deadlines
-
-- 🔍 **Candidate Search**
-  - Browse verified student profiles
-  - Advanced filters (CGPA, skills, department, year)
-  - Debounced search for smooth experience
-
-- 📊 **Employer Dashboard**
-  - Track active jobs and applications
-  - View shortlisted candidates
-  - Recent applications table
-
-- 📝 **Application Review**
-  - View student profiles, resumes, cover letters
-  - Contact students directly from platform
-  - Download resumes for offline review
+- 📅 **Calendar Management**
+  - Create and manage placement events (deadlines, interviews, drives, announcements)
+  - Centralized event tracking for all students
+  - Automatic deadline notifications
 
 </details>
 
@@ -197,8 +151,8 @@ WhyNot provides an **integrated, intelligent placement ecosystem** with:
 | React | 19.2.3 | Component library |
 | TypeScript | 5.8.2 | Type safety |
 | Vite | 6.2.0 | Build tool & dev server |
-| Tailwind CSS | 4.1.18 | Utility-first styling (`@import` syntax) |
-| Framer Motion | 11.0.3 | Animations & transitions |
+| Tailwind CSS | 4.1.18 | Utility-first styling with glass morphism |
+| Framer Motion | 12.23.26 | Animations, transitions & animated orbs |
 | Three.js | 0.172.0 | 3D graphics (lazy loaded) |
 | React Router | v7 | Client-side routing |
 | Lucide React | 0.469.0 | Icon library |
@@ -388,11 +342,8 @@ why-not/
 
 | Role | Route Prefix | Key Permissions |
 |------|--------------|-----------------|
-| **🎓 Student** | `/dashboard`, `/opportunities`, `/profile` | View opportunities, apply, track applications, upload resume |
-| **🏛️ Placement Officer** | `/placement/*` | Post jobs, manage applications, view analytics, schedule interviews |
-| **👨‍🏫 Faculty Mentor** | `/mentor/*` | Approve applications, monitor mentees, provide feedback |
-| **🏢 Employer** | `/employer/*` | Post jobs, search candidates, review applications |
-| **🔧 Admin** | `/admin/*` | System-wide configuration *(planned)* |
+| **🎓 Student** | `/dashboard`, `/opportunities`, `/applications`, `/profile`, `/settings` | Browse opportunities, apply directly, track applications, upload resume, AI rejection analysis, view calendar |
+| **🏛️ Placement Officer** | `/placement/*` | Post jobs, manage all applications, update statuses, view analytics, manage calendar events, schedule interviews |
 
 ### **Authentication Flow**
 
@@ -468,11 +419,12 @@ User redirected to role-specific dashboard
 | `id` | UUID (PK) | Application ID |
 | `student_id` | UUID (FK) | Student who applied |
 | `opportunity_id` | UUID (FK) | Opportunity applied to |
-| `status` | APPLICATION_STATUS | APPLIED \| SHORTLISTED \| INTERVIEW_SCHEDULED \| REJECTED \| OFFERED \| ACCEPTED |
+| `status` | APPLICATION_STATUS | PENDING \| SHORTLISTED \| INTERVIEW_SCHEDULED \| ACCEPTED \| REJECTED |
 | `cover_letter` | TEXT | Student's cover letter |
-| `mentor_approved` | BOOLEAN | Mentor approval status |
-| `mentor_feedback` | TEXT | Mentor comments |
-| `applied_at` | TIMESTAMP | Application submission time |
+| `interview_date` | TIMESTAMP | Scheduled interview date/time |
+| `rejection_reason` | TEXT | Reason for rejection (optional) |
+| `created_at` | TIMESTAMP | Application submission time |
+| `updated_at` | TIMESTAMP | Last status update time |
 
 #### **notifications**
 
@@ -674,21 +626,28 @@ vercel --prod
 
 | Feature | Status |
 |---------|--------|
-| Multi-role Authentication | ✅ Complete |
-| Student Dashboard & Applications | ✅ Complete |
+| Feature | Status |
+|---------|--------|
+| Multi-role Authentication (Student, Placement Officer) | ✅ Complete |
+| Student Dashboard with Bento Grid | ✅ Complete |
+| AI Rejection Coach (Gemini 2.0 Flash) | ✅ Complete |
+| Simplified Application Workflow (5 statuses) | ✅ Complete |
 | Placement Officer Portal | ✅ Complete |
-| Faculty Mentor Portal | ✅ Complete |
-| Employer Portal | ✅ Complete |
-| AI Rejection Insights (Gemini) | ✅ Complete |
+| Application Management (Direct workflow) | ✅ Complete |
+| Smart Opportunity Matching | ✅ Complete |
 | Resume Upload/Download | ✅ Complete |
 | Real-time Notifications | ✅ Complete |
 | Analytics Dashboard with CSV | ✅ Complete |
+| Calendar System (Events & Reminders) | ✅ Complete |
+| Resume Analyzer (AI-powered) | ✅ Complete |
+| Purple/Gradient Theme with Glass Morphism | ✅ Complete |
+| Animated Background Orbs | ✅ Complete |
 | Loading Skeletons | ✅ Complete |
 | Search Debouncing | ✅ Complete |
 | Performance Optimizations | ✅ Complete |
 | Comprehensive Documentation | ✅ Complete |
-| Mobile Responsive Design | 🔄 In Progress (75%) |
-| Dark/Light Theme Toggle | 🔄 In Progress (UI done) |
+| Mobile Responsive Design | 🔄 In Progress (80%) |
+| Dark Mode Toggle | 📋 Planned |
 | Interview Video Calls | 📋 Planned |
 | Mobile App (React Native) | 📋 Planned |
 
