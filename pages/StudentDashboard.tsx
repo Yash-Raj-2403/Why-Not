@@ -138,14 +138,14 @@ const StudentDashboard: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="grid md:grid-cols-12 gap-6 items-end">
+          <div className="grid md:grid-cols-12 gap-6 items-stretch">
             {/* Welcome Card - spans 8 columns */}
             <div className="md:col-span-8">
-              <div className="relative group">
+              <div className="relative group h-full">
                 {/* Glow effect on hover */}
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
                 
-                <div className="relative glass-panel rounded-3xl p-8 border border-white/10 group-hover:border-white/20 transition-all">
+                <div className="relative glass-panel rounded-3xl p-8 border border-white/10 group-hover:border-white/20 transition-all h-full flex flex-col justify-between">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <motion.div 
@@ -234,21 +234,21 @@ const StudentDashboard: React.FC = () => {
                 whileHover={{ scale: 1.02 }}
                 className="relative h-full"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl blur-xl" />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-3xl blur-xl" />
                 <button
                   onClick={() => setShowAnalysisHub(true)}
-                  className="relative w-full h-full glass-panel rounded-2xl p-6 border-2 border-purple-500/30 hover:border-purple-500/50 transition-all group"
+                  className="relative w-full h-full glass-panel rounded-3xl p-8 border border-purple-500/30 hover:border-purple-500/50 transition-all group"
                 >
-                  <div className="flex flex-col items-center justify-center h-full text-center gap-3">
+                  <div className="flex flex-col items-center justify-center h-full text-center gap-4">
                     <motion.div
                       animate={{
                         rotate: [0, 5, -5, 0],
                         scale: [1, 1.1, 1, 1.1, 1],
                       }}
                       transition={{ duration: 3, repeat: Infinity }}
-                      className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center"
+                      className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center"
                     >
-                      <Brain className="w-8 h-8 text-white" />
+                      <Brain className="w-10 h-10 text-white" />
                     </motion.div>
                     <div>
                       <h3 className="text-xl font-bold text-white mb-1">AI Rejection Coach</h3>
