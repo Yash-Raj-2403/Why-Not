@@ -1,73 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, ChevronRight, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import ExplanationModal from '../components/ExplanationModal';
-import { StudentProfile, Application, ApplicationStatus, JobOpportunity } from '../types';
+import { ApplicationStatus } from '../types';
 import PageTransition from '../components/PageTransition';
-
-// Mock Data
-const MOCK_STUDENT: StudentProfile = {
-  id: 's1',
-  name: 'Alex Chen',
-  major: 'Computer Science',
-  cgpa: 8.2,
-  skills: [
-    { name: 'Java', level: 'Advanced' },
-    { name: 'React', level: 'Intermediate' },
-    { name: 'Python', level: 'Intermediate' }
-  ]
-};
-
-const MOCK_JOBS: JobOpportunity[] = [
-  {
-    id: 'j1',
-    role: 'Data Analyst',
-    company: 'FinTech Corp',
-    requiredSkills: [
-        { name: 'SQL', level: 'Advanced' },
-        { name: 'Python', level: 'Intermediate' },
-        { name: 'Tableau', level: 'Intermediate' }
-    ],
-    minCgpa: 8.0
-  },
-  {
-    id: 'j2',
-    role: 'Frontend Developer',
-    company: 'Creative Tech',
-    requiredSkills: [
-        { name: 'React', level: 'Advanced' },
-        { name: 'TypeScript', level: 'Intermediate' }
-    ],
-    minCgpa: 7.5
-  }
-];
-
-const MOCK_APPLICATIONS: Application[] = [
-  {
-    id: 'a1',
-    jobId: 'j1',
-    studentId: 's1',
-    job: MOCK_JOBS[0],
-    status: ApplicationStatus.REJECTED,
-    appliedDate: '2023-10-15',
-  },
-  {
-    id: 'a2',
-    jobId: 'j2',
-    studentId: 's1',
-    job: MOCK_JOBS[1],
-    status: ApplicationStatus.SHORTLISTED,
-    appliedDate: '2023-10-18',
-  },
-  {
-    id: 'a3',
-    jobId: 'j2',
-    studentId: 's1',
-    job: { ...MOCK_JOBS[1], role: "Backend Intern", company: "StartUp Inc" },
-    status: ApplicationStatus.APPLIED,
-    appliedDate: '2023-10-20',
-  }
-];
+import { useAuth } from '../contexts/AuthContext';
+import { api } from '../services/api';
+import { LoadingGrid, StatCardSkeleton } from '../components/LoadingSkeleton';
 
 const ReadinessRing = ({ score }: { score: number }) => {
   const radius = 50;
@@ -107,12 +46,80 @@ const ReadinessRing = ({ score }: { score: number }) => {
 };
 
 const StudentDashboard: React.FC = () => {
-  const [selectedApp, setSelectedApp] = useState<Application | null>(null);
+  const { user } = useAuth();
+  const [applications, setApplications] = useState<any[]>([]);
+  const [selectedApp, setSelectedApp] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [readinessScore, setReadinessScore] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const handleAppClick = (app: Application) => {
+  useEffect(() => {
+    if (user) {
+      loadData();
+    }
+  }, [user]);
+
+  const loadData = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      const apps = await api.getMyApplications(user.id);
+      setApplications(apps || []);
+      calculateReadiness(user, apps || []);
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calculateReadiness = (user: any, apps: any[]) => {
+    let score = 0;
+    // CGPA (30%)
+    if (user.cgpa) score += (user.cgpa / 10) * 30;
+    
+    // Skills (45%) - Assume 5 skills is max score
+    const skillCount = user.skills?.length || 0;
+    score += Math.min(skillCount / 5, 1) * 45;
+    
+    // Activity (25%) - Assume 5 applications is max score
+    const appCount = apps.length;
+    score += Math.min(appCount / 5, 1) * 25;
+    
+    setReadinessScore(Math.round(score));
+  };
+
+  if (loading) {
+    return (
+      <PageTransition>
+        <div className="pt-8 px-6 max-w-7xl mx-auto min-h-screen">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-1 space-y-6">
+              <StatCardSkeleton />
+              <StatCardSkeleton />
+            </div>
+            <div className="lg:col-span-2">
+              <LoadingGrid count={4} type="card" />
+            </div>
+          </div>
+        </div>
+      </PageTransition>
+    );
+  }
+
+  const handleAppClick = (app: any) => {
     if (app.status === ApplicationStatus.REJECTED) {
-      setSelectedApp(app);
+      // Map app to format expected by ExplanationModal
+      const mappedApp = {
+        ...app,
+        job: {
+            role: app.opportunity.title,
+            company: app.opportunity.company_name,
+            requiredSkills: app.opportunity.required_skills || [],
+            minCgpa: app.opportunity.min_cgpa
+        }
+      };
+      setSelectedApp(mappedApp);
       setIsModalOpen(true);
     }
   };
@@ -123,7 +130,7 @@ const StudentDashboard: React.FC = () => {
           initial={{ opacity: 0 }} 
           animate={{ opacity: 1 }} 
           exit={{ opacity: 0 }}
-          className="pt-24 px-6 max-w-7xl mx-auto min-h-screen"
+          className="pt-8 px-6 max-w-7xl mx-auto min-h-screen"
     >
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
@@ -131,22 +138,24 @@ const StudentDashboard: React.FC = () => {
         <div className="lg:col-span-1 space-y-6">
           <div className="glass-panel p-6 rounded-2xl flex flex-col items-center">
             <h3 className="text-lg font-medium text-slate-300 mb-6 w-full text-left">Career Readiness</h3>
-            <ReadinessRing score={72} />
+            <ReadinessRing score={readinessScore} />
             <div className="mt-8 w-full space-y-4">
               <div className="flex justify-between text-sm">
                 <span className="text-slate-400">Technical Skills</span>
-                <span className="text-neon-blue">Advanced</span>
+                <span className="text-neon-blue">
+                    {user?.skills?.length ? `${user.skills.length} Added` : 'None'}
+                </span>
               </div>
               <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className="h-full bg-neon-blue w-[85%]" />
+                <div className="h-full bg-neon-blue" style={{ width: `${Math.min((user?.skills?.length || 0) * 20, 100)}%` }} />
               </div>
               
               <div className="flex justify-between text-sm pt-2">
-                <span className="text-slate-400">Soft Skills</span>
-                <span className="text-neon-purple">Developing</span>
+                <span className="text-slate-400">CGPA</span>
+                <span className="text-neon-purple">{user?.cgpa || 'N/A'}</span>
               </div>
               <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-                <div className="h-full bg-neon-purple w-[60%]" />
+                <div className="h-full bg-neon-purple" style={{ width: `${Math.min((user?.cgpa || 0) * 10, 100)}%` }} />
               </div>
             </div>
           </div>
@@ -154,11 +163,12 @@ const StudentDashboard: React.FC = () => {
           <div className="glass-panel p-6 rounded-2xl">
              <h3 className="text-lg font-medium text-slate-300 mb-4">Your Skills</h3>
              <div className="flex flex-wrap gap-2">
-                {MOCK_STUDENT.skills.map(s => (
+                {user?.skills?.map((s: any) => (
                     <span key={s.name} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300 hover:bg-white/10 transition-colors">
-                        {s.name}
+                        {s.name} ({s.level})
                     </span>
                 ))}
+                {!user?.skills?.length && <span className="text-slate-500 text-sm">No skills added yet.</span>}
              </div>
           </div>
         </div>
@@ -169,7 +179,12 @@ const StudentDashboard: React.FC = () => {
             <h2 className="text-2xl font-bold mb-8">Application Timeline</h2>
             
             <div className="space-y-4">
-              {MOCK_APPLICATIONS.map((app, index) => (
+              {applications.length === 0 && (
+                  <div className="text-center text-slate-500 py-10">
+                      No applications yet. Start applying!
+                  </div>
+              )}
+              {applications.map((app, index) => (
                 <motion.div
                   key={app.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -187,8 +202,8 @@ const StudentDashboard: React.FC = () => {
                                 <Briefcase className="w-6 h-6 text-slate-300" />
                             </div>
                             <div>
-                                <h4 className="font-bold text-lg text-white">{app.job.role}</h4>
-                                <p className="text-slate-400 text-sm">{app.job.company}</p>
+                                <h4 className="font-bold text-lg text-white">{app.opportunity.title}</h4>
+                                <p className="text-slate-400 text-sm">{app.opportunity.company_name}</p>
                             </div>
                         </div>
 
@@ -205,7 +220,7 @@ const StudentDashboard: React.FC = () => {
                                     {app.status === 'APPLIED' && <Clock className="w-3 h-3" />}
                                     {app.status}
                                 </span>
-                                <p className="text-xs text-slate-500 mt-1">{app.appliedDate}</p>
+                                <p className="text-xs text-slate-500 mt-1">{new Date(app.created_at).toLocaleDateString()}</p>
                              </div>
                              
                              {app.status === 'REJECTED' && (
@@ -222,12 +237,14 @@ const StudentDashboard: React.FC = () => {
         </div>
       </div>
 
-      <ExplanationModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        application={selectedApp}
-        student={MOCK_STUDENT}
-      />
+      {selectedApp && (
+        <ExplanationModal 
+            isOpen={isModalOpen} 
+            onClose={() => setIsModalOpen(false)} 
+            application={selectedApp}
+            student={user as any}
+        />
+      )}
     </motion.div>
     </PageTransition>
   );

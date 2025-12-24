@@ -3,7 +3,6 @@ import {
   PlacementOfficerProfile, 
   FacultyMentorProfile, 
   EmployerProfile, 
-  TrainingSupervisorProfile,
   OpportunityType,
   UserRole
 } from './types';
@@ -302,53 +301,8 @@ export const employers: EmployerProfile[] = [
   }
 ];
 
-// Training Supervisor Profiles
-export const trainingSupervisors: TrainingSupervisorProfile[] = [
-  {
-    id: 'SUP001',
-    name: 'Mr. Ramesh Chandra',
-    email: 'ramesh.c@techcorp.com',
-    phone: '+91 98765 20001',
-    companyId: 'EMP001',
-    department: 'Software Development',
-    role: UserRole.TRAINING_SUPERVISOR,
-    assignedInterns: ['STU001', 'STU004'],
-    avatar: 'https://i.pravatar.cc/150?img=15'
-  },
-  {
-    id: 'SUP002',
-    name: 'Ms. Lakshmi Pillai',
-    email: 'lakshmi.p@autodrive.in',
-    phone: '+91 98765 20002',
-    companyId: 'EMP002',
-    department: 'R&D',
-    role: UserRole.TRAINING_SUPERVISOR,
-    assignedInterns: ['STU002'],
-    avatar: 'https://i.pravatar.cc/150?img=31'
-  },
-  {
-    id: 'SUP003',
-    name: 'Mr. Sanjay Bhatt',
-    email: 'sanjay.b@buildright.co.in',
-    phone: '+91 98765 20003',
-    companyId: 'EMP003',
-    department: 'Project Management',
-    role: UserRole.TRAINING_SUPERVISOR,
-    assignedInterns: ['STU003', 'STU005'],
-    avatar: 'https://i.pravatar.cc/150?img=59'
-  },
-  {
-    id: 'SUP004',
-    name: 'Ms. Divya Krishnan',
-    email: 'divya.k@cloudnine.io',
-    phone: '+91 98765 20004',
-    companyId: 'EMP004',
-    department: 'DevOps',
-    role: UserRole.TRAINING_SUPERVISOR,
-    assignedInterns: [],
-    avatar: 'https://i.pravatar.cc/150?img=41'
-  }
-];
+// Training Supervisor Profiles - REMOVED
+export const trainingSupervisors = [];
 
 export const getAllProfiles = () => ({
   students: studentProfiles,

@@ -1,8 +1,32 @@
+-- ============================================================================
+-- CLEANUP: Drop existing tables and policies
+-- ============================================================================
+-- This ensures a clean slate for schema updates
+-- WARNING: This will delete all existing data!
+
+DROP TABLE IF EXISTS public.notifications CASCADE;
+DROP TABLE IF EXISTS public.applications CASCADE;
+DROP TABLE IF EXISTS public.opportunities CASCADE;
+DROP TABLE IF EXISTS public.student_profiles CASCADE;
+DROP TABLE IF EXISTS public.profiles CASCADE;
+
+-- Note: Test user account must be created via Supabase Auth signup
+-- Email: tester@test.com
+-- Password: 12345678
+-- The profile and student_profile will be auto-created on first login
+
+-- Drop the trigger function if it exists
+DROP FUNCTION IF EXISTS update_updated_at_column() CASCADE;
+
+-- ============================================================================
+-- TABLE CREATION
+-- ============================================================================
+
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   name TEXT NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('STUDENT', 'PLACEMENT_OFFICER', 'FACULTY_MENTOR', 'EMPLOYER', 'TRAINING_SUPERVISOR', 'ADMIN')),
+  role TEXT NOT NULL CHECK (role IN ('STUDENT', 'PLACEMENT_OFFICER', 'FACULTY_MENTOR', 'EMPLOYER', 'ADMIN')),
   avatar TEXT,
   department TEXT,
   organization TEXT,
@@ -63,7 +87,7 @@ CREATE TABLE IF NOT EXISTS public.opportunities (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
-  type TEXT NOT NULL CHECK (type IN ('INTERNSHIP', 'INDUSTRIAL_TRAINING', 'PLACEMENT')),
+  type TEXT NOT NULL CHECK (type IN ('INTERNSHIP', 'PLACEMENT')),
   company_name TEXT NOT NULL,
   posted_by UUID REFERENCES public.profiles(id),
   department TEXT,
@@ -145,46 +169,14 @@ CREATE POLICY "Placement officers and employers can update applications"
     OR mentor_id = auth.uid()
   );
 
-CREATE TABLE IF NOT EXISTS public.feedback (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  application_id UUID REFERENCES public.applications(id) ON DELETE CASCADE,
-  supervisor_id UUID REFERENCES public.profiles(id),
-  rating INTEGER CHECK (rating >= 1 AND rating <= 5),
-  comments TEXT,
-  skills_gained JSONB DEFAULT '[]'::jsonb,
-  certificate_url TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-ALTER TABLE public.feedback ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Students can view feedback for their applications"
-  ON public.feedback FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.applications
-      WHERE applications.id = feedback.application_id
-      AND applications.student_id = auth.uid()
-    )
-  );
-
-CREATE POLICY "Supervisors can create feedback"
-  ON public.feedback FOR INSERT
-  WITH CHECK (supervisor_id = auth.uid());
-
-CREATE POLICY "Supervisors can update their feedback"
-  ON public.feedback FOR UPDATE
-  USING (supervisor_id = auth.uid());
-
 CREATE TABLE IF NOT EXISTS public.notifications (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   message TEXT NOT NULL,
-  type TEXT CHECK (type IN ('APPLICATION', 'INTERVIEW', 'APPROVAL', 'FEEDBACK', 'SYSTEM')),
+  type TEXT CHECK (type IN ('application_status', 'new_opportunity', 'interview_scheduled', 'profile_update', 'general')),
   read BOOLEAN DEFAULT FALSE,
-  link TEXT,
+  related_id TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -197,6 +189,10 @@ CREATE POLICY "Users can view their own notifications"
 CREATE POLICY "Users can update their own notifications"
   ON public.notifications FOR UPDATE
   USING (user_id = auth.uid());
+
+CREATE POLICY "System can insert notifications"
+  ON public.notifications FOR INSERT
+  WITH CHECK (true);
 
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -226,7 +222,155 @@ CREATE TRIGGER update_applications_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_feedback_updated_at
-  BEFORE UPDATE ON public.feedback
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
+-- ============================================================================
+-- TEST DATA SEEDS
+-- ============================================================================
+-- NOTE: To use these seeds, you need to:
+-- 1. Create the test user in Supabase Auth first (email: tester@test.com, password: 12345678)
+-- 2. Get the user's UUID from auth.users
+-- 3. Replace '00000000-0000-0000-0000-000000000001' with the actual UUID in the INSERT statements below
+
+-- Test Student Profile
+INSERT INTO public.profiles (id, email, name, role, department, phone)
+VALUES (
+  'c58fcc19-fc64-46e5-a819-47ab9f999d92',
+  'tester@test.com',
+  'Test Student',
+  'STUDENT',
+  'Computer Science',
+  '+91-9876543210'
+);
+
+INSERT INTO public.student_profiles (id, major, year, semester, cgpa, skills, preferences)
+VALUES (
+  'c58fcc19-fc64-46e5-a819-47ab9f999d92',
+  'Computer Science & Engineering',
+  3,
+  6,
+  7.8,
+  '[
+    {"name": "JavaScript", "level": "Advanced", "verified": true},
+    {"name": "React", "level": "Intermediate", "verified": true},
+    {"name": "Python", "level": "Intermediate", "verified": false},
+    {"name": "SQL", "level": "Beginner", "verified": false}
+  ]'::jsonb,
+  '{
+    "industries": ["Technology", "Startups", "Finance"],
+    "locations": ["Bangalore", "Hyderabad", "Remote"],
+    "stipendRange": {"min": 15000, "max": 50000},
+    "opportunityTypes": ["INTERNSHIP", "PLACEMENT"]
+  }'::jsonb
+);
+
+-- Sample Opportunities
+INSERT INTO public.opportunities (id, title, description, type, company_name, department, required_skills, min_cgpa, stipend_min, stipend_max, location, duration, deadline, status)
+VALUES 
+  (
+    '10000000-0000-0000-0000-000000000001',
+    'Frontend Developer Intern',
+    'Build amazing user interfaces with React and TypeScript. Work on real projects with our product team.',
+    'INTERNSHIP',
+    'TechCorp Solutions',
+    'Computer Science',
+    '["React", "JavaScript", "TypeScript", "HTML", "CSS"]'::jsonb,
+    7.0,
+    25000,
+    35000,
+    'Bangalore',
+    '6 months',
+    NOW() + INTERVAL '30 days',
+    'ACTIVE'
+  ),
+  (
+    '10000000-0000-0000-0000-000000000002',
+    'Backend Developer Intern',
+    'Design and implement RESTful APIs using Node.js and PostgreSQL. Learn microservices architecture.',
+    'INTERNSHIP',
+    'DataFlow Systems',
+    'Computer Science',
+    '["Node.js", "PostgreSQL", "REST API", "Docker", "AWS"]'::jsonb,
+    7.5,
+    30000,
+    40000,
+    'Hyderabad',
+    '6 months',
+    NOW() + INTERVAL '25 days',
+    'ACTIVE'
+  ),
+  (
+    '10000000-0000-0000-0000-000000000003',
+    'Full Stack Developer',
+    'Join our engineering team to build scalable web applications. Work with modern tech stack.',
+    'PLACEMENT',
+    'InnovateLabs',
+    'Computer Science',
+    '["React", "Node.js", "MongoDB", "TypeScript", "Docker"]'::jsonb,
+    8.0,
+    600000,
+    800000,
+    'Bangalore',
+    'Full-time',
+    NOW() + INTERVAL '20 days',
+    'ACTIVE'
+  ),
+  (
+    '10000000-0000-0000-0000-000000000004',
+    'Python Developer Intern',
+    'Work on data processing pipelines and automation tools using Python and modern frameworks.',
+    'INTERNSHIP',
+    'AutomateNow',
+    'Computer Science',
+    '["Python", "Django", "PostgreSQL", "Redis", "Celery"]'::jsonb,
+    7.0,
+    20000,
+    30000,
+    'Remote',
+    '3 months',
+    NOW() + INTERVAL '15 days',
+    'ACTIVE'
+  ),
+  (
+    '10000000-0000-0000-0000-000000000005',
+    'Machine Learning Engineer',
+    'Build and deploy ML models for production systems. Experience with TensorFlow and PyTorch required.',
+    'PLACEMENT',
+    'AI Dynamics',
+    'Computer Science',
+    '["Python", "TensorFlow", "PyTorch", "Machine Learning", "Deep Learning", "AWS"]'::jsonb,
+    8.5,
+    1000000,
+    1400000,
+    'Bangalore',
+    'Full-time',
+    NOW() + INTERVAL '10 days',
+    'ACTIVE'
+  );
+
+-- Sample Applications (2 accepted, 1 rejected for AI testing)
+INSERT INTO public.applications (id, opportunity_id, student_id, status, cover_letter, rejection_reason)
+VALUES 
+  (
+    '20000000-0000-0000-0000-000000000001',
+    '10000000-0000-0000-0000-000000000001',
+    'c58fcc19-fc64-46e5-a819-47ab9f999d92',
+    'SHORTLISTED',
+    'I am excited to apply for this position as I have been working with React for over a year...',
+    NULL
+  ),
+  (
+    '20000000-0000-0000-0000-000000000002',
+    '10000000-0000-0000-0000-000000000004',
+    'c58fcc19-fc64-46e5-a819-47ab9f999d92',
+    'INTERVIEW_SCHEDULED',
+    'My experience with Python and passion for automation makes me a great fit for this role...',
+    NULL
+  ),
+  (
+    '20000000-0000-0000-0000-000000000003',
+    '10000000-0000-0000-0000-000000000005',
+    'c58fcc19-fc64-46e5-a819-47ab9f999d92',
+    'REJECTED',
+    'I am deeply interested in machine learning and have completed several online courses...',
+    'While your foundational programming skills are strong, this role requires advanced expertise in TensorFlow, PyTorch, and production ML systems. Your current skill set (JavaScript, React, basic Python) shows great web development capability, but lacks the specialized ML frameworks and deep learning experience needed. Additionally, the role requires a minimum CGPA of 8.5, and your current 7.8 CGPA, while respectable, does not meet this threshold. We recommend completing advanced ML certifications, building ML projects using TensorFlow/PyTorch, and focusing on improving your academic performance to strengthen future applications.'
+  );
+

@@ -16,7 +16,17 @@ export interface AuthUser {
   name: string;
   avatar?: string;
   department?: string;
+  phone?: string;
   notifications?: number;
+  // Student specific fields
+  major?: string;
+  year?: number;
+  semester?: number;
+  cgpa?: number;
+  skills?: Skill[];
+  preferences?: any;
+  resume?: string;
+  resume_url?: string;
 }
 
 export enum UserRole {
@@ -24,13 +34,11 @@ export enum UserRole {
   PLACEMENT_OFFICER = 'PLACEMENT_OFFICER',
   FACULTY_MENTOR = 'FACULTY_MENTOR',
   EMPLOYER = 'EMPLOYER',
-  TRAINING_SUPERVISOR = 'TRAINING_SUPERVISOR',
   ADMIN = 'ADMIN'
 }
 
 export enum OpportunityType {
   INTERNSHIP = 'INTERNSHIP',
-  INDUSTRIAL_TRAINING = 'INDUSTRIAL_TRAINING',
   PLACEMENT = 'PLACEMENT'
 }
 
@@ -103,18 +111,6 @@ export interface EmployerProfile {
   logo?: string;
 }
 
-export interface TrainingSupervisorProfile {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  companyId: string;
-  department: string;
-  role: UserRole.TRAINING_SUPERVISOR;
-  assignedInterns: string[]; // student IDs
-  avatar?: string;
-}
-
 export interface JobOpportunity {
   id: string;
   role: string;
@@ -160,14 +156,6 @@ export interface Application {
     mode: 'online' | 'offline';
     location?: string;
     meetingLink?: string;
-  };
-  feedback?: {
-    supervisorId: string;
-    rating: number;
-    comments: string;
-    skillsAcquired: string[];
-    certificateGenerated: boolean;
-    date: string;
   };
   rejectionReason?: string;
   offerDetails?: {
