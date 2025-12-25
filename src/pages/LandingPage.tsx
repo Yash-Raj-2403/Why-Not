@@ -21,14 +21,13 @@ const LandingPage: React.FC = () => {
           canonicalUrl="/"
         />
 
-        {/* Header with Logo */}
-        <motion.header 
+        {/* Branding */}
+        <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 lg:px-24 py-6"
+          className="absolute top-0 left-0 z-50 px-6 md:px-12 lg:px-24 py-6"
         >
-          <div className="flex items-center justify-between max-w-7xl mx-auto">
             <Link to="/" className="flex items-center gap-3 group">
               <motion.div 
                 whileHover={{ rotate: 360, scale: 1.1 }}
@@ -43,8 +42,7 @@ const LandingPage: React.FC = () => {
                 WhyNot
               </span>
             </Link>
-          </div>
-        </motion.header>
+        </motion.div>
 
         {/* 3D Background Animation Only */}
         <div className="fixed inset-0 z-0" aria-hidden="true">
@@ -55,18 +53,18 @@ const LandingPage: React.FC = () => {
       <section className="relative z-10 min-h-screen flex flex-col justify-start pt-32 px-6 md:px-12 lg:px-24">
         <div className="max-w-4xl w-full">
             <motion.div
-                initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                initial={{ opacity: 0, y: 30, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
             >
                 <div className="inline-block px-4 py-2 bg-neon-purple/10 border border-neon-purple/20 rounded-full mb-6">
                   <span className="text-neon-purple text-sm font-semibold">Campus Internship & Placement Platform</span>
                 </div>
                 
                 <motion.h1 
-                  initial={{ opacity: 0, y: 20, rotateX: 45 }}
-                  animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2, type: "spring", stiffness: 100 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
                   className="text-6xl md:text-8xl font-bold leading-[1.1] tracking-tight mb-8"
                 >
                     Turning silent <br />
@@ -80,9 +78,9 @@ const LandingPage: React.FC = () => {
                 </motion.h1>
 
                 <motion.p 
-                  initial={{ opacity: 0, x: -20, y: 10 }}
-                  animate={{ opacity: 1, x: 0, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.3 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
                   className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl leading-relaxed font-light"
                 >
                     Stop wondering why you got rejected. Get AI-powered explanations that reveal skill gaps, 
@@ -91,9 +89,9 @@ const LandingPage: React.FC = () => {
                 </motion.p>
                 
                 <motion.div 
-                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.4, delay: 0.4, type: "spring", bounce: 0.4 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
                   className="flex flex-wrap gap-4"
                 >
                   <Link to="/login">
