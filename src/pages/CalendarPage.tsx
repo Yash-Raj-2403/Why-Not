@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar as CalendarIcon, Plus, Download, AlertCircle, Sparkles, Clock } from 'lucide-react';
+import PageTransition from '../components/common/PageTransition';
 import CalendarGrid from '../components/features/CalendarGrid';
 import EventModal from '../components/modals/EventModal';
 import { CalendarEvent, CreateEventRequest, EventType } from '../types';
@@ -145,13 +146,11 @@ const CalendarPage: React.FC = () => {
   }
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-black relative overflow-hidden pt-28">
       <div className="relative z-10 max-w-[1800px] mx-auto p-4 md:p-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+        <div
           className="mb-8"
         >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -187,14 +186,11 @@ const CalendarPage: React.FC = () => {
               )}
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Today's Events Highlight */}
         {todaysEvents.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+          <div
             className="mb-6 p-6 rounded-2xl glass-panel border border-white/10"
           >
             <div className="flex items-center gap-3 mb-4">
@@ -232,15 +228,12 @@ const CalendarPage: React.FC = () => {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* Info for Students */}
         {!isPlacementOfficer && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+          <div
             className="mb-6 p-4 rounded-lg bg-neon-purple/10 border border-neon-purple/30 flex items-start gap-3"
           >
             <AlertCircle className="w-5 h-5 text-neon-purple mt-0.5" />
@@ -250,14 +243,11 @@ const CalendarPage: React.FC = () => {
                 details. Only placement officers can create or edit events.
               </p>
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* Calendar Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+        <div
           className="bg-black rounded-2xl border border-white/10 p-6 shadow-2xl"
         >
           {events.length === 0 ? (
@@ -285,13 +275,10 @@ const CalendarPage: React.FC = () => {
               onDateClick={handleDateClick}
             />
           )}
-        </motion.div>
+        </div>
 
         {/* Event Legend */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+        <div
           className="mt-6 p-6 rounded-2xl bg-white/5 border border-white/10"
         >
           <h3 className="text-sm font-semibold mb-4 text-slate-400">EVENT TYPES</h3>
@@ -313,7 +300,7 @@ const CalendarPage: React.FC = () => {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Event Modal */}
@@ -330,6 +317,7 @@ const CalendarPage: React.FC = () => {
         onDelete={handleDeleteEvent}
       />
     </div>
+    </PageTransition>
   );
 };
 

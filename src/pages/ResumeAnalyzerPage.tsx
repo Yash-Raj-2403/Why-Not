@@ -4,6 +4,7 @@ import {
   Upload, FileText, Sparkles, AlertCircle, TrendingUp, 
   CheckCircle, XCircle, Loader 
 } from 'lucide-react';
+import PageTransition from '../components/common/PageTransition';
 import ResumeAnalysisCard from '../components/features/ResumeAnalysisCard';
 import { ResumeAnalysis } from '../types';
 import { useAuth } from '../contexts/AuthContext';
@@ -148,13 +149,11 @@ const ResumeAnalyzerPage: React.FC = () => {
   }
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-black relative overflow-hidden pt-28">
       <div className="relative z-10 max-w-[1800px] mx-auto p-4 md:p-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+        <div
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
@@ -164,13 +163,10 @@ const ResumeAnalyzerPage: React.FC = () => {
           <p className="text-slate-400 text-lg">
             Upload your resume and get instant AI-powered feedback to improve your chances of passing ATS systems
           </p>
-        </motion.div>
+        </div>
 
         {/* Upload Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+        <div
           className="mb-8 p-8 rounded-2xl glass-panel border border-white/10 shadow-2xl"
         >
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-white">
@@ -280,15 +276,11 @@ const ResumeAnalyzerPage: React.FC = () => {
               and actionable improvements. The analysis typically takes 10-20 seconds.
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Previous Analyses */}
         {analyses.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
-          >
+          <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold flex items-center gap-2">
                 <TrendingUp className="w-6 h-6 text-neon-purple" />
@@ -373,15 +365,12 @@ const ResumeAnalyzerPage: React.FC = () => {
                 />
               ))}
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* Empty State */}
         {!analyzing && analyses.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+          <div
             className="text-center py-20"
           >
             <FileText className="w-24 h-24 text-slate-600 mx-auto mb-6" />
@@ -390,10 +379,11 @@ const ResumeAnalyzerPage: React.FC = () => {
               Upload your first resume to get started with AI-powered analysis and improve your 
               chances of landing your dream job!
             </p>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>
+    </PageTransition>
   );
 };
 

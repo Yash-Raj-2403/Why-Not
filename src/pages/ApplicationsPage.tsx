@@ -77,25 +77,19 @@ const ApplicationsPage: React.FC = () => {
         </div>
 
         <div className="relative z-10 max-w-[1800px] mx-auto px-4 md:px-8 pb-12">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+          <div 
             className="mb-8"
           >
             <h1 className="text-3xl md:text-4xl font-black text-white mb-2">My Applications</h1>
             <p className="text-slate-400 text-lg">Track the status of your internship and placement applications</p>
-          </motion.div>
+          </div>
 
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
           </div>
         ) : applications.length === 0 ? (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+          <div 
             className="text-center py-20 glass-panel rounded-2xl border border-white/10 backdrop-blur-xl bg-slate-900/80"
           >
             <FileText className="w-16 h-16 text-slate-600 mx-auto mb-4" />
@@ -105,7 +99,7 @@ const ApplicationsPage: React.FC = () => {
               Browse Opportunities
               <ArrowRight className="w-4 h-4" />
             </a>
-          </motion.div>
+          </div>
         ) : (
           <div className="grid gap-6">
             {applications.map((app, index) => {
@@ -115,8 +109,8 @@ const ApplicationsPage: React.FC = () => {
               return (
                 <motion.div
                   key={app.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
                   className="relative group"
                 >

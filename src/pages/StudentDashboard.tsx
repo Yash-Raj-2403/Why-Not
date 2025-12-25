@@ -10,6 +10,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabaseClient';
 import { Application, JobOpportunity } from '../types';
 import RejectionAnalysisHub from '../components/features/RejectionAnalysisHub';
+import PageTransition from '../components/common/PageTransition';
 
 const StudentDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -98,6 +99,7 @@ const StudentDashboard: React.FC = () => {
   ];
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-black relative overflow-hidden pt-28">
       {/* Pure black background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{display: 'none'}}>
@@ -133,10 +135,7 @@ const StudentDashboard: React.FC = () => {
 
       <div className="relative z-10 max-w-[1800px] mx-auto p-4 md:p-8">
         {/* Hero Welcome Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+        <div
           className="mb-8"
         >
           <div className="grid md:grid-cols-12 gap-6 items-stretch">
@@ -233,9 +232,6 @@ const StudentDashboard: React.FC = () => {
             {/* AI Quick Action - spans 4 columns */}
             <div className="md:col-span-4">
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
                 whileHover={{ scale: 1.02 }}
                 className="relative h-full group"
               >
@@ -273,17 +269,14 @@ const StudentDashboard: React.FC = () => {
               </motion.div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Bento Grid Layout */}
         <div className="grid grid-cols-12 gap-6">
           {/* Stats Row - Dynamic sizes for visual interest */}
           {stats.map((stat, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 + index * 0.1, ease: "easeOut" }}
               className="col-span-12 md:col-span-3"
             >
               <div className="relative group h-full">
@@ -307,14 +300,11 @@ const StudentDashboard: React.FC = () => {
                   <p className="text-4xl font-black text-white">{stat.value}</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
 
           {/* Recent Applications - Large Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
+          <div
             className="col-span-12 md:col-span-7"
           >
             <div className="relative glass-panel rounded-2xl p-6 h-full overflow-hidden">
@@ -417,13 +407,10 @@ const StudentDashboard: React.FC = () => {
                 ))}
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Upcoming Interviews - Tall Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.7, ease: "easeOut" }}
+          <div
             className="col-span-12 md:col-span-5"
           >
             <div className="relative glass-panel rounded-2xl p-6 h-full overflow-hidden">
@@ -471,13 +458,10 @@ const StudentDashboard: React.FC = () => {
                 )}
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* New Opportunities - Grid */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.8, ease: "easeOut" }}
+          <div
             className="col-span-12 md:col-span-7"
           >
             <div className="relative glass-panel rounded-2xl p-6 h-full overflow-hidden">
@@ -541,7 +525,7 @@ const StudentDashboard: React.FC = () => {
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
 
 
         </div>
@@ -559,6 +543,7 @@ const StudentDashboard: React.FC = () => {
         />
       )}
     </div>
+    </PageTransition>
   );
 };
 
