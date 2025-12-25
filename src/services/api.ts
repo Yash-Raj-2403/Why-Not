@@ -150,11 +150,26 @@ export const api = {
           type,
           location,
           stipend_min,
-          stipend_max
+          stipend_max,
+          description,
+          required_skills,
+          min_cgpa
         )
       `)
       .eq('student_id', studentId)
       .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  },
+
+  async updateApplicationStatus(applicationId: string, status: string) {
+    const { data, error } = await supabase
+      .from('applications')
+      .update({ status })
+      .eq('id', applicationId)
+      .select()
+      .single();
 
     if (error) throw error;
     return data;

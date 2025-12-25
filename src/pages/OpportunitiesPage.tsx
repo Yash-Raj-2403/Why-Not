@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
-import ApplyModal from '../components/modals/ApplyModal';
 import PageTransition from '../components/common/PageTransition';
 import { useDebounce } from '../hooks/useDebounce';
 import { LoadingGrid } from '../components/common/LoadingSkeleton';
@@ -21,8 +20,6 @@ const OpportunitiesPage: React.FC = () => {
     location: '',
     minStipend: 0
   });
-  const [selectedOpp, setSelectedOpp] = useState<any | null>(null);
-  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
   const debouncedSearch = useDebounce(filters.search, 300);
 
@@ -47,9 +44,21 @@ const OpportunitiesPage: React.FC = () => {
     }
   };
 
-  const handleApplyClick = (opp: any) => {
-    setSelectedOpp(opp);
-    setIsApplyModalOpen(true);
+  const handleApplyClick = async (opp: any) => {
+    if (opp?.application_url) {
+      // Track application internally before redirecting
+      if (user?.id) {
+        try {
+          await api.applyToOpportunity(opp.id, user.id);
+        } catch (error) {
+          console.error('Failed to track application:', error);
+          // Continue to open URL even if tracking fails
+        }
+      }
+      window.open(opp.application_url, '_blank', 'noopener,noreferrer');
+    } else {
+      alert('Application link not provided yet. Please check back or contact the placement office.');
+    }
   };
 
   const calculateMatch = (opp: any) => {
@@ -260,12 +269,6 @@ const OpportunitiesPage: React.FC = () => {
             </div>
           )}
         </div>
-
-        <ApplyModal 
-          isOpen={isApplyModalOpen} 
-          onClose={() => setIsApplyModalOpen(false)} 
-          opportunity={selectedOpp} 
-        />
       </div>
     </PageTransition>
   );

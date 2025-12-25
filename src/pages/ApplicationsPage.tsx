@@ -4,11 +4,14 @@ import { FileText, Calendar, Building, MapPin, CheckCircle, XCircle, Clock, Aler
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import PageTransition from '../components/common/PageTransition';
+import RejectionAnalysisHub from '../components/features/RejectionAnalysisHub';
 
 const ApplicationsPage: React.FC = () => {
   const { user } = useAuth();
   const [applications, setApplications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAnalysisHub, setShowAnalysisHub] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState<any>(null);
 
   useEffect(() => {
     if (user) {
@@ -25,6 +28,24 @@ const ApplicationsPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleStatusUpdate = async (appId: string, newStatus: string) => {
+    try {
+      await api.updateApplicationStatus(appId, newStatus);
+      // Optimistic update
+      setApplications(apps => apps.map(app => 
+        app.id === appId ? { ...app, status: newStatus } : app
+      ));
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Failed to update status');
+    }
+  };
+
+  const openAnalysis = (app: any) => {
+    setSelectedApplication(app);
+    setShowAnalysisHub(true);
   };
 
   const getStatusColor = (status: string) => {
@@ -119,10 +140,25 @@ const ApplicationsPage: React.FC = () => {
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">
                           <h3 className="text-xl font-bold text-white">{app.opportunity.title}</h3>
-                          <span className={`px-3 py-2 rounded-lg text-xs font-bold border flex items-center gap-2 ${getStatusColor(app.status)}`}>
-                            <StatusIcon size={14} />
-                            {app.status.replace(/_/g, ' ')}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className={`px-3 py-2 rounded-lg text-xs font-bold border flex items-center gap-2 ${getStatusColor(app.status)}`}>
+                              <StatusIcon size={14} />
+                              {app.status.replace(/_/g, ' ')}
+                            </span>
+                            <select
+                              className="bg-black/40 border border-white/10 rounded-lg text-xs text-slate-300 py-2 px-2 focus:outline-none focus:border-purple-500"
+                              value={app.status}
+                              onChange={(e) => handleStatusUpdate(app.id, e.target.value)}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <option value="PENDING">Update Status</option>
+                              <option value="PENDING">Pending</option>
+                              <option value="SHORTLISTED">Shortlisted</option>
+                              <option value="INTERVIEW_SCHEDULED">Interview</option>
+                              <option value="ACCEPTED">Accepted</option>
+                              <option value="REJECTED">Rejected</option>
+                            </select>
+                          </div>
                         </div>
                         
                         <div className="flex items-center gap-2 text-slate-300 mb-4">
@@ -160,14 +196,14 @@ const ApplicationsPage: React.FC = () => {
                               <div className="flex-1">
                                 <h4 className="text-sm font-bold text-white mb-1">Want to know why?</h4>
                                 <p className="text-xs text-slate-400 mb-3">Use our AI Rejection Coach to analyze this rejection and get actionable insights</p>
-                                <a 
-                                  href="/dashboard"
+                                <button 
+                                  onClick={() => openAnalysis(app)}
                                   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all"
                                 >
                                   <Brain className="w-4 h-4" />
                                   Analyze Rejection
                                   <ArrowRight className="w-4 h-4" />
-                                </a>
+                                </button>
                               </div>
                             </div>
                           </motion.div>
@@ -219,6 +255,16 @@ const ApplicationsPage: React.FC = () => {
         )}
         </div>
       </div>
+
+      {user && (
+        <RejectionAnalysisHub
+          isOpen={showAnalysisHub}
+          onClose={() => setShowAnalysisHub(false)}
+          application={selectedApplication}
+          student={user as any}
+          mode="single"
+        />
+      )}
     </PageTransition>
   );
 };

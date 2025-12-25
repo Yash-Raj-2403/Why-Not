@@ -60,10 +60,12 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
         studentName: student.name,
         studentSkills: student.skills.map(s => s.name),
         studentCgpa: student.cgpa,
-        jobRole: application.job.role,
-        jobCompany: application.job.company,
-        jobRequiredSkills: application.job.requiredSkills.map(s => s.name),
-        jobMinCgpa: application.job.minCgpa
+        jobRole: application.job.role || (application.job as any).title, // Handle title vs role
+        jobCompany: application.job.company || (application.job as any).company_name,
+        jobRequiredSkills: (application.job.requiredSkills || (application.job as any).required_skills || []).map((s: any) => s.name),
+        jobMinCgpa: application.job.minCgpa || (application.job as any).min_cgpa,
+        jobDescription: application.job.description,
+        resumeText: student.resume
       };
       
       const result = await generateRejectionExplanation(reqData, student.id);
@@ -261,7 +263,7 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
                       <span>Required Skills</span>
                       <span>Your Status</span>
                     </div>
-                    {application.job.requiredSkills.map((reqSkill) => {
+                    {(application.job.requiredSkills || (application.job as any).required_skills || []).map((reqSkill: any) => {
                       const hasSkill = student.skills.find(s => s.name === reqSkill.name);
                       return (
                         <div key={reqSkill.name} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5">
@@ -287,12 +289,12 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
                     <div className="flex items-center justify-between p-4 rounded-lg bg-white/5 border border-white/5">
                       <div>
                         <span className="text-xs text-slate-400 block">Required</span>
-                        <span className="text-lg font-bold text-white">{application.job.minCgpa}</span>
+                        <span className="text-lg font-bold text-white">{application.job.minCgpa || (application.job as any).min_cgpa}</span>
                       </div>
                       <ArrowRight className="text-slate-500" />
                       <div className="text-right">
                         <span className="text-xs text-slate-400 block">Your Score</span>
-                        <span className={`text-lg font-bold ${student.cgpa >= application.job.minCgpa ? 'text-green-400' : 'text-red-400'}`}>
+                        <span className={`text-lg font-bold ${student.cgpa >= (application.job.minCgpa || (application.job as any).min_cgpa) ? 'text-green-400' : 'text-red-400'}`}>
                           {student.cgpa}
                         </span>
                       </div>

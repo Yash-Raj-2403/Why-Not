@@ -135,6 +135,8 @@ export interface ExplanationRequest {
   jobCompany: string;
   jobRequiredSkills: string[];
   jobMinCgpa: number;
+  resumeText?: string;
+  jobDescription?: string;
 }
 
 // ============================================================================

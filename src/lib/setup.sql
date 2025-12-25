@@ -100,6 +100,7 @@ CREATE TABLE IF NOT EXISTS public.opportunities (
   description TEXT NOT NULL,
   type TEXT NOT NULL CHECK (type IN ('INTERNSHIP', 'PLACEMENT')),
   company_name TEXT NOT NULL,
+  application_url TEXT NOT NULL,
   posted_by UUID REFERENCES public.profiles(id),
   department TEXT,
   required_skills JSONB DEFAULT '[]'::jsonb,
@@ -314,7 +315,7 @@ VALUES (
 );
 
 -- Sample Opportunities (UNCOMMENT IF NEEDED)
-INSERT INTO public.opportunities (id, title, description, type, company_name, department, required_skills, min_cgpa, stipend_min, stipend_max, location, duration, deadline, status)
+INSERT INTO public.opportunities (id, title, description, type, company_name, application_url, department, required_skills, min_cgpa, stipend_min, stipend_max, location, duration, deadline, status)
 VALUES 
   (
     '10000000-0000-0000-0000-000000000001',
@@ -322,6 +323,7 @@ VALUES
     'Build amazing user interfaces with React and TypeScript. Work on real projects with our product team.',
     'INTERNSHIP',
     'TechCorp Solutions',
+    'https://careers.techcorp.com/frontend-developer-intern',
     'Computer Science',
     '["React", "JavaScript", "TypeScript", "HTML", "CSS"]'::jsonb,
     7.0,
@@ -338,6 +340,7 @@ VALUES
     'Design and implement RESTful APIs using Node.js and PostgreSQL. Learn microservices architecture.',
     'INTERNSHIP',
     'DataFlow Systems',
+    'https://jobs.dataflowsystems.com/backend-intern',
     'Computer Science',
     '["Node.js", "PostgreSQL", "REST API", "Docker", "AWS"]'::jsonb,
     7.5,
@@ -354,6 +357,7 @@ VALUES
     'Join our engineering team to build scalable web applications. Work with modern tech stack.',
     'PLACEMENT',
     'InnovateLabs',
+    'https://careers.innovatelabs.com/fullstack-developer',
     'Computer Science',
     '["React", "Node.js", "MongoDB", "TypeScript", "Docker"]'::jsonb,
     8.0,
@@ -370,6 +374,7 @@ VALUES
     'Work on data processing pipelines and automation tools using Python and modern frameworks.',
     'INTERNSHIP',
     'AutomateNow',
+    'https://careers.automatenow.com/python-intern',
     'Computer Science',
     '["Python", "Django", "PostgreSQL", "Redis", "Celery"]'::jsonb,
     7.0,
@@ -386,6 +391,7 @@ VALUES
     'Build and deploy ML models for production systems. Experience with TensorFlow and PyTorch required.',
     'PLACEMENT',
     'AI Dynamics',
+    'https://careers.aidynamics.ai/ml-engineer',
     'Computer Science',
     '["Python", "TensorFlow", "PyTorch", "Machine Learning", "Deep Learning", "AWS"]'::jsonb,
     8.5,

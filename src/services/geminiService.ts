@@ -82,26 +82,28 @@ export const generateRejectionExplanation = async (
     Student: ${data.studentName}
     Major/CGPA: ${data.studentCgpa}
     Student Skills: ${data.studentSkills.join(', ')}
+    ${data.resumeText ? `Resume Content: ${data.resumeText.substring(0, 3000)}` : ''}
     
     Target Opportunity:
     Role: ${data.jobRole} at ${data.jobCompany}
     Required Skills: ${data.jobRequiredSkills.join(', ')}
     Minimum CGPA: ${data.jobMinCgpa}
+    ${data.jobDescription ? `Job Description: ${data.jobDescription.substring(0, 3000)}` : ''}
     
     Task:
-    Compare the Student's profile against the Target Opportunity requirements.
-    Identify the specific gap (e.g., missing specific skills like SQL, or low CGPA).
-    Generate a 3-4 sentence explanation.
+    Analyze the rejection based on the provided context.
+    Provide a structured analysis with the following sections:
+    1. **Core Mismatch**: The primary reason for rejection (e.g., Skill Gap, Experience, CGPA).
+    2. **Key Missing Skills**: Specific skills mentioned in the job description but missing in the profile/resume.
+    3. **Resume Feedback**: Specific improvements for the resume to better align with this role.
+    4. **Action Plan**: 2-3 concrete steps to improve chances for similar roles.
     
     Sentiment & Tone Guidelines:
     - Maintain a Constructive and Encouraging sentiment.
-    - Be factual about the gaps (honesty is key), but frame the rejection as a "path to improvement" rather than a failure.
-    - Use a futuristic, professional, yet supportive tone.
-    - Avoid harsh or discouraging language. Focus on growth potential.
+    - Be factual about the gaps.
+    - Use a professional, yet supportive tone.
     
-    Ending: Provide one specific recommended action (e.g., "Complete the Advanced SQL certification").
-    
-    Format: Plain text.
+    Format: Markdown.
   `;
 
   try {
@@ -185,7 +187,7 @@ export const generateBulkRejectionAnalysis = async (
       contents: prompt,
       config: {
         thinkingConfig: { thinkingBudget: 0 },
-        responseFormat: "json"
+        responseMimeType: "application/json"
       }
     });
 
@@ -346,17 +348,18 @@ EVALUATION CRITERIA:
 
 Be specific and actionable in your feedback. Focus on improvements that will have the most impact.`;
 
-    const model = ai.models['gemini-2.0-flash-exp'];
-    const result = await model.generateContent(prompt);
-    const response = result.text;
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.0-flash-exp',
+      contents: prompt,
+      config: {
+        responseMimeType: 'application/json',
+      }
+    });
 
-    // Parse JSON from response
-    const jsonMatch = response.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error('Failed to parse AI response');
-    }
-
-    const analysis = JSON.parse(jsonMatch[0]);
+    const text = response.text || '{}';
+    // Clean up the response (remove markdown code blocks if present)
+    const jsonText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const analysis = JSON.parse(jsonText);
     return analysis;
   } catch (error: any) {
     console.error('Error analyzing resume:', error);

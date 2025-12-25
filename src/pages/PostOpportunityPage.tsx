@@ -17,6 +17,7 @@ const PostOpportunityPage: React.FC = () => {
     description: '',
     type: 'INTERNSHIP',
     company_name: '',
+    application_url: '',
     department: '',
     required_skills: '',
     min_cgpa: '',
@@ -37,6 +38,11 @@ const PostOpportunityPage: React.FC = () => {
     setMessage(null);
 
     try {
+      // Validate required fields
+        if (!formData.title || !formData.company_name || !formData.description || !formData.application_url) {
+        throw new Error('Please fill in all required fields');
+      }
+
       // Parse skills
       const skills = formData.required_skills
         .split(',')
@@ -49,12 +55,13 @@ const PostOpportunityPage: React.FC = () => {
         description: formData.description,
         type: formData.type,
         company_name: formData.company_name,
+        application_url: formData.application_url,
         posted_by: user!.id,
         department: formData.department,
         required_skills: skills,
-        min_cgpa: parseFloat(formData.min_cgpa),
-        stipend_min: parseInt(formData.stipend_min),
-        stipend_max: parseInt(formData.stipend_max),
+        min_cgpa: formData.min_cgpa ? parseFloat(formData.min_cgpa) : null,
+        stipend_min: formData.stipend_min ? parseInt(formData.stipend_min) : null,
+        stipend_max: formData.stipend_max ? parseInt(formData.stipend_max) : null,
         location: formData.location,
         duration: formData.duration,
         deadline: formData.deadline ? new Date(formData.deadline).toISOString() : null,
@@ -125,8 +132,12 @@ const PostOpportunityPage: React.FC = () => {
               <Briefcase className="text-purple-400" />
               Post New Opportunity
             </h1>
-            <p className="text-slate-400">Create an internship or placement opportunity for students</p>
+            <p className="text-slate-400">Add external roles from companies like Microsoft or Google. Students will be redirected to the official application link you provide.</p>
           </motion.div>
+
+        <div className="mb-6 p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 text-amber-100 text-sm">
+          These postings are external. Please paste the official application URL so students can apply on the company site.
+        </div>
 
         {message && (
           <motion.div
@@ -202,22 +213,35 @@ const PostOpportunityPage: React.FC = () => {
                 value={formData.company_name}
                 onChange={handleChange}
                 required
-                placeholder="e.g., TechCorp Solutions"
+                placeholder="e.g., Microsoft, Google"
                 className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-neon-purple focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Department</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Official Application Link *</label>
               <input
-                type="text"
-                name="department"
-                value={formData.department}
+                type="url"
+                name="application_url"
+                value={formData.application_url}
                 onChange={handleChange}
-                placeholder="e.g., Computer Science"
+                required
+                placeholder="https://careers.microsoft.com/..."
                 className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-neon-purple focus:outline-none"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Department</label>
+            <input
+              type="text"
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              placeholder="e.g., Computer Science"
+              className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-neon-purple focus:outline-none"
+            />
           </div>
 
           <div>
