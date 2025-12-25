@@ -98,7 +98,7 @@ const StudentDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden pt-20">
+    <div className="min-h-screen bg-black relative overflow-hidden pt-28">
       {/* Pure black background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{display: 'none'}}>
         <motion.div
@@ -543,67 +543,7 @@ const StudentDashboard: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Quick Actions - Full Width */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.9, ease: "easeOut" }}
-            className="col-span-12"
-          >
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Link to="/resume-analyzer" className="group relative">
-                <div className="absolute -inset-[1px] bg-gradient-to-br from-rose-500 to-purple-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="relative glass-panel rounded-2xl p-6 h-full hover:-translate-y-1 transition-transform duration-300">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-purple-500 p-[1px] mb-4">
-                    <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center">
-                      <BarChart2 className="w-6 h-6 text-rose-400" />
-                    </div>
-                  </div>
-                  <h3 className="text-white font-bold text-lg mb-1">Resume AI</h3>
-                  <p className="text-slate-400 text-sm">Analyze & improve</p>
-                </div>
-              </Link>
 
-              <Link to="/calendar" className="group relative">
-                <div className="absolute -inset-[1px] bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="relative glass-panel rounded-2xl p-6 h-full hover:-translate-y-1 transition-transform duration-300">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 p-[1px] mb-4">
-                    <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center">
-                      <Calendar className="w-6 h-6 text-purple-400" />
-                    </div>
-                  </div>
-                  <h3 className="text-white font-bold text-lg mb-1">Calendar</h3>
-                  <p className="text-slate-400 text-sm">Manage schedule</p>
-                </div>
-              </Link>
-
-              <Link to="/profile" className="group relative">
-                <div className="absolute -inset-[1px] bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="relative glass-panel rounded-2xl p-6 h-full hover:-translate-y-1 transition-transform duration-300">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 p-[1px] mb-4">
-                    <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center">
-                      <Users className="w-6 h-6 text-indigo-400" />
-                    </div>
-                  </div>
-                  <h3 className="text-white font-bold text-lg mb-1">Profile</h3>
-                  <p className="text-slate-400 text-sm">Update details</p>
-                </div>
-              </Link>
-
-              <button onClick={() => setShowAnalysisHub(true)} className="group relative text-left w-full">
-                <div className="absolute -inset-[1px] bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                <div className="relative glass-panel rounded-2xl p-6 h-full hover:-translate-y-1 transition-transform duration-300">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 p-[1px] mb-4">
-                    <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center">
-                      <TrendingUp className="w-6 h-6 text-pink-400" />
-                    </div>
-                  </div>
-                  <h3 className="text-white font-bold text-lg mb-1">Analytics</h3>
-                  <p className="text-slate-400 text-sm">Track progress</p>
-                </div>
-              </button>
-            </div>
-          </motion.div>
         </div>
       </div>
 

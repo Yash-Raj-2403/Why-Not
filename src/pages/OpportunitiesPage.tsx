@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Search, Filter, MapPin, DollarSign, Briefcase } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Search, Filter, MapPin, DollarSign, Briefcase, 
+  Building, Clock, ChevronRight, Zap, Star
+} from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import ApplyModal from '../components/modals/ApplyModal';
@@ -21,7 +24,6 @@ const OpportunitiesPage: React.FC = () => {
   const [selectedOpp, setSelectedOpp] = useState<any | null>(null);
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
 
-  // Debounce search input to avoid excessive API calls
   const debouncedSearch = useDebounce(filters.search, 300);
 
   useEffect(() => {
@@ -67,150 +69,196 @@ const OpportunitiesPage: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="pt-24 pb-12 px-6 max-w-7xl mx-auto min-h-screen">
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Sidebar Filters */}
-          <div className="w-full md:w-64 space-y-6">
-            <div className="glass-panel p-6 rounded-xl">
-              <div className="flex items-center gap-2 mb-4 text-slate-300">
-                <Filter className="w-5 h-5" />
-                <h3 className="font-bold">Filters</h3>
-              </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm text-slate-400 mb-1">Type</label>
-                  <select 
-                    className="w-full bg-black/30 border border-purple-glow-20 rounded p-2 text-sm"
-                    value={filters.type}
-                    onChange={(e) => setFilters({...filters, type: e.target.value})}
-                  >
-                    <option value="">All Types</option>
-                    <option value="INTERNSHIP">Internship</option>
-                    <option value="PLACEMENT">Placement</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm text-slate-400 mb-1">Location</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. Bangalore"
-                    className="w-full bg-black/30 border border-purple-glow-20 rounded p-2 text-sm"
-                    value={filters.location}
-                    onChange={(e) => setFilters({...filters, location: e.target.value})}
-                  />
-                </div>
+      <div className="min-h-screen bg-black relative overflow-hidden pt-28">
+        {/* Background Effects */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.15, 0.25, 0.15],
+              x: [0, 100, 0],
+              y: [0, -50, 0],
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-0 right-0 w-[800px] h-[800px] bg-purple-500/30 rounded-full blur-[150px]"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.15, 0.25, 0.15],
+              x: [0, -100, 0],
+              y: [0, 100, 0],
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-indigo-500/30 rounded-full blur-[150px]"
+          />
+        </div>
 
-                <div>
-                  <label className="block text-sm text-slate-400 mb-1">Min Stipend</label>
-                  <input 
-                    type="number" 
-                    placeholder="0"
-                    className="w-full bg-black/30 border border-purple-glow-20 rounded p-2 text-sm"
-                    value={filters.minStipend}
-                    onChange={(e) => setFilters({...filters, minStipend: Number(e.target.value)})}
-                  />
-                </div>
+        <div className="relative z-10 max-w-[1800px] mx-auto p-4 md:p-8">
+          {/* Header Section */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-black text-white mb-2">
+                Find Opportunities
+              </h1>
+              <p className="text-slate-400 text-lg">
+                Discover internships and placements tailored for you
+              </p>
+            </div>
+          </div>
+
+          {/* Filters & Search */}
+          <div className="glass-panel p-4 rounded-2xl mb-8 border border-white/10">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+              {/* Search */}
+              <div className="md:col-span-5 relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <input 
+                  type="text" 
+                  placeholder="Search by role, company, or skills..." 
+                  className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-purple-500/50 focus:outline-none placeholder:text-slate-500 transition-colors"
+                  value={filters.search}
+                  onChange={(e) => setFilters({...filters, search: e.target.value})}
+                />
+              </div>
+
+              {/* Type Filter */}
+              <div className="md:col-span-2">
+                <select 
+                  className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:border-purple-500/50 focus:outline-none appearance-none cursor-pointer"
+                  value={filters.type}
+                  onChange={(e) => setFilters({...filters, type: e.target.value})}
+                >
+                  <option value="">All Types</option>
+                  <option value="INTERNSHIP">Internship</option>
+                  <option value="PLACEMENT">Placement</option>
+                </select>
+              </div>
+
+              {/* Location Filter */}
+              <div className="md:col-span-3 relative">
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <input 
+                  type="text" 
+                  placeholder="Location"
+                  className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-purple-500/50 focus:outline-none placeholder:text-slate-500 transition-colors"
+                  value={filters.location}
+                  onChange={(e) => setFilters({...filters, location: e.target.value})}
+                />
+              </div>
+
+              {/* Min Stipend */}
+              <div className="md:col-span-2 relative">
+                <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <input 
+                  type="number" 
+                  placeholder="Min Stipend"
+                  className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-purple-500/50 focus:outline-none placeholder:text-slate-500 transition-colors"
+                  value={filters.minStipend || ''}
+                  onChange={(e) => setFilters({...filters, minStipend: Number(e.target.value)})}
+                />
               </div>
             </div>
           </div>
 
-          {/* Main Content */}
-          <div className="flex-1">
-            {/* Search Bar */}
-            <div className="mb-6 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-              <input 
-                type="text" 
-                placeholder="Search by role, company, or skills..." 
-                className="w-full glass-panel rounded-xl py-3 pl-12 pr-4 text-white focus:ring-2 focus:ring-neon-purple/50 focus:outline-none"
-                value={filters.search}
-                onChange={(e) => setFilters({...filters, search: e.target.value})}
-              />
-            </div>
-
-            {/* Opportunities List */}
-            <div className="space-y-4">
-              {loading ? (
-                <LoadingGrid count={6} type="card" />
-              ) : opportunities.length === 0 ? (
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="text-center py-20 glass-panel rounded-xl"
-                >
-                  <Briefcase className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-                  <h3 className="text-xl font-bold mb-2">No Opportunities Found</h3>
-                  <p className="text-slate-400 mb-6">No opportunities match your current filters.</p>
-                  <p className="text-sm text-slate-500">Try adjusting your filters or check the Settings page to seed sample data.</p>
-                </motion.div>
-              ) : (
-                opportunities.map((opp, index) => {
+          {/* Opportunities Grid */}
+          {loading ? (
+            <LoadingGrid count={6} type="card" />
+          ) : opportunities.length === 0 ? (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-20 glass-panel rounded-2xl border border-white/10"
+            >
+              <Briefcase className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-white mb-2">No Opportunities Found</h3>
+              <p className="text-slate-400">Try adjusting your filters to find what you're looking for.</p>
+            </motion.div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <AnimatePresence>
+                {opportunities.map((opp, index) => {
                   const matchScore = calculateMatch(opp);
                   return (
-                    <motion.div 
+                    <motion.div
                       key={opp.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
-                      className="glass-panel p-6 rounded-xl hover:bg-white/[0.05] transition-all border border-white/5"
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      className="group relative"
                     >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <div className="flex items-center gap-3 mb-1">
-                            <h3 className="text-xl font-bold text-white">{opp.title}</h3>
-                            <span className={`text-xs px-2 py-0.5 rounded border ${
-                              opp.type === 'INTERNSHIP' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                      <div className="absolute -inset-[1px] bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+                      <div className="relative glass-panel p-6 rounded-2xl h-full flex flex-col border border-white/10 hover:border-purple-500/30 transition-colors">
+                        
+                        {/* Card Header */}
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+                              <Building className="w-6 h-6 text-purple-400" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-white text-lg leading-tight group-hover:text-purple-400 transition-colors">
+                                {opp.title}
+                              </h3>
+                              <p className="text-slate-400 text-sm">{opp.company_name}</p>
+                            </div>
+                          </div>
+                          {matchScore > 0 && (
+                            <div className={`px-2 py-1 rounded-lg text-xs font-bold border ${
+                              matchScore >= 80 ? 'bg-green-500/10 text-green-400 border-green-500/20' :
+                              matchScore >= 50 ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
+                              'bg-red-500/10 text-red-400 border-red-500/20'
                             }`}>
-                              {opp.type}
-                            </span>
-                          </div>
-                          <p className="text-slate-400 text-lg mb-2">{opp.company_name}</p>
-                          <p className="text-slate-500 text-sm mb-4 line-clamp-2">{opp.description}</p>
-                          
-                          <div className="flex flex-wrap gap-4 text-sm text-slate-400 mb-4">
-                            <div className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" /> {opp.location || 'Remote'}
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <DollarSign className="w-4 h-4" /> ₹{opp.stipend_min?.toLocaleString()} - ₹{opp.stipend_max?.toLocaleString()}
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Briefcase className="w-4 h-4" /> {opp.duration || 'Full Time'}
-                            </div>
-                          </div>
-
-                          <div className="flex flex-wrap gap-2">
-                            {opp.required_skills?.map((skill: any) => (
-                              <span key={skill.name} className="px-2 py-1 bg-slate-800 rounded text-xs text-slate-300">
-                                {skill.name}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col items-end gap-4">
-                          <div className="flex flex-col items-center">
-                            <div className={`text-lg font-bold ${matchScore >= 80 ? 'text-green-400' : matchScore >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
                               {matchScore}% Match
                             </div>
+                          )}
+                        </div>
+
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <span className={`px-2.5 py-1 rounded-md text-xs font-medium border ${
+                            opp.type === 'INTERNSHIP' 
+                              ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' 
+                              : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20'
+                          }`}>
+                            {opp.type}
+                          </span>
+                          <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-white/5 text-slate-300 border border-white/10 flex items-center gap-1">
+                            <MapPin className="w-3 h-3" /> {opp.location || 'Remote'}
+                          </span>
+                          <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-white/5 text-slate-300 border border-white/10 flex items-center gap-1">
+                            <Zap className="w-3 h-3 text-yellow-400" /> 
+                            ₹{opp.stipend_min?.toLocaleString()} - {opp.stipend_max?.toLocaleString()}
+                          </span>
+                        </div>
+
+                        {/* Description */}
+                        <p className="text-slate-400 text-sm mb-6 line-clamp-2 flex-grow">
+                          {opp.description}
+                        </p>
+
+                        {/* Footer Actions */}
+                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
+                          <div className="text-xs text-slate-500 flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            Posted {new Date(opp.created_at).toLocaleDateString()}
                           </div>
                           <button 
                             onClick={() => handleApplyClick(opp)}
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-black font-bold text-sm hover:bg-purple-50 transition-colors"
                           >
                             Apply Now
+                            <ChevronRight className="w-4 h-4" />
                           </button>
                         </div>
                       </div>
                     </motion.div>
                   );
-                })
-              )}
+                })}
+              </AnimatePresence>
             </div>
-          </div>
+          )}
         </div>
 
         <ApplyModal 

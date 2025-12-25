@@ -51,7 +51,7 @@ const ApplicationsPage: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-black relative overflow-hidden pt-20">
+      <div className="min-h-screen bg-black relative overflow-hidden pt-28">
         {/* Pure black background */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{display: 'none'}}>
           <motion.div
@@ -76,14 +76,14 @@ const ApplicationsPage: React.FC = () => {
           />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 pb-12">
+        <div className="relative z-10 max-w-[1800px] mx-auto px-4 md:px-8 pb-12">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
             className="mb-8"
           >
-            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-rose-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">My Applications</h1>
+            <h1 className="text-3xl md:text-4xl font-black text-white mb-2">My Applications</h1>
             <p className="text-slate-400 text-lg">Track the status of your internship and placement applications</p>
           </motion.div>
 
@@ -120,10 +120,7 @@ const ApplicationsPage: React.FC = () => {
                   transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
                   className="relative group"
                 >
-                  {/* Glow effect on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-purple-500/10 to-pink-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                  
-                  <div className="relative glass-panel rounded-2xl p-6 border border-white/10 group-hover:border-white/20 transition-all backdrop-blur-xl bg-slate-900/80">
+                  <div className="relative glass-panel rounded-2xl p-6 border border-white/10 hover:border-purple-500/50 hover:bg-white/5 transition-all">
                     <div className="flex flex-col md:flex-row justify-between gap-6">
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">

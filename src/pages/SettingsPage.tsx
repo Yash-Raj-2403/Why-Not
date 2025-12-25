@@ -109,7 +109,7 @@ const SettingsPage: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden pt-20">
+    <div className="min-h-screen bg-black relative overflow-hidden pt-28">
       {/* Pure black background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{display: 'none'}}>
         <motion.div
@@ -144,7 +144,7 @@ const SettingsPage: React.FC = () => {
         />
       </div>
 
-      <div className="relative z-10 max-w-[1600px] mx-auto p-4 md:p-8">
+      <div className="relative z-10 max-w-[1800px] mx-auto p-4 md:p-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -152,7 +152,7 @@ const SettingsPage: React.FC = () => {
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-8"
         >
-          <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-rose-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+          <h1 className="text-3xl md:text-4xl font-black text-white mb-2">
             Settings
           </h1>
           <p className="text-slate-400 text-lg">Manage your account and developer tools</p>

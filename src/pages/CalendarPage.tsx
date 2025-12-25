@@ -106,15 +106,15 @@ const CalendarPage: React.FC = () => {
   const getEventTypeColor = (type: EventType): string => {
     switch (type) {
       case EventType.DEADLINE:
-        return 'bg-rose-500/20 border-rose-500 text-rose-400';
+        return 'bg-rose-500/10 border-rose-500/20 text-rose-400 hover:bg-rose-500/20';
       case EventType.INTERVIEW:
-        return 'bg-neon-purple/20 border-neon-purple text-neon-purple';
+        return 'bg-purple-500/10 border-purple-500/20 text-purple-400 hover:bg-purple-500/20';
       case EventType.DRIVE:
-        return 'bg-neon-purple/20 border-neon-purple text-neon-purple';
+        return 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400 hover:bg-indigo-500/20';
       case EventType.ANNOUNCEMENT:
-        return 'bg-amber-500/20 border-amber-500 text-amber-400';
+        return 'bg-amber-500/10 border-amber-500/20 text-amber-400 hover:bg-amber-500/20';
       default:
-        return 'bg-slate-500/20 border-slate-500 text-slate-400';
+        return 'bg-slate-500/10 border-slate-500/20 text-slate-400 hover:bg-slate-500/20';
     }
   };
 
@@ -145,8 +145,8 @@ const CalendarPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-black relative overflow-hidden pt-28">
+      <div className="relative z-10 max-w-[1800px] mx-auto p-4 md:p-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -156,11 +156,11 @@ const CalendarPage: React.FC = () => {
         >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold mb-2 flex items-center gap-3">
-                <CalendarIcon className="w-10 h-10 text-neon-purple" />
+              <h1 className="text-3xl md:text-4xl font-black text-white mb-2 flex items-center gap-3">
+                <CalendarIcon className="w-10 h-10 text-purple-400" />
                 Calendar
               </h1>
-              <p className="text-slate-400">
+              <p className="text-slate-400 text-lg">
                 {isPlacementOfficer
                   ? 'Manage application deadlines, interviews, and campus drives'
                   : 'Track important dates, deadlines, and upcoming events'}
@@ -170,7 +170,7 @@ const CalendarPage: React.FC = () => {
             <div className="flex gap-3">
               <button
                 onClick={handleExportCalendar}
-                className="px-5 py-3 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-all flex items-center gap-2 font-medium"
+                className="px-5 py-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all flex items-center gap-2 font-medium text-white"
               >
                 <Download className="w-5 h-5" />
                 Export
@@ -179,7 +179,7 @@ const CalendarPage: React.FC = () => {
               {isPlacementOfficer && (
                 <button
                   onClick={handleCreateEvent}
-                  className="px-5 py-3 rounded-lg bg-gradient-to-r from-neon-purple to-neon-purple hover:scale-105 transition-transform flex items-center gap-2 font-semibold shadow-lg shadow-neon-purple/30"
+                  className="px-5 py-3 rounded-lg bg-gradient-to-r from-rose-500 to-purple-500 hover:scale-105 transition-transform flex items-center gap-2 font-semibold shadow-lg shadow-purple-500/30 text-white"
                 >
                   <Plus className="w-5 h-5" />
                   Create Event
@@ -195,12 +195,12 @@ const CalendarPage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="mb-6 p-6 rounded-2xl bg-gradient-to-br from-neon-purple/10 to-neon-purple/5 border-2 border-neon-purple/30"
+            className="mb-6 p-6 rounded-2xl glass-panel border border-white/10"
           >
             <div className="flex items-center gap-3 mb-4">
-              <Sparkles className="w-6 h-6 text-neon-purple" />
-              <h2 className="text-xl font-bold">Today's Events</h2>
-              <span className="px-3 py-1 rounded-full bg-neon-purple/20 text-neon-purple text-sm font-semibold">
+              <Sparkles className="w-6 h-6 text-purple-400" />
+              <h2 className="text-xl font-bold text-white">Today's Events</h2>
+              <span className="px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm font-semibold">
                 {todaysEvents.length}
               </span>
             </div>
@@ -209,7 +209,7 @@ const CalendarPage: React.FC = () => {
                 <div
                   key={event.id}
                   onClick={() => handleEventClick(event)}
-                  className={`p-4 rounded-lg border-2 cursor-pointer hover:scale-105 transition-all ${getEventTypeColor(
+                  className={`p-4 rounded-lg border cursor-pointer hover:scale-105 transition-all ${getEventTypeColor(
                     event.event_type
                   )}`}
                 >

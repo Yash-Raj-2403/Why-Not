@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Home, Briefcase, Users, FileText, Settings, LogOut, Bell, Calendar, BarChart3, UserCheck, BookOpen } from 'lucide-react';
+import { Menu, X, Home, Briefcase, Users, FileText, Settings, LogOut, Bell, Calendar, BarChart3, UserCheck, BookOpen, Search } from 'lucide-react';
 import { UserRole } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
 import NotificationBell from '../features/NotificationBell';
@@ -39,11 +39,17 @@ const Header: React.FC<HeaderProps> = ({
       case UserRole.STUDENT:
         return [
           { label: 'Dashboard', path: '/dashboard', icon: Home },
+          { label: 'Opportunities', path: '/opportunities', icon: Briefcase },
+          { label: 'Applications', path: '/applications', icon: FileText },
+          { label: 'Calendar', path: '/calendar', icon: Calendar },
+          { label: 'Resume AI', path: '/resume-analyzer', icon: BarChart3 },
         ];
       
       case UserRole.PLACEMENT_OFFICER:
         return [
           { label: 'Dashboard', path: '/placement/dashboard', icon: Home },
+          { label: 'Post Job', path: '/placement/post-opportunity', icon: Briefcase },
+          { label: 'Applications', path: '/placement/applications', icon: FileText },
         ];
       
       default:
@@ -56,40 +62,53 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300 glass-panel shadow-lg shadow-black/20">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex justify-between items-center py-3">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 via-purple-500 to-indigo-500 p-[2px] shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-all group-hover:scale-105">
-              <div className="w-full h-full rounded-xl bg-black flex items-center justify-center">
-                <span className="text-lg font-bold bg-gradient-to-r from-rose-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">W</span>
+      <div className="max-w-[1800px] mx-auto px-4 md:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* Left Section: Logo + Nav */}
+          <div className="flex items-center gap-8">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 via-purple-500 to-indigo-500 p-[2px] shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-all group-hover:scale-105">
+                <div className="w-full h-full rounded-xl bg-black flex items-center justify-center">
+                  <span className="text-lg font-bold bg-gradient-to-r from-rose-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">W</span>
+                </div>
               </div>
-            </div>
-            <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent group-hover:from-rose-400 group-hover:to-purple-400 transition-all">
-              WhyNot
-            </span>
-          </Link>
+              <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent group-hover:from-rose-400 group-hover:to-purple-400 transition-all">
+                WhyNot
+              </span>
+            </Link>
 
-          {/* Center Navigation */}
-          <nav className="hidden md:flex items-center gap-4 absolute left-1/2 -translate-x-1/2">
-            {isLoggedIn && navItems.slice(0, 4).map((item) => (
-              <Link 
-                key={item.path}
-                to={item.path}
-                className={`flex items-center gap-2 text-sm transition-colors ${
-                  location.pathname === item.path 
-                    ? 'text-white' 
-                    : 'text-slate-300 hover:text-white'
-                }`}
-              >
-                <item.icon size={16} />
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-1">
+              {isLoggedIn && navItems.map((item) => (
+                <Link 
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    location.pathname === item.path 
+                      ? 'bg-white/10 text-white' 
+                      : 'text-slate-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <item.icon size={16} />
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
           {/* Right Side Navigation */}
           <div className="hidden md:flex items-center gap-4">
+            {isLoggedIn && (
+              <div className="hidden lg:flex items-center relative mr-2">
+                <Search className="absolute left-3 text-slate-400 w-4 h-4" />
+                <input 
+                  type="text" 
+                  placeholder="Search..." 
+                  className="bg-white/5 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-purple-500/50 w-64 transition-all placeholder:text-slate-500"
+                />
+              </div>
+            )}
+
             {!isLoggedIn ? (
               <>
                 {/* Removed Features, How It Works, About links as requested */}

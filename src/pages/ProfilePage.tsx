@@ -182,7 +182,7 @@ const ProfilePage: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden pt-20">
+    <div className="min-h-screen bg-black relative overflow-hidden pt-28">
       {/* Pure black background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{display: 'none'}}>
         <motion.div
@@ -207,7 +207,7 @@ const ProfilePage: React.FC = () => {
         />
       </div>
 
-      <div className="relative z-10 max-w-[1600px] mx-auto p-4 md:p-8">
+      <div className="relative z-10 max-w-[1800px] mx-auto p-4 md:p-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -216,7 +216,7 @@ const ProfilePage: React.FC = () => {
           className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
         >
           <div>
-            <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl md:text-4xl font-black text-white mb-2">
               My Profile
             </h1>
             <p className="text-slate-400 text-lg">Manage your personal and academic information</p>
@@ -227,7 +227,7 @@ const ProfilePage: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setEditMode(true)}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold hover:shadow-lg hover:shadow-indigo-500/50 transition-all"
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-purple-500 text-white font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all"
             >
               <Edit className="w-5 h-5" />
               Edit Profile

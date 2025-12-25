@@ -148,8 +148,8 @@ const ResumeAnalyzerPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-black relative overflow-hidden pt-28">
+      <div className="relative z-10 max-w-[1800px] mx-auto p-4 md:p-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -158,10 +158,10 @@ const ResumeAnalyzerPage: React.FC = () => {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
-            <Sparkles className="w-10 h-10 text-neon-purple" />
-            <h1 className="text-4xl font-bold">AI Resume Analyzer</h1>
+            <Sparkles className="w-10 h-10 text-purple-400" />
+            <h1 className="text-3xl md:text-4xl font-black text-white">AI Resume Analyzer</h1>
           </div>
-          <p className="text-slate-400">
+          <p className="text-slate-400 text-lg">
             Upload your resume and get instant AI-powered feedback to improve your chances of passing ATS systems
           </p>
         </motion.div>
@@ -171,10 +171,10 @@ const ResumeAnalyzerPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="mb-8 p-8 rounded-2xl bg-black border border-white/10 shadow-2xl"
+          className="mb-8 p-8 rounded-2xl glass-panel border border-white/10 shadow-2xl"
         >
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-            <Upload className="w-6 h-6 text-neon-purple" />
+          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-white">
+            <Upload className="w-6 h-6 text-purple-400" />
             Upload Resume
           </h2>
 
@@ -186,12 +186,12 @@ const ResumeAnalyzerPage: React.FC = () => {
               onDrop={handleDrop}
               className={`border-2 border-dashed rounded-xl p-12 text-center transition-all ${
                 dragActive
-                  ? 'border-neon-purple bg-neon-purple/10'
-                  : 'border-white/20 hover:border-neon-purple/50'
+                  ? 'border-purple-500 bg-purple-500/10'
+                  : 'border-white/20 hover:border-purple-500/50 hover:bg-white/5'
               }`}
             >
               <Upload className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-              <p className="text-lg font-semibold mb-2">
+              <p className="text-lg font-semibold mb-2 text-white">
                 Drag & drop your resume here, or click to browse
               </p>
               <p className="text-sm text-slate-400 mb-4">
@@ -206,7 +206,7 @@ const ResumeAnalyzerPage: React.FC = () => {
               />
               <label
                 htmlFor="resume-upload"
-                className="inline-block px-6 py-3 rounded-lg bg-gradient-to-r from-neon-purple to-neon-purple cursor-pointer hover:scale-105 transition-transform font-semibold"
+                className="inline-block px-6 py-3 rounded-lg bg-gradient-to-r from-rose-500 to-purple-500 cursor-pointer hover:scale-105 transition-transform font-semibold text-white shadow-lg shadow-purple-500/30"
               >
                 Choose File
               </label>
@@ -216,9 +216,9 @@ const ResumeAnalyzerPage: React.FC = () => {
               {/* Selected File */}
               <div className="p-4 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <FileText className="w-8 h-8 text-neon-purple" />
+                  <FileText className="w-8 h-8 text-purple-400" />
                   <div>
-                    <div className="font-semibold">{selectedFile.name}</div>
+                    <div className="font-semibold text-white">{selectedFile.name}</div>
                     <div className="text-sm text-slate-400">
                       {(selectedFile.size / 1024).toFixed(2)} KB
                     </div>
@@ -234,7 +234,7 @@ const ResumeAnalyzerPage: React.FC = () => {
 
               {/* Target Role (Optional) */}
               <div>
-                <label className="block text-sm font-semibold mb-2">
+                <label className="block text-sm font-semibold mb-2 text-white">
                   Target Role <span className="text-slate-400 font-normal">(Optional)</span>
                 </label>
                 <input
@@ -242,7 +242,7 @@ const ResumeAnalyzerPage: React.FC = () => {
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
                   placeholder="e.g., Software Engineer, Data Analyst"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-neon-purple transition-colors"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-purple-500/50 transition-colors text-white placeholder:text-slate-600"
                 />
                 <p className="text-xs text-slate-400 mt-2">
                   Specify a role to get more targeted keyword recommendations
@@ -253,7 +253,7 @@ const ResumeAnalyzerPage: React.FC = () => {
               <button
                 onClick={handleAnalyze}
                 disabled={analyzing}
-                className="w-full px-8 py-4 rounded-lg bg-gradient-to-r from-neon-purple to-neon-purple font-bold text-lg hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg shadow-neon-purple/30"
+                className="w-full px-8 py-4 rounded-lg bg-gradient-to-r from-rose-500 to-purple-500 font-bold text-lg text-white hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg shadow-purple-500/30"
               >
                 {analyzing ? (
                   <>
@@ -271,8 +271,8 @@ const ResumeAnalyzerPage: React.FC = () => {
           )}
 
           {/* Info Banner */}
-          <div className="mt-6 p-4 rounded-lg bg-neon-purple/10 border border-neon-purple/30 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-neon-purple mt-0.5 flex-shrink-0" />
+          <div className="mt-6 p-4 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
             <div className="text-sm text-slate-300">
               <span className="font-semibold text-white">Powered by Google Gemini AI</span>
               <br />
