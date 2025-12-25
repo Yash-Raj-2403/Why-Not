@@ -336,6 +336,7 @@ const PostOpportunityPage: React.FC = () => {
           </div>
         </motion.form>
       </div>
+      </div>
     </PageTransition>
   );
 };

@@ -268,6 +268,7 @@ const ApplicationsManagementPage: React.FC = () => {
           </div>
         )}
       </div>
+      </div>
     </PageTransition>
   );
 };
