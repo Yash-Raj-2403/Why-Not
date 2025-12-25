@@ -5,6 +5,7 @@ import { Lock, Mail, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import PageTransition from '../components/PageTransition';
 import ParticleBackground from '../components/ParticleBackground';
+import ThreeScene from '../components/ThreeScene';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -34,6 +35,8 @@ const LoginPage: React.FC = () => {
   return (
     <PageTransition>
       <div className="relative min-h-screen flex items-center justify-center px-6 pt-20 bg-gradient-to-br from-slate-950 via-slate-900 to-black overflow-hidden">
+      {/* Particle Background with Balls Effect */}
+      <ParticleBackground />
       {/* Animated Background Orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <motion.div

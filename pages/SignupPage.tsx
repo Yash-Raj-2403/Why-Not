@@ -7,6 +7,7 @@ import { supabase } from '../services/supabaseClient';
 import { UserRole } from '../types';
 import PageTransition from '../components/PageTransition';
 import ParticleBackground from '../components/ParticleBackground';
+import ThreeScene from '../components/ThreeScene';
 
 const SignupPage: React.FC = () => {
   const navigate = useNavigate();
@@ -183,6 +184,8 @@ const SignupPage: React.FC = () => {
   return (
     <PageTransition>
       <div className="relative min-h-screen flex items-center justify-center px-6 py-20 bg-gradient-to-br from-slate-950 via-slate-900 to-black overflow-hidden">
+      {/* Particle Background with Balls Effect */}
+      <ParticleBackground />
       {/* Animated Background Orbs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <motion.div
