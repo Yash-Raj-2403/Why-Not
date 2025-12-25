@@ -196,7 +196,15 @@ ALTER TABLE public.opportunities ENABLE ROW LEVEL SECURITY;
 -- RLS Policies for opportunities
 CREATE POLICY "Everyone can view active opportunities"
   ON public.opportunities FOR SELECT
-  USING (status = 'active' OR posted_by = auth.uid());
+  USING (
+    status = 'active' 
+    OR posted_by = auth.uid()
+    OR EXISTS (
+      SELECT 1 FROM public.applications 
+      WHERE applications.opportunity_id = opportunities.id 
+      AND applications.student_id = auth.uid()
+    )
+  );
 
 CREATE POLICY "Placement officers can create opportunities"
   ON public.opportunities FOR INSERT

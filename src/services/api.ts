@@ -130,7 +130,7 @@ export const api = {
         opportunity_id: opportunityId,
         student_id: studentId,
         cover_letter: coverLetter,
-        status: 'APPLIED'
+        status: 'PENDING'
       })
       .select()
       .single();

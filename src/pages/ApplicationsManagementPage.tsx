@@ -28,7 +28,7 @@ const ApplicationsManagementPage: React.FC = () => {
         .select(`
           *,
           opportunity:opportunities!inner(title, company_name, posted_by),
-          student:profiles!applications_student_id_fkey(name, email, department)
+          student:profiles(name, email, department)
         `)
         .eq('opportunity.posted_by', user!.id)
         .order('created_at', { ascending: false });

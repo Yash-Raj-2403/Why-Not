@@ -156,7 +156,7 @@ const ApplicationsPage: React.FC = () => {
                     <div className="flex flex-col md:flex-row justify-between gap-6">
                       <div className="flex-1">
                         <div className="flex items-start justify-between mb-3">
-                          <h3 className="text-xl font-bold text-white">{app.opportunity.title}</h3>
+                          <h3 className="text-xl font-bold text-white">{app.opportunity?.title || 'Unknown Opportunity'}</h3>
                           <div className="flex items-center gap-2">
                             <span className={`px-3 py-2 rounded-lg text-xs font-bold border flex items-center gap-2 ${getStatusColor(app.status)}`}>
                               <StatusIcon size={14} />
@@ -180,10 +180,10 @@ const ApplicationsPage: React.FC = () => {
                         
                         <div className="flex items-center gap-2 text-slate-300 mb-4">
                           <Building size={16} className="text-purple-400" />
-                          <span className="font-medium">{app.opportunity.company_name}</span>
+                          <span className="font-medium">{app.opportunity?.company_name || 'Unknown Company'}</span>
                           <span className="text-slate-600">•</span>
                           <MapPin size={16} className="text-slate-500" />
-                          <span className="text-slate-400 text-sm">{app.opportunity.location}</span>
+                          <span className="text-slate-400 text-sm">{app.opportunity?.location || 'Unknown Location'}</span>
                         </div>
 
                         <div className="flex flex-wrap gap-4 text-sm text-slate-400 mb-4">
@@ -191,7 +191,7 @@ const ApplicationsPage: React.FC = () => {
                             <Clock size={14} />
                             Applied on {new Date(app.created_at).toLocaleDateString()}
                           </div>
-                          {app.opportunity.stipend_min && (
+                          {app.opportunity?.stipend_min && (
                             <div className="flex items-center gap-2">
                               <span className="text-emerald-400 font-semibold">₹{app.opportunity.stipend_min.toLocaleString()} - ₹{app.opportunity.stipend_max.toLocaleString()}</span>
                             </div>

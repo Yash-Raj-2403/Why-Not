@@ -56,15 +56,18 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
     
     setLoading(true);
     try {
+      const job = application.job || (application as any).opportunity;
+      if (!job) throw new Error('Job details not found');
+
       const reqData = {
         studentName: student.name,
-        studentSkills: student.skills.map(s => s.name),
+        studentSkills: student.skills?.map(s => s.name) || [],
         studentCgpa: student.cgpa,
-        jobRole: application.job.role || (application.job as any).title, // Handle title vs role
-        jobCompany: application.job.company || (application.job as any).company_name,
-        jobRequiredSkills: (application.job.requiredSkills || (application.job as any).required_skills || []).map((s: any) => s.name),
-        jobMinCgpa: application.job.minCgpa || (application.job as any).min_cgpa,
-        jobDescription: application.job.description,
+        jobRole: job.role || job.title,
+        jobCompany: job.company || job.company_name,
+        jobRequiredSkills: (job.requiredSkills || job.required_skills || []).map((s: any) => typeof s === 'string' ? s : s.name),
+        jobMinCgpa: job.minCgpa || job.min_cgpa,
+        jobDescription: job.description,
         resumeText: student.resume
       };
       
@@ -88,15 +91,18 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
       
       const bulkData = {
         studentName: student.name,
-        studentSkills: student.skills.map(s => s.name),
+        studentSkills: student.skills?.map(s => s.name) || [],
         studentCgpa: student.cgpa,
-        rejections: rejectedApps.map(app => ({
-          jobRole: app.job.role,
-          jobCompany: app.job.company,
-          jobRequiredSkills: app.job.requiredSkills.map(s => s.name),
-          jobMinCgpa: app.job.minCgpa,
-          rejectionDate: app.appliedDate
-        }))
+        rejections: rejectedApps.map(app => {
+          const job = app.job || (app as any).opportunity;
+          return {
+            jobRole: job?.role || job?.title || 'Unknown Role',
+            jobCompany: job?.company || job?.company_name || 'Unknown Company',
+            jobRequiredSkills: (job?.requiredSkills || job?.required_skills || []).map((s: any) => typeof s === 'string' ? s : s.name),
+            jobMinCgpa: job?.minCgpa || job?.min_cgpa,
+            rejectionDate: app.appliedDate || (app as any).created_at
+          };
+        })
       };
       
       const result = await generateBulkRejectionAnalysis(bulkData, student.id);
