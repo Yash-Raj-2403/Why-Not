@@ -17,7 +17,7 @@ const StudentDashboard: React.FC = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [opportunities, setOpportunities] = useState<JobOpportunity[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loginStreak, setLoginStreak] = useState(7);
+  const [loginStreak, setLoginStreak] = useState(1);
   const [profileCompletion, setProfileCompletion] = useState(0);
   const [showAnalysisHub, setShowAnalysisHub] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application | undefined>();
@@ -80,23 +80,44 @@ const StudentDashboard: React.FC = () => {
   };
 
   const stats = [
-    { label: 'Applications', value: applications.length, icon: FileText, color: 'text-rose-400', gradient: 'from-rose-500 to-purple-500', change: '+3 this week' },
-    { label: 'Interviews', value: applications.filter(a => a.status === 'INTERVIEW_SCHEDULED').length, icon: Users, color: 'text-purple-400', gradient: 'from-purple-500 to-indigo-500', change: '2 upcoming' },
-    { label: 'Offers', value: applications.filter(a => a.status === 'ACCEPTED').length, icon: Award, color: 'text-indigo-400', gradient: 'from-indigo-500 to-purple-500', change: 'Congrats!' },
-    { label: 'Profile Views', value: 156, icon: Eye, color: 'text-pink-400', gradient: 'from-pink-500 to-rose-500', change: '+12 today' },
+    { label: 'Applications', value: applications.length, icon: FileText, color: 'text-rose-400', gradient: 'from-rose-500 to-purple-500', change: 'Total' },
+    { label: 'Interviews', value: applications.filter(a => a.status === 'INTERVIEW_SCHEDULED').length, icon: Users, color: 'text-purple-400', gradient: 'from-purple-500 to-indigo-500', change: 'Scheduled' },
+    { label: 'Offers', value: applications.filter(a => a.status === 'ACCEPTED').length, icon: Award, color: 'text-indigo-400', gradient: 'from-indigo-500 to-purple-500', change: 'Received' },
+    { label: 'Opportunities', value: opportunities.length, icon: Briefcase, color: 'text-pink-400', gradient: 'from-pink-500 to-rose-500', change: 'Available' },
   ];
 
-  const recentActivity = [
-    { action: 'Application viewed by', company: 'Google', time: '2 hours ago', icon: Eye },
-    { action: 'Interview scheduled with', company: 'Microsoft', time: '5 hours ago', icon: Calendar },
-    { action: 'Applied to', company: 'Amazon', time: '1 day ago', icon: FileText },
-    { action: 'Resume downloaded by', company: 'Meta', time: '2 days ago', icon: ThumbsUp },
-  ];
+  const recentActivity = applications.slice(0, 4).map(app => {
+    let action = 'Applied to';
+    let icon = FileText;
+    
+    if (app.status === 'INTERVIEW_SCHEDULED') {
+      action = 'Interview scheduled with';
+      icon = Calendar;
+    } else if (app.status === 'ACCEPTED') {
+      action = 'Offer received from';
+      icon = Award;
+    } else if (app.status === 'REJECTED') {
+      action = 'Application update from';
+      icon = Activity;
+    }
 
-  const upcomingInterviews = [
-    { company: 'Microsoft', date: 'Dec 28', time: '10:00 AM', type: 'Technical' },
-    { company: 'Google', date: 'Dec 30', time: '2:00 PM', type: 'HR Round' },
-  ];
+    return {
+      action,
+      company: app.opportunity?.company_name || 'Unknown Company',
+      time: new Date(app.created_at).toLocaleDateString(),
+      icon
+    };
+  });
+
+  const upcomingInterviews = applications
+    .filter(a => a.status === 'INTERVIEW_SCHEDULED')
+    .slice(0, 3)
+    .map(app => ({
+      company: app.opportunity?.company_name || 'Unknown Company',
+      date: app.interview_date ? new Date(app.interview_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'TBD',
+      time: app.interview_time || 'TBD',
+      type: app.opportunity?.type === 'INTERNSHIP' ? 'Internship Interview' : 'Job Interview'
+    }));
 
   return (
     <PageTransition>
@@ -369,7 +390,7 @@ const StudentDashboard: React.FC = () => {
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
 
           {/* Activity Feed - Medium Card */}
           <motion.div
@@ -407,7 +428,7 @@ const StudentDashboard: React.FC = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Upcoming Interviews - Tall Card */}
           <div

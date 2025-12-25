@@ -81,27 +81,52 @@ const PostOpportunityPage: React.FC = () => {
 
   return (
     <PageTransition>
-      <div className="pt-28 px-6 max-w-4xl mx-auto min-h-screen pb-12">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-slate-400 hover:text-white mb-6 transition-colors"
-        >
-          <ArrowLeft size={20} />
-          Back
-        </button>
+      <div className="min-h-screen bg-black relative overflow-hidden pt-28 pb-12">
+        {/* Background Effects */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.15, 0.25, 0.15],
+              x: [0, 100, 0],
+              y: [0, -50, 0],
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-0 right-0 w-[800px] h-[800px] bg-purple-500/30 rounded-full blur-[150px]"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.15, 0.25, 0.15],
+              x: [0, -100, 0],
+              y: [0, 100, 0],
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-indigo-500/30 rounded-full blur-[150px]"
+          />
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="mb-8"
-        >
-          <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-            <Briefcase className="text-neon-purple" />
-            Post New Opportunity
-          </h1>
-          <p className="text-slate-400">Create an internship or placement opportunity for students</p>
-        </motion.div>
+        <div className="relative z-10 max-w-4xl mx-auto px-6">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-slate-400 hover:text-white mb-6 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            Back
+          </button>
+
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="mb-8"
+          >
+            <h1 className="text-3xl font-bold mb-2 flex items-center gap-3 text-white">
+              <Briefcase className="text-purple-400" />
+              Post New Opportunity
+            </h1>
+            <p className="text-slate-400">Create an internship or placement opportunity for students</p>
+          </motion.div>
 
         {message && (
           <motion.div
@@ -123,7 +148,7 @@ const PostOpportunityPage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
           onSubmit={handleSubmit} 
-          className="glass-panel p-8 rounded-xl border border-white/10 space-y-6"
+          className="glass-panel rounded-2xl p-8 border border-white/10 bg-slate-900/60 space-y-6"
         >
           {/* Basic Info */}
           <div className="grid md:grid-cols-2 gap-6">
@@ -136,7 +161,7 @@ const PostOpportunityPage: React.FC = () => {
                 onChange={handleChange}
                 required
                 placeholder="e.g., Frontend Developer Intern"
-                className="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-neon-purple focus:outline-none"
+                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
               />
             </div>
 

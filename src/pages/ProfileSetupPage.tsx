@@ -210,11 +210,7 @@ const ProfileSetupPage: React.FC = () => {
               <button onClick={prevStep} className="text-slate-400 hover:text-white">Back</button>
               <button onClick={nextStep} className="bg-neutral-900 px-4 py-2 rounded hover:bg-neutral-800">Next</button>
             </div>
-          </motion.div
-            initial={{ opacity: 0, x: 20 }} 
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-          
+          </motion.div>
         )}
 
         {step === 3 && (
@@ -251,11 +247,7 @@ const ProfileSetupPage: React.FC = () => {
                 ))}
               </div>
             </div>
-            <div class
-            initial={{ opacity: 0, x: 20 }} 
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-          
+            <div className="mt-6 flex justify-between">
               <button onClick={prevStep} className="text-slate-400 hover:text-white">Back</button>
               <button onClick={nextStep} className="bg-neutral-900 px-4 py-2 rounded hover:bg-neutral-800">Next</button>
             </div>
@@ -278,7 +270,7 @@ const ProfileSetupPage: React.FC = () => {
                   className="w-full bg-slate-800 border border-slate-700 rounded p-2"
                 />
               </div>
-        motion.      {/* Add more preference fields as needed */}
+              {/* Add more preference fields as needed */}
             </div>
             <div className="mt-6 flex justify-between">
               <button onClick={prevStep} className="text-slate-400 hover:text-white">Back</button>
@@ -286,7 +278,7 @@ const ProfileSetupPage: React.FC = () => {
             </div>
           </motion.div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };
