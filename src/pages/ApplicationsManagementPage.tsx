@@ -93,10 +93,15 @@ const ApplicationsManagementPage: React.FC = () => {
   return (
     <PageTransition>
       <div className="pt-24 pb-12 px-6 max-w-7xl mx-auto min-h-screen">
-        <div className="mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="mb-8"
+        >
           <h1 className="text-3xl font-bold mb-2">Applications Management</h1>
           <p className="text-slate-400">Review and manage student applications</p>
-        </div>
+        </motion.div>
 
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           {/* Search */}
@@ -134,11 +139,16 @@ const ApplicationsManagementPage: React.FC = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neon-purple"></div>
           </div>
         ) : filteredApps.length === 0 ? (
-          <div className="text-center py-20 glass-panel rounded-xl">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="text-center py-20 glass-panel rounded-xl"
+          >
             <FileText className="w-16 h-16 text-slate-600 mx-auto mb-4" />
             <h3 className="text-xl font-bold mb-2">No Applications Found</h3>
             <p className="text-slate-400">No applications match your filters.</p>
-          </div>
+          </motion.div>
         ) : (
           <div className="space-y-4">
             {filteredApps.map((app, index) => (
@@ -146,7 +156,7 @@ const ApplicationsManagementPage: React.FC = () => {
                 key={app.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
                 className="glass-panel p-6 rounded-xl border border-white/10 hover:border-white/20 transition-all"
               >
                 <div className="flex justify-between items-start mb-4">

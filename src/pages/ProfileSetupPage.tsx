@@ -93,7 +93,12 @@ const ProfileSetupPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full bg-slate-900 p-8 rounded-xl border border-slate-800">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="max-w-2xl w-full bg-slate-900 p-8 rounded-xl border border-slate-800"
+      >
         <h1 className="text-3xl font-bold mb-6 text-center">Complete Your Profile</h1>
         
         <div className="flex justify-between mb-8">
@@ -105,7 +110,11 @@ const ProfileSetupPage: React.FC = () => {
         </div>
 
         {step === 1 && (
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }} 
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
             <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
             <div className="space-y-4">
               <div>
@@ -168,7 +177,11 @@ const ProfileSetupPage: React.FC = () => {
         )}
 
         {step === 2 && (
-          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }} 
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
             <h2 className="text-xl font-semibold mb-4">Academic Details</h2>
             <div className="space-y-4">
               <div>
@@ -197,7 +210,11 @@ const ProfileSetupPage: React.FC = () => {
               <button onClick={prevStep} className="text-slate-400 hover:text-white">Back</button>
               <button onClick={nextStep} className="bg-neutral-900 px-4 py-2 rounded hover:bg-neutral-800">Next</button>
             </div>
-          </motion.div>
+          </motion.div
+            initial={{ opacity: 0, x: 20 }} 
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          
         )}
 
         {step === 3 && (
@@ -234,7 +251,11 @@ const ProfileSetupPage: React.FC = () => {
                 ))}
               </div>
             </div>
-            <div className="mt-6 flex justify-between">
+            <div class
+            initial={{ opacity: 0, x: 20 }} 
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          
               <button onClick={prevStep} className="text-slate-400 hover:text-white">Back</button>
               <button onClick={nextStep} className="bg-neutral-900 px-4 py-2 rounded hover:bg-neutral-800">Next</button>
             </div>
@@ -257,7 +278,7 @@ const ProfileSetupPage: React.FC = () => {
                   className="w-full bg-slate-800 border border-slate-700 rounded p-2"
                 />
               </div>
-              {/* Add more preference fields as needed */}
+        motion.      {/* Add more preference fields as needed */}
             </div>
             <div className="mt-6 flex justify-between">
               <button onClick={prevStep} className="text-slate-400 hover:text-white">Back</button>

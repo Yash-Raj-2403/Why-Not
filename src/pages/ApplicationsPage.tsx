@@ -80,6 +80,7 @@ const ApplicationsPage: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             className="mb-8"
           >
             <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-rose-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">My Applications</h1>
@@ -94,6 +95,7 @@ const ApplicationsPage: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             className="text-center py-20 glass-panel rounded-2xl border border-white/10 backdrop-blur-xl bg-slate-900/80"
           >
             <FileText className="w-16 h-16 text-slate-600 mx-auto mb-4" />
@@ -115,7 +117,7 @@ const ApplicationsPage: React.FC = () => {
                   key={app.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
                   className="relative group"
                 >
                   {/* Glow effect on hover */}
@@ -157,6 +159,7 @@ const ApplicationsPage: React.FC = () => {
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
                             className="mt-4 p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/30"
                           >
                             <div className="flex items-start gap-3">
@@ -184,6 +187,7 @@ const ApplicationsPage: React.FC = () => {
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
                             className="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30"
                           >
                             <div className="flex items-center gap-3">
@@ -202,6 +206,7 @@ const ApplicationsPage: React.FC = () => {
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
                             className="mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30"
                           >
                             <div className="flex items-center gap-3">

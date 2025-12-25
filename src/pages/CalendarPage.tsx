@@ -151,6 +151,7 @@ const CalendarPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-8"
         >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -193,6 +194,7 @@ const CalendarPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             className="mb-6 p-6 rounded-2xl bg-gradient-to-br from-neon-purple/10 to-neon-purple/5 border-2 border-neon-purple/30"
           >
             <div className="flex items-center gap-3 mb-4">
@@ -238,6 +240,7 @@ const CalendarPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             className="mb-6 p-4 rounded-lg bg-neon-purple/10 border border-neon-purple/30 flex items-start gap-3"
           >
             <AlertCircle className="w-5 h-5 text-neon-purple mt-0.5" />
@@ -254,7 +257,7 @@ const CalendarPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
           className="bg-black rounded-2xl border border-white/10 p-6 shadow-2xl"
         >
           {events.length === 0 ? (
@@ -288,7 +291,7 @@ const CalendarPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
           className="mt-6 p-6 rounded-2xl bg-white/5 border border-white/10"
         >
           <h3 className="text-sm font-semibold mb-4 text-slate-400">EVENT TYPES</h3>

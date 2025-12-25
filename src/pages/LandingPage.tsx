@@ -25,14 +25,14 @@ const LandingPage: React.FC = () => {
         <motion.header 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.4 }}
           className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 lg:px-24 py-6"
         >
           <div className="flex items-center justify-between max-w-7xl mx-auto">
             <Link to="/" className="flex items-center gap-3 group">
               <motion.div 
                 whileHover={{ rotate: 360, scale: 1.1 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.4 }}
                 className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 via-purple-500 to-indigo-500 p-[2px] shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50"
               >
                 <div className="w-full h-full rounded-xl bg-black flex items-center justify-center">
@@ -55,18 +55,18 @@ const LandingPage: React.FC = () => {
       <section className="relative z-10 min-h-screen flex flex-col justify-center pt-32 px-6 md:px-12 lg:px-24">
         <div className="max-w-4xl w-full">
             <motion.div
-                initial={{ opacity: 0, y: 150, scale: 0.8 }}
+                initial={{ opacity: 0, y: 50, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
             >
                 <div className="inline-block px-4 py-2 bg-neon-purple/10 border border-neon-purple/20 rounded-full mb-6">
                   <span className="text-neon-purple text-sm font-semibold">Campus Internship & Placement Platform</span>
                 </div>
                 
                 <motion.h1 
-                  initial={{ opacity: 0, y: 100, rotateX: 45 }}
+                  initial={{ opacity: 0, y: 20, rotateX: 45 }}
                   animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                  transition={{ duration: 1.2, delay: 0.5, type: "spring", stiffness: 60 }}
+                  transition={{ duration: 0.5, delay: 0.2, type: "spring", stiffness: 100 }}
                   className="text-6xl md:text-8xl font-bold leading-[1.1] tracking-tight mb-8"
                 >
                     Turning silent <br />
@@ -80,9 +80,9 @@ const LandingPage: React.FC = () => {
                 </motion.h1>
 
                 <motion.p 
-                  initial={{ opacity: 0, x: -100, y: 30 }}
+                  initial={{ opacity: 0, x: -20, y: 10 }}
                   animate={{ opacity: 1, x: 0, y: 0 }}
-                  transition={{ duration: 1, delay: 0.8 }}
+                  transition={{ duration: 0.4, delay: 0.3 }}
                   className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl leading-relaxed font-light"
                 >
                     Stop wondering why you got rejected. Get AI-powered explanations that reveal skill gaps, 
@@ -91,9 +91,9 @@ const LandingPage: React.FC = () => {
                 </motion.p>
                 
                 <motion.div 
-                  initial={{ opacity: 0, y: 50, scale: 0.7 }}
+                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.8, delay: 1.1, type: "spring", bounce: 0.4 }}
+                  transition={{ duration: 0.4, delay: 0.4, type: "spring", bounce: 0.4 }}
                   className="flex flex-wrap gap-4"
                 >
                   <Link to="/login">
@@ -121,9 +121,9 @@ const LandingPage: React.FC = () => {
             {/* Core Features Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
                 <motion.div 
-                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: false, amount: 0.2 }}
+                  viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-slate-900/80 border border-purple-500/30 hover:border-purple-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/30 hover:-translate-y-3"
                 >
@@ -159,9 +159,9 @@ const LandingPage: React.FC = () => {
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: false, amount: 0.2 }}
+                  viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-slate-900/80 border border-white/10 hover:border-indigo-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/20 hover:-translate-y-2"
                 >
@@ -179,9 +179,9 @@ const LandingPage: React.FC = () => {
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: false, amount: 0.2 }}
+                  viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-slate-900/80 border border-white/10 hover:border-indigo-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/20 hover:-translate-y-2"
                 >
@@ -199,9 +199,9 @@ const LandingPage: React.FC = () => {
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: false, amount: 0.2 }}
+                  viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-slate-900/80 border border-white/10 hover:border-pink-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/20 hover:-translate-y-2"
                 >
@@ -219,9 +219,9 @@ const LandingPage: React.FC = () => {
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: false, amount: 0.2 }}
+                  viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-slate-900/80 border border-white/10 hover:border-orange-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20 hover:-translate-y-2"
                 >
@@ -239,9 +239,9 @@ const LandingPage: React.FC = () => {
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: false, amount: 0.2 }}
+                  viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                   className="relative group p-8 rounded-2xl backdrop-blur-xl bg-slate-900/80 border border-white/10 hover:border-green-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20 hover:-translate-y-2"
                 >
@@ -313,9 +313,9 @@ const LandingPage: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <motion.div 
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className="text-center p-8 rounded-2xl backdrop-blur-xl bg-slate-900/60 border border-indigo-500/20 hover:border-indigo-500/40 transition-all"
             >
@@ -325,9 +325,9 @@ const LandingPage: React.FC = () => {
             </motion.div>
 
             <motion.div 
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-center p-8 rounded-2xl backdrop-blur-xl bg-slate-900/60 border border-purple-500/20 hover:border-purple-500/40 transition-all"
             >
@@ -337,9 +337,9 @@ const LandingPage: React.FC = () => {
             </motion.div>
 
             <motion.div 
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-center p-8 rounded-2xl backdrop-blur-xl bg-slate-900/60 border border-rose-500/20 hover:border-rose-500/40 transition-all"
             >
@@ -349,9 +349,9 @@ const LandingPage: React.FC = () => {
             </motion.div>
 
             <motion.div 
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.3 }}
               className="text-center p-8 rounded-2xl backdrop-blur-xl bg-slate-900/60 border border-rose-500/20 hover:border-rose-500/40 transition-all"
             >
@@ -373,9 +373,9 @@ const LandingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className="flex gap-4 p-6 rounded-xl backdrop-blur-xl bg-slate-900/40 border border-white/10 hover:border-purple-500/30 transition-all"
             >
@@ -391,9 +391,9 @@ const LandingPage: React.FC = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className="flex gap-4 p-6 rounded-xl backdrop-blur-xl bg-slate-900/40 border border-white/10 hover:border-indigo-500/30 transition-all"
             >
@@ -409,9 +409,9 @@ const LandingPage: React.FC = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
               className="flex gap-4 p-6 rounded-xl backdrop-blur-xl bg-slate-900/40 border border-white/10 hover:border-rose-500/30 transition-all"
             >
@@ -427,9 +427,9 @@ const LandingPage: React.FC = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
               className="flex gap-4 p-6 rounded-xl backdrop-blur-xl bg-slate-900/40 border border-white/10 hover:border-rose-500/30 transition-all"
             >
@@ -457,9 +457,9 @@ const LandingPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className="p-8 rounded-2xl backdrop-blur-xl bg-slate-900/60 border border-purple-500/20 hover:border-purple-500/40 transition-all"
             >
@@ -482,9 +482,9 @@ const LandingPage: React.FC = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
               className="p-8 rounded-2xl backdrop-blur-xl bg-slate-900/60 border border-indigo-500/20 hover:border-indigo-500/40 transition-all"
             >
@@ -507,9 +507,9 @@ const LandingPage: React.FC = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
               className="p-8 rounded-2xl backdrop-blur-xl bg-slate-900/60 border border-rose-500/20 hover:border-rose-500/40 transition-all"
             >
@@ -538,10 +538,10 @@ const LandingPage: React.FC = () => {
       <section className="relative z-10 py-32 px-6 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
             className="p-12 rounded-3xl backdrop-blur-xl bg-gradient-to-br from-purple-900/40 via-slate-900/40 to-pink-900/40 border border-purple-500/30 shadow-2xl shadow-purple-500/20"
           >
             <h2 className="text-5xl font-bold mb-6">

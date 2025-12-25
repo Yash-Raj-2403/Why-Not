@@ -136,6 +136,7 @@ const StudentDashboard: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-8"
         >
           <div className="grid md:grid-cols-12 gap-6 items-stretch">
@@ -187,7 +188,7 @@ const StudentDashboard: React.FC = () => {
                             className="absolute inset-0 bg-gradient-to-r from-rose-500 via-purple-500 to-pink-500"
                             initial={{ width: 0 }}
                             animate={{ width: `${profileCompletion}%` }}
-                            transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                            transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
                           />
                           <motion.div
                             className="absolute inset-0 bg-gradient-to-r from-white/40 to-transparent"
@@ -230,7 +231,7 @@ const StudentDashboard: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3 }}
+                transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
                 whileHover={{ scale: 1.02 }}
                 className="relative h-full"
               >
@@ -272,7 +273,7 @@ const StudentDashboard: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
             className="col-span-12 md:col-span-3"
           >
             <div className="relative group h-full">
@@ -295,7 +296,7 @@ const StudentDashboard: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
             className="col-span-12 md:col-span-3"
           >
             <div className="relative group h-full">
@@ -318,7 +319,7 @@ const StudentDashboard: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
             className="col-span-12 md:col-span-3"
           >
             <div className="relative group h-full">
@@ -343,7 +344,7 @@ const StudentDashboard: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
             className="col-span-12 md:col-span-3"
           >
             <div className="relative group h-full">
@@ -367,7 +368,7 @@ const StudentDashboard: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
             className="col-span-12 md:col-span-7"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -436,7 +437,7 @@ const StudentDashboard: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            transition={{ duration: 0.4, delay: 0.6, ease: "easeOut" }}
             className="col-span-12 md:col-span-5"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -472,7 +473,7 @@ const StudentDashboard: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
+            transition={{ duration: 0.4, delay: 0.7, ease: "easeOut" }}
             className="col-span-12 md:col-span-5"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -525,7 +526,7 @@ const StudentDashboard: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
+            transition={{ duration: 0.4, delay: 0.8, ease: "easeOut" }}
             className="col-span-12 md:col-span-7"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -593,7 +594,7 @@ const StudentDashboard: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9 }}
+            transition={{ duration: 0.4, delay: 0.9, ease: "easeOut" }}
             className="col-span-12"
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

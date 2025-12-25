@@ -212,6 +212,7 @@ const ProfilePage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
         >
           <div>
@@ -261,7 +262,7 @@ const ProfilePage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
           className="mb-8 glass-panel rounded-2xl p-6 border border-white/10"
         >
           <div className="flex items-center justify-between mb-3">
@@ -294,7 +295,7 @@ const ProfilePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
             className="col-span-12"
           >
             <div className="relative group">
@@ -413,7 +414,7 @@ const ProfilePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
             className="col-span-12 md:col-span-6"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -504,7 +505,7 @@ const ProfilePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
             className="col-span-12 md:col-span-6"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -597,7 +598,7 @@ const ProfilePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
             className="col-span-12 md:col-span-7"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -742,7 +743,7 @@ const ProfilePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            transition={{ duration: 0.4, delay: 0.6, ease: "easeOut" }}
             className="col-span-12 md:col-span-5"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">

@@ -154,6 +154,7 @@ const ResumeAnalyzerPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
@@ -169,6 +170,7 @@ const ResumeAnalyzerPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-8 p-8 rounded-2xl bg-black border border-white/10 shadow-2xl"
         >
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
@@ -285,7 +287,7 @@ const ResumeAnalyzerPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
           >
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold flex items-center gap-2">
@@ -311,6 +313,7 @@ const ResumeAnalyzerPage: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
                 className="mb-6 p-6 rounded-2xl bg-gradient-to-br from-neon-purple/10 to-neon-purple/10 border-2 border-neon-purple/30"
               >
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
@@ -378,6 +381,7 @@ const ResumeAnalyzerPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             className="text-center py-20"
           >
             <FileText className="w-24 h-24 text-slate-600 mx-auto mb-6" />

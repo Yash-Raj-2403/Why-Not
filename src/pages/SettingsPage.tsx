@@ -149,6 +149,7 @@ const SettingsPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="mb-8"
         >
           <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-rose-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
@@ -192,7 +193,7 @@ const SettingsPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
             className="col-span-12 md:col-span-7"
           >
             <div className="relative group">
@@ -281,7 +282,7 @@ const SettingsPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
             className="col-span-12 md:col-span-5"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -355,7 +356,7 @@ const SettingsPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
             className="col-span-12 md:col-span-6"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -417,7 +418,7 @@ const SettingsPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
             className="col-span-12 md:col-span-6"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -487,7 +488,7 @@ const SettingsPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
             className="col-span-12"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10">

@@ -142,7 +142,7 @@ const PlacementDashboard: React.FC = () => {
                   key={stat.title}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
                   className={`glass-panel p-6 rounded-xl border ${stat.borderColor}`}
                 >
                   <div className="flex items-start justify-between mb-4">
@@ -168,7 +168,12 @@ const PlacementDashboard: React.FC = () => {
             </div>
 
             {/* Quick Actions */}
-            <div className="grid md:grid-cols-3 gap-4 mb-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
+              className="grid md:grid-cols-3 gap-4 mb-8"
+            >
               <Link to="/placement/post" className="glass-panel p-6 rounded-xl border border-white/10 hover:border-neon-purple/50 transition-all group">
                 <PlusCircle className="w-8 h-8 mb-3 text-neon-purple" />
                 <h3 className="font-bold mb-1 group-hover:text-neon-purple transition-colors">Post New Opportunity</h3>
@@ -184,10 +189,15 @@ const PlacementDashboard: React.FC = () => {
                 <h3 className="font-bold mb-1 group-hover:text-neon-purple transition-colors">Review Applications</h3>
                 <p className="text-sm text-slate-400">Manage student applications</p>
               </Link>
-            </div>
+            </motion.div>
 
             {/* Recent Applications */}
-            <div className="glass-panel p-6 rounded-xl border border-white/10">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
+              className="glass-panel p-6 rounded-xl border border-white/10"
+            >
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold flex items-center gap-2">
                   <Clock className="text-amber-400" />
@@ -220,7 +230,7 @@ const PlacementDashboard: React.FC = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </motion.div>
           </>
         )}
       </div>

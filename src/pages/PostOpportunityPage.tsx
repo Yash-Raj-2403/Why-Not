@@ -90,13 +90,18 @@ const PostOpportunityPage: React.FC = () => {
           Back
         </button>
 
-        <div className="mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="mb-8"
+        >
           <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
             <Briefcase className="text-neon-purple" />
             Post New Opportunity
           </h1>
           <p className="text-slate-400">Create an internship or placement opportunity for students</p>
-        </div>
+        </motion.div>
 
         {message && (
           <motion.div
@@ -113,7 +118,13 @@ const PostOpportunityPage: React.FC = () => {
           </motion.div>
         )}
 
-        <form onSubmit={handleSubmit} className="glass-panel p-8 rounded-xl border border-white/10 space-y-6">
+        <motion.form 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+          onSubmit={handleSubmit} 
+          className="glass-panel p-8 rounded-xl border border-white/10 space-y-6"
+        >
           {/* Basic Info */}
           <div className="grid md:grid-cols-2 gap-6">
             <div>
@@ -298,7 +309,7 @@ const PostOpportunityPage: React.FC = () => {
               )}
             </button>
           </div>
-        </form>
+        </motion.form>
       </div>
     </PageTransition>
   );

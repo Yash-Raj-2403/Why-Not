@@ -84,22 +84,22 @@ const LoginPage: React.FC = () => {
       </div>
       
       <motion.div
-        initial={{ opacity: 0, y: 150, scale: 0.8 }}
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
         className="relative z-10 w-full max-w-md"
       >
         {/* Logo */}
         <motion.div 
-          initial={{ opacity: 0, y: 100, rotateX: 45 }}
-          animate={{ opacity: 1, y: 0, rotateX: 0 }}
-          transition={{ duration: 1.2, delay: 0.3, type: "spring", stiffness: 60 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
           className="text-center mb-8 glass-panel rounded-2xl p-6 border border-white/10 backdrop-blur-xl bg-slate-900/80 shadow-2xl shadow-purple-500/10"
         >
           <Link to="/" className="inline-flex items-center gap-3 group">
             <motion.div 
               whileHover={{ rotate: 360, scale: 1.1 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.4 }}
               className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 via-purple-500 to-indigo-500 p-[2px] shadow-lg shadow-purple-500/50"
             >
               <div className="w-full h-full rounded-xl bg-black flex items-center justify-center">
@@ -113,7 +113,7 @@ const LoginPage: React.FC = () => {
           <motion.h1 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.2 }}
             className="text-xl font-semibold bg-gradient-to-r from-slate-200 to-slate-400 bg-clip-text text-transparent mt-3"
           >
             Welcome Back
@@ -121,7 +121,7 @@ const LoginPage: React.FC = () => {
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
+            transition={{ delay: 0.25 }}
             className="text-slate-400 text-sm mt-1"
           >
             Sign in to your account
@@ -130,9 +130,9 @@ const LoginPage: React.FC = () => {
         
         {/* Login Form */}
         <motion.div 
-          initial={{ opacity: 0, y: 100, scale: 0.8 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.5, type: "spring", stiffness: 60 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
           className="glass-panel rounded-2xl p-8 border border-white/10 backdrop-blur-xl bg-slate-900/80 shadow-2xl shadow-purple-500/10"
         >
           
@@ -151,9 +151,9 @@ const LoginPage: React.FC = () => {
 
             {/* Email Input */}
             <motion.div
-              initial={{ opacity: 0, x: -100, y: 30 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 1, delay: 0.7 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
             >
               <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
                 Email Address
@@ -178,9 +178,9 @@ const LoginPage: React.FC = () => {
 
             {/* Password Input */}
             <motion.div
-              initial={{ opacity: 0, x: -100, y: 30 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 1, delay: 0.85 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.35, ease: "easeOut" }}
             >
               <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
                 Password
@@ -212,9 +212,9 @@ const LoginPage: React.FC = () => {
 
             {/* Forgot Password Link */}
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1 }}
+              transition={{ duration: 0.4, delay: 0.4 }}
               className="flex items-center justify-between"
             >
               <label className="flex items-center cursor-pointer group">
@@ -235,9 +235,9 @@ const LoginPage: React.FC = () => {
 
             {/* Submit Button */}
             <motion.button
-              initial={{ opacity: 0, y: 50, scale: 0.7 }}
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.8, delay: 1.15, type: "spring", bounce: 0.4 }}
+              transition={{ duration: 0.4, delay: 0.45, type: "spring", bounce: 0.4 }}
               whileHover={{ scale: loading ? 1 : 1.05 }}
               whileTap={{ scale: loading ? 1 : 0.95 }}
               type="submit"
@@ -278,7 +278,7 @@ const LoginPage: React.FC = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 1.3 }}
+              transition={{ duration: 0.3, delay: 0.5 }}
               className="relative flex items-center justify-center my-6"
             >
               <div className="absolute inset-0 flex items-center">
@@ -291,9 +291,9 @@ const LoginPage: React.FC = () => {
 
             {/* Google Sign-In Button */}
             <motion.button
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.4 }}
+              transition={{ duration: 0.4, delay: 0.55 }}
               whileHover={{ scale: googleLoading ? 1 : 1.02 }}
               whileTap={{ scale: googleLoading ? 1 : 0.98 }}
               type="button"
@@ -328,7 +328,7 @@ const LoginPage: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
+            transition={{ duration: 0.3, delay: 0.6 }}
             className="mt-6"
           >
             <motion.div 

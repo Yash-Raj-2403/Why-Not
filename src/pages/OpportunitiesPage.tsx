@@ -135,20 +135,26 @@ const OpportunitiesPage: React.FC = () => {
               {loading ? (
                 <LoadingGrid count={6} type="card" />
               ) : opportunities.length === 0 ? (
-                <div className="text-center py-20 glass-panel rounded-xl">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  className="text-center py-20 glass-panel rounded-xl"
+                >
                   <Briefcase className="w-16 h-16 text-slate-600 mx-auto mb-4" />
                   <h3 className="text-xl font-bold mb-2">No Opportunities Found</h3>
                   <p className="text-slate-400 mb-6">No opportunities match your current filters.</p>
                   <p className="text-sm text-slate-500">Try adjusting your filters or check the Settings page to seed sample data.</p>
-                </div>
+                </motion.div>
               ) : (
-                opportunities.map((opp) => {
+                opportunities.map((opp, index) => {
                   const matchScore = calculateMatch(opp);
                   return (
                     <motion.div 
                       key={opp.id}
-                      initial={{ opacity: 0, y: 10 }}
+                      initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: index * 0.05, ease: "easeOut" }}
                       className="glass-panel p-6 rounded-xl hover:bg-white/[0.05] transition-all border border-white/5"
                     >
                       <div className="flex justify-between items-start">

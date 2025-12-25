@@ -1,5 +1,6 @@
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface EmptyStateProps {
   icon: LucideIcon;
@@ -28,7 +29,10 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   className = ''
 }) => {
   return (
-    <div 
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       className={`flex flex-col items-center justify-center text-center p-12 ${className}`}
       role="status"
       aria-label={title}
@@ -47,7 +51,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           {actionLabel}
         </button>
       )}
-    </div>
+    </motion.div>
   );
 };
 

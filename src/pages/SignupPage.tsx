@@ -253,22 +253,22 @@ const SignupPage: React.FC = () => {
       </div>
       
       <motion.div
-        initial={{ opacity: 0, y: 150, scale: 0.8 }}
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
         className="relative z-10 w-full max-w-2xl"
       >
         {/* Logo */}
         <motion.div 
-          initial={{ opacity: 0, y: 100, rotateX: 45 }}
-          animate={{ opacity: 1, y: 0, rotateX: 0 }}
-          transition={{ duration: 1.2, delay: 0.3, type: "spring", stiffness: 60 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
           className="text-center mb-8 glass-panel rounded-2xl p-6 border border-white/10 backdrop-blur-xl bg-slate-900/80 shadow-2xl shadow-purple-500/10"
         >
           <Link to="/" className="inline-flex items-center gap-3 group">
             <motion.div 
               whileHover={{ rotate: 360, scale: 1.1 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.4 }}
               className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 via-purple-500 to-indigo-500 p-[2px] shadow-lg shadow-purple-500/50"
             >
               <div className="w-full h-full rounded-xl bg-black flex items-center justify-center">
@@ -282,7 +282,7 @@ const SignupPage: React.FC = () => {
           <motion.h1 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
             className="text-2xl font-bold text-white mt-6 mb-2 flex items-center justify-center gap-3"
           >
             <motion.div 
@@ -296,7 +296,7 @@ const SignupPage: React.FC = () => {
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
             className="text-slate-400"
           >
             Join the campus placement platform
@@ -305,9 +305,9 @@ const SignupPage: React.FC = () => {
 
         {/* Signup Form */}
         <motion.div 
-          initial={{ opacity: 0, y: 100, scale: 0.8 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.5, type: "spring", stiffness: 60 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
           className="glass-panel rounded-2xl p-8 border border-white/10 backdrop-blur-xl bg-slate-900/80 shadow-2xl shadow-purple-500/10"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -325,9 +325,9 @@ const SignupPage: React.FC = () => {
 
             {/* Role Selection */}
             <motion.div
-              initial={{ opacity: 0, x: -100, y: 30 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 1, delay: 0.7 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
             >
               <label className="block text-sm font-medium text-slate-300 mb-3">
                 I am a...
@@ -338,9 +338,9 @@ const SignupPage: React.FC = () => {
                   return (
                     <motion.label
                       key={option.value}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+                      transition={{ duration: 0.4, delay: 0.3 + index * 0.05, ease: "easeOut" }}
                       whileHover={{ scale: 1.03, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                       className={`relative flex items-start p-4 rounded-lg border cursor-pointer transition-all ${
@@ -362,7 +362,7 @@ const SignupPage: React.FC = () => {
                           scale: formData.role === option.value ? [1, 1.2, 1] : 1,
                           rotate: formData.role === option.value ? [0, 10, -10, 0] : 0
                         }}
-                        transition={{ duration: 0.4 }}
+                        transition={{ duration: 0.3 }}
                       >
                         <Icon className={`w-5 h-5 mt-0.5 ${formData.role === option.value ? 'text-purple-400' : 'text-slate-400'}`} />
                       </motion.div>
@@ -397,7 +397,7 @@ const SignupPage: React.FC = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.4 }}
+                transition={{ duration: 0.3 }}
               >
                 <label htmlFor="universityCode" className="block text-sm font-medium text-slate-300 mb-2">
                   University Authorization Code *
@@ -431,16 +431,16 @@ const SignupPage: React.FC = () => {
             )}
 
             <motion.div 
-              initial={{ opacity: 0, x: -100, y: 30 }}
+              initial={{ opacity: 0, x: -20, y: 10 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 1, delay: 0.85 }}
+              transition={{ duration: 0.4, delay: 0.35 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
               {/* Name Input */}
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.65 }}
+                transition={{ duration: 0.3, delay: 0.35 }}
               >
                 <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">
                   Full Name
@@ -466,9 +466,9 @@ const SignupPage: React.FC = () => {
 
               {/* Email Input */}
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.7 }}
+                transition={{ duration: 0.3, delay: 0.4 }}
               >
                 <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
                   Email Address
@@ -508,10 +508,10 @@ const SignupPage: React.FC = () => {
             {/* Department - Only for Students */}
             {formData.role === UserRole.STUDENT && (
               <motion.div
-                initial={{ opacity: 0, x: -100, y: 30 }}
+                initial={{ opacity: 0, x: -20, y: 10 }}
                 animate={{ opacity: 1, x: 0, y: 0 }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 1, delay: 1 }}
+                transition={{ duration: 0.4, delay: 0.45 }}
               >
                 <label htmlFor="department" className="block text-sm font-medium text-slate-300 mb-2">
                   Branch/Department
@@ -574,16 +574,16 @@ const SignupPage: React.FC = () => {
             )}
 
             <motion.div 
-              initial={{ opacity: 0, x: -100, y: 30 }}
+              initial={{ opacity: 0, x: -20, y: 10 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ duration: 1, delay: 1.15 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
               {/* Password Input */}
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.85 }}
+                transition={{ duration: 0.3, delay: 0.5 }}
               >
                 <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
                   Password
@@ -652,9 +652,9 @@ const SignupPage: React.FC = () => {
 
               {/* Confirm Password Input */}
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.9 }}
+                transition={{ duration: 0.3, delay: 0.55 }}
               >
                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-300 mb-2">
                   Confirm Password
@@ -688,9 +688,9 @@ const SignupPage: React.FC = () => {
 
             {/* Submit Button */}
             <motion.button
-              initial={{ opacity: 0, y: 50, scale: 0.7 }}
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.8, delay: 1.3, type: "spring", bounce: 0.4 }}
+              transition={{ duration: 0.4, delay: 0.6, type: "spring", bounce: 0.4 }}
               whileHover={{ scale: loading ? 1 : 1.05 }}
               whileTap={{ scale: loading ? 1 : 0.95 }}
               type="submit"
@@ -731,7 +731,7 @@ const SignupPage: React.FC = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 1.5 }}
+              transition={{ duration: 0.3, delay: 0.65 }}
               className="relative flex items-center justify-center my-6"
             >
               <div className="absolute inset-0 flex items-center">
@@ -744,9 +744,9 @@ const SignupPage: React.FC = () => {
 
             {/* Google Sign-Up Button */}
             <motion.button
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.6 }}
+              transition={{ duration: 0.4, delay: 0.7 }}
               whileHover={{ scale: googleLoading ? 1 : 1.02 }}
               whileTap={{ scale: googleLoading ? 1 : 0.98 }}
               type="button"
@@ -781,7 +781,7 @@ const SignupPage: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1 }}
+            transition={{ duration: 0.3, delay: 0.75 }}
             className="mt-6"
           >
             <motion.div 
