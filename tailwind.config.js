@@ -11,15 +11,15 @@ export default {
         mono: ['Space Grotesk', 'monospace'],
       },
       colors: {
+        // Glass morphism effects
         glass: {
           100: 'rgba(255, 255, 255, 0.1)',
           200: 'rgba(255, 255, 255, 0.2)',
           300: 'rgba(255, 255, 255, 0.05)',
         },
+        // Primary brand colors - rose, purple, indigo palette
         neon: {
-          blue: '#0aff99',  // Changed to teal/green
           purple: '#bc13fe',
-          teal: '#0aff99',
           pink: '#ff006e',
         },
         'dark-purple': {
@@ -32,6 +32,24 @@ export default {
           15: 'rgba(188, 19, 254, 0.15)',
           20: 'rgba(188, 19, 254, 0.2)',
           30: 'rgba(188, 19, 254, 0.3)',
+        },
+        // Extended palette for consistency
+        brand: {
+          rose: {
+            400: '#fb7185',
+            500: '#f43f5e',
+            600: '#e11d48',
+          },
+          purple: {
+            400: '#c084fc',
+            500: '#a855f7',
+            600: '#9333ea',
+          },
+          indigo: {
+            400: '#818cf8',
+            500: '#6366f1',
+            600: '#4f46e5',
+          }
         }
       },
       backgroundImage: {

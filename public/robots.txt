@@ -1,0 +1,11 @@
+# WhyNot Robots.txt
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# Sitemaps
+Sitemap: https://whynot.app/sitemap.xml
+
+# Crawl Delay
+Crawl-delay: 1
