@@ -12,7 +12,7 @@
 [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ecf8e?style=flat-square&logo=supabase)](https://supabase.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-[Features](#-features) • [Quick Start](#-quick-start) • [Tech Stack](#-tech-stack) • [Documentation](#-database-schema) • [Deployment](#-deployment)
+[Features](#-features) • [Quick Start](#-quick-start) • [Tech Stack](#-tech-stack) • [Documentation](#-project-structure) • [Deployment](#-deployment)
 
 </div>
 
@@ -40,12 +40,12 @@ WhyNot provides an integrated, intelligent placement ecosystem with:
 
 | Feature | Impact |
 |---------|--------|
-| 🎯 **Smart Matching** | AI-powered skill & CGPA-based opportunity recommendations (avg 73% match accuracy) |
+| 🎯 **Smart Matching** | Skill & CGPA-based opportunity recommendations with match percentage |
 | 🤖 **AI Rejection Coach** | Personalized rejection analysis via Google Gemini 2.0 Flash with actionable insights |
-| 🔄 **Streamlined Workflow** | Direct application submission: PENDING → SHORTLISTED → INTERVIEW → ACCEPTED/REJECTED |
-| 📊 **Live Analytics** | Real-time placement dashboards with CSV export |
+| 🔄 **Streamlined Workflow** | Direct application submission: PENDING → SHORTLISTED → INTERVIEW_SCHEDULED → ACCEPTED/REJECTED |
+| 📊 **Live Analytics** | Real-time placement dashboards for officers |
 | 📄 **Resume Hub** | Secure cloud storage with Supabase (PDF, 10MB limit) |
-| 🔔 **Real-time Notifications** | WebSocket-powered instant updates |
+| 🔔 **Real-time Notifications** | Database-backed notification system with instant updates |
 | 📅 **Smart Calendar** | Centralized deadline and interview tracking |
 
 ---
@@ -61,7 +61,7 @@ WhyNot provides an integrated, intelligent placement ecosystem with:
 - Custom department/branch support
 
 #### 🎯 **Smart Opportunity Matching**
-- AI-powered recommendations based on skill match percentage
+- Skill match percentage based on required skills vs. student skills
 - Filter by type (internship/placement), location, stipend
 - Debounced search for smooth UX (300ms delay)
 - Real-time availability status
@@ -79,13 +79,11 @@ WhyNot provides an integrated, intelligent placement ecosystem with:
 - Actionable suggestions for future applications
 - Single or bulk rejection analysis
 
-#### 📈 **Career Readiness Score**
-- Employability index calculation:
-  - CGPA: 30%
-  - Skills: 45%
-  - Activity: 25%
-- Visual readiness ring with animated SVG
-- Track progress over time
+#### 📊 **Dashboard**
+- Overview of all applications with recent activity
+- Profile completion tracking
+- Application statistics (total, interviews, offers)
+- Quick access to available opportunities
 
 ### 🏛️ For Placement Officers
 
@@ -104,16 +102,14 @@ WhyNot provides an integrated, intelligent placement ecosystem with:
 
 #### 📊 **Analytics Dashboard**
 - Real-time placement statistics
-- Department-wise breakdown
 - Application funnel metrics
-- CSV export for reporting
 - Track placement rates
+- Active jobs and pending applications overview
 
 #### 📅 **Calendar & Scheduling**
 - Create interview events
-- Send automated reminders
-- Conflict detection
-- Bulk scheduling support
+- Event management with details
+- Deadline tracking
 
 #### 🔐 **University Authorization**
 - Secure signup with university codes
@@ -303,19 +299,18 @@ npm run preview    # Preview production build locally
 | [Vite](https://vitejs.dev/) | 6.2.0 | Lightning-fast build tool & HMR |
 | [Tailwind CSS](https://tailwindcss.com/) | 4.1.18 | Utility-first styling with glass morphism |
 | [Framer Motion](https://www.framer.com/motion/) | 12.23.26 | Smooth animations & transitions |
-| [Three.js](https://threejs.org/) | 0.172.0 | 3D graphics (lazy loaded) |
-| [React Router](https://reactrouter.com/) | v7 | Client-side routing |
-| [Lucide React](https://lucide.dev/) | 0.469.0 | Beautiful icon library |
-| [React Helmet Async](https://github.com/staylor/react-helmet-async) | 2.0 | SEO meta management |
+| [Three.js](https://threejs.org/) | 0.182.0 | 3D graphics (lazy loaded) |
+| [React Router](https://reactrouter.com/) | 7.11.0 | Client-side routing |
+| [Lucide React](https://lucide.dev/) | 0.562.0 | Beautiful icon library |
 
 ### Backend & Infrastructure
 
 **Supabase (Backend-as-a-Service)**
 ```
 ├── PostgreSQL 15+        → Relational database
-├── Supabase Auth         → Email/password + OAuth authentication
+├── Supabase Auth         → Email/password + Google OAuth authentication
 ├── Row Level Security    → Role-based access control
-├── Realtime              → WebSocket subscriptions
+├── Realtime              → Real-time subscriptions for notifications
 └── Storage               → Resume file storage (PDFs, 10MB limit)
 ```
 
@@ -324,7 +319,7 @@ npm run preview    # Preview production build locally
 | Service | Purpose |
 |---------|---------|
 | **Google Gemini 2.0 Flash Experimental** | Rejection analysis & improvement insights |
-| **@google/genai** | AI client library |
+| **@google/genai** (v1.34.0) | AI client library |
 
 ### Development Tools
 
@@ -388,11 +383,11 @@ User redirected to role-specific dashboard
 
 - ✅ **Google Sign-In** - One-click signup/login
 - ✅ Automatic profile creation
-- ✅ Redirects to profile setup if needed
+- ✅ Role selection during OAuth flow
 
 ---
 
-## �️ Database Schema
+## 🗄️ Database Schema
 
 ### Core Tables
 
@@ -402,24 +397,28 @@ User redirected to role-specific dashboard
 | `id` | UUID (PK) | User ID (from Supabase Auth) |
 | `email` | TEXT | User email (unique) |
 | `name` | TEXT | Full name |
-| `role` | USER_ROLE | `STUDENT` \| `PLACEMENT_OFFICER` |
-| `department` | TEXT | Department/branch (students only) |
+| `role` | TEXT | `STUDENT` \| `PLACEMENT_OFFICER` |
+| `department` | TEXT | Department/branch |
+| `organization` | TEXT | Organization name |
 | `phone` | TEXT | Contact number |
 | `avatar` | TEXT | Profile picture URL |
-| `created_at` | TIMESTAMP | Account creation time |
+| `created_at` | TIMESTAMPTZ | Account creation time |
+| `updated_at` | TIMESTAMPTZ | Last update time |
 
 #### **student_profiles** (Students Only)
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | UUID (PK, FK) | References `profiles.id` |
-| `cgpa` | NUMERIC(3,2) | Current CGPA (0.00-10.00) |
+| `cgpa` | DECIMAL(4,2) | Current CGPA (0.00-10.00) |
 | `major` | TEXT | Major/specialization |
 | `year` | INTEGER | Current year (1-5) |
 | `semester` | INTEGER | Current semester (1-10) |
-| `skills` | JSONB[] | Skills with proficiency levels |
-| `preferences` | JSONB | Job preferences (roles, locations, stipend) |
+| `skills` | JSONB | Skills array |
+| `preferences` | JSONB | Job preferences |
 | `resume_url` | TEXT | Supabase Storage URL |
+| `cover_letter` | TEXT | Default cover letter |
 | `placement_status` | TEXT | `unplaced` \| `placed` \| `in-process` |
+| `completed_internships` | INTEGER | Number of completed internships |
 
 #### **opportunities** (Jobs/Internships)
 | Column | Type | Description |
@@ -427,17 +426,23 @@ User redirected to role-specific dashboard
 | `id` | UUID (PK) | Opportunity ID |
 | `title` | TEXT | Job title |
 | `description` | TEXT | Job description |
-| `type` | OPPORTUNITY_TYPE | `INTERNSHIP` \| `PLACEMENT` |
+| `type` | TEXT | `INTERNSHIP` \| `PLACEMENT` |
 | `company_name` | TEXT | Company name |
+| `company_logo_url` | TEXT | Company logo |
+| `application_url` | TEXT | Optional external application URL |
 | `posted_by` | UUID (FK) | Placement officer who posted |
-| `required_skills` | JSONB[] | Required skills with levels |
-| `min_cgpa` | NUMERIC | Minimum CGPA requirement |
+| `department` | TEXT | Target department |
+| `required_skills` | JSONB | Required skills array |
+| `responsibilities` | JSONB | Job responsibilities |
+| `eligibility` | JSONB | Eligibility criteria |
+| `min_cgpa` | DECIMAL(3,2) | Minimum CGPA requirement |
 | `stipend_min` | INTEGER | Minimum stipend/salary |
 | `stipend_max` | INTEGER | Maximum stipend/salary |
 | `location` | TEXT | Job location |
-| `deadline` | TIMESTAMP | Application deadline |
-| `status` | TEXT | `ACTIVE` \| `CLOSED` \| `DRAFT` |
-| `created_at` | TIMESTAMP | Posted date |
+| `duration` | TEXT | Duration (for internships) |
+| `deadline` | TIMESTAMPTZ | Application deadline |
+| `status` | TEXT | `active` \| `closed` \| `draft` |
+| `created_at` | TIMESTAMPTZ | Posted date |
 
 #### **applications**
 | Column | Type | Description |
@@ -445,12 +450,15 @@ User redirected to role-specific dashboard
 | `id` | UUID (PK) | Application ID |
 | `student_id` | UUID (FK) | Student who applied |
 | `opportunity_id` | UUID (FK) | Opportunity applied to |
-| `status` | APPLICATION_STATUS | `PENDING` \| `SHORTLISTED` \| `INTERVIEW_SCHEDULED` \| `ACCEPTED` \| `REJECTED` |
+| `status` | TEXT | `PENDING` \| `SHORTLISTED` \| `INTERVIEW_SCHEDULED` \| `ACCEPTED` \| `REJECTED` |
 | `cover_letter` | TEXT | Student's cover letter |
-| `interview_date` | TIMESTAMP | Scheduled interview date/time |
+| `interview_date` | TIMESTAMPTZ | Scheduled interview date/time |
+| `interview_mode` | TEXT | `online` \| `offline` |
+| `interview_meeting_link` | TEXT | Online meeting link |
 | `rejection_reason` | TEXT | Reason for rejection (optional) |
-| `created_at` | TIMESTAMP | Application submission time |
-| `updated_at` | TIMESTAMP | Last status update time |
+| `applied_date` | TIMESTAMPTZ | Application submission time |
+| `created_at` | TIMESTAMPTZ | Record creation time |
+| `updated_at` | TIMESTAMPTZ | Last status update time |
 
 #### **notifications**
 | Column | Type | Description |
@@ -459,9 +467,33 @@ User redirected to role-specific dashboard
 | `user_id` | UUID (FK) | User receiving notification |
 | `title` | TEXT | Notification title |
 | `message` | TEXT | Notification content |
-| `type` | TEXT | `info` \| `success` \| `warning` \| `error` |
+| `type` | TEXT | `application_status` \| `new_opportunity` \| `interview_scheduled` \| etc. |
 | `read` | BOOLEAN | Read status (default: false) |
-| `created_at` | TIMESTAMP | Creation time |
+| `related_id` | TEXT | Related entity ID |
+| `created_at` | TIMESTAMPTZ | Creation time |
+
+#### **rejection_analyses**
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | UUID (PK) | Analysis ID |
+| `student_id` | UUID (FK) | Student who received analysis |
+| `application_id` | UUID (FK) | Related application |
+| `analysis_type` | TEXT | `single` \| `bulk` \| `pattern` |
+| `analysis_text` | TEXT | AI-generated analysis |
+| `pattern_data` | JSONB | Common patterns (for bulk analysis) |
+| `created_at` | TIMESTAMPTZ | Creation time |
+
+#### **calendar_events**
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | UUID (PK) | Event ID |
+| `title` | TEXT | Event title |
+| `description` | TEXT | Event description |
+| `event_type` | TEXT | `interview` \| `deadline` \| `placement_drive` \| `announcement` |
+| `event_date` | TIMESTAMPTZ | Event date and time |
+| `created_by` | UUID (FK) | User who created event |
+| `related_to` | TEXT | Related entity type |
+| `created_at` | TIMESTAMPTZ | Creation time |
 
 ### Row Level Security (RLS) Policies
 
@@ -753,30 +785,28 @@ npm run build
 | Google OAuth Sign-In | ✅ Complete |
 | University Authorization Codes | ✅ Complete |
 | Student Dashboard | ✅ Complete |
-| AI Rejection Coach | ✅ Complete |
+| AI Rejection Coach (Gemini 2.0 Flash) | ✅ Complete |
 | Application Management | ✅ Complete |
 | Smart Opportunity Matching | ✅ Complete |
-| Resume Upload/Download | ✅ Complete |
+| Resume Upload/Download (Supabase Storage) | ✅ Complete |
 | Custom Department Support | ✅ Complete |
-| Real-time Notifications | ✅ Complete |
-| Analytics Dashboard | ✅ Complete |
+| Real-time Notifications (Database-backed) | ✅ Complete |
+| Placement Officer Dashboard | ✅ Complete |
 | Calendar System | ✅ Complete |
-| Resume Analyzer | ✅ Complete |
+| Resume Analyzer Service | ✅ Complete |
 | Pure Black Theme | ✅ Complete |
-| 3D Background Animation | ✅ Complete |
+| 3D Background Animation (Three.js) | ✅ Complete |
 | Performance Optimizations | ✅ Complete |
-
-### In Progress 🔄
-
-- Mobile Responsive Design (80%)
-- Email Notifications (60%)
 
 ### Planned Features 📋
 
-- Dark/Light Mode Toggle
-- Mobile App (React Native)
-- Interview Video Calls
-- Advanced Analytics
+- CSV export functionality for analytics
+- Email notifications integration
+- Mobile responsive design improvements
+- Department-wise breakdown in analytics
+- Dark/Light mode toggle
+- Interview video calls
+- Career readiness score calculator
 
 ---
 
