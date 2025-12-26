@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, CheckCircle } from 'lucide-react';
 import { api } from '../../services/api';
@@ -15,6 +15,39 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, opportunity })
   const [coverLetter, setCoverLetter] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const firstInputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Focus management: trap focus inside modal
+  useEffect(() => {
+    if (isOpen) {
+      // Focus the first input when modal opens
+      setTimeout(() => {
+        firstInputRef.current?.focus();
+      }, 100);
+      
+      // Prevent scrolling on body when modal is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // Handle ESC key to close modal
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEsc);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,19 +74,38 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, opportunity })
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-lg overflow-hidden shadow-2xl"
+      {isOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="apply-modal-title"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              onClose();
+            }
+          }}
         >
-          <div className="p-6 border-b border-slate-800 flex justify-between items-center">
-            <h2 className="text-xl font-bold text-white">Apply for {opportunity?.title}</h2>
-            <button onClick={onClose} className="text-slate-400 hover:text-white">
-              <X className="w-6 h-6" />
-            </button>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-lg overflow-hidden shadow-2xl"
+            role="document"
+          >
+            <div className="p-6 border-b border-slate-800 flex justify-between items-center">
+              <h2 id="apply-modal-title" className="text-xl font-bold text-white">
+                Apply for {opportunity?.title}
+              </h2>
+              <button 
+                ref={closeButtonRef}
+                onClick={onClose} 
+                className="text-slate-400 hover:text-white transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
 
           {isSuccess ? (
             <div className="p-12 flex flex-col items-center text-center">
@@ -70,14 +122,17 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, opportunity })
           ) : (
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label htmlFor="cover-letter" className="block text-sm font-medium text-slate-300 mb-2">
                   Cover Letter (Optional)
                 </label>
                 <textarea
+                  id="cover-letter"
+                  ref={firstInputRef}
                   value={coverLetter}
                   onChange={(e) => setCoverLetter(e.target.value)}
                   placeholder="Why are you a good fit for this role?"
                   className="w-full h-32 bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-none"
+                  aria-label="Cover letter"
                 />
               </div>
 
@@ -94,18 +149,20 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, opportunity })
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 text-slate-300 hover:text-white"
+                  className="px-4 py-2 text-slate-300 hover:text-white transition-colors"
+                  aria-label="Cancel application"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  aria-label={isSubmitting ? 'Submitting application' : 'Submit application'}
                 >
                   {isSubmitting ? 'Sending...' : (
                     <>
-                      Submit Application <Send className="w-4 h-4" />
+                      Submit Application <Send className="w-4 h-4" aria-hidden="true" />
                     </>
                   )}
                 </button>
@@ -114,6 +171,7 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, opportunity })
           )}
         </motion.div>
       </div>
+      )}
     </AnimatePresence>
   );
 };

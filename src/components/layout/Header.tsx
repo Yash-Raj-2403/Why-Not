@@ -61,15 +61,23 @@ const Header: React.FC<HeaderProps> = ({
   const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase();
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300 glass-panel shadow-lg shadow-black/20">
+    <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300 glass-panel shadow-lg shadow-black/20" role="banner">
+      {/* Skip to main content link for keyboard navigation */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-purple-600 focus:text-white focus:rounded-lg focus:shadow-lg"
+      >
+        Skip to main content
+      </a>
+      
       <div className="max-w-[1800px] mx-auto px-4 md:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Left Section: Logo + Nav */}
           <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-3 group">
+            <Link to="/" className="flex items-center gap-3 group" aria-label="WhyNot Home">
               <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 via-purple-500 to-indigo-500 p-[2px] shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-all group-hover:scale-105">
                 <div className="w-full h-full rounded-xl bg-black flex items-center justify-center">
-                  <span className="text-lg font-bold bg-gradient-to-r from-rose-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">W</span>
+                  <span className="text-lg font-bold bg-gradient-to-r from-rose-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent" aria-hidden="true">W</span>
                 </div>
               </div>
               <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent group-hover:from-rose-400 group-hover:to-purple-400 transition-all">
@@ -78,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
               {isLoggedIn && navItems.map((item) => (
                 <Link 
                   key={item.path}
@@ -88,8 +96,10 @@ const Header: React.FC<HeaderProps> = ({
                       ? 'bg-white/10 text-white' 
                       : 'text-slate-400 hover:text-white hover:bg-white/5'
                   }`}
+                  aria-current={location.pathname === item.path ? 'page' : undefined}
+                  aria-label={item.label}
                 >
-                  <item.icon size={16} />
+                  <item.icon size={16} aria-hidden="true" />
                   {item.label}
                 </Link>
               ))}

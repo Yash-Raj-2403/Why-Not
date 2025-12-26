@@ -98,13 +98,14 @@ const App: React.FC = () => {
             )}
 
             <Suspense fallback={<LoadingSpinner fullScreen message="Loading page..." />}>
-              <AnimatePresence mode="wait">
-                <Routes location={location} key={location.pathname}>
-                  {/* Public Routes */}
-                  <Route path="/" element={<LandingPage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/signup" element={<SignupPage />} />
-                  <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <main id="main-content" role="main">
+                <AnimatePresence mode="wait">
+                  <Routes location={location} key={location.pathname}>
+                    {/* Public Routes */}
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/signup" element={<SignupPage />} />
+                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           
           {/* Protected Routes */}
           <Route 
@@ -244,6 +245,7 @@ const App: React.FC = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </AnimatePresence>
+      </main>
       </Suspense>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import PageTransition from '../components/common/PageTransition';
 import ParticleBackground from '../components/common/ParticleBackground';
 import ThreeScene from '../components/common/ThreeScene';
+import { validateLoginForm, ValidationError, getFieldError, hasFieldError } from '../utils/validation';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,12 +16,22 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setValidationErrors([]);
+    
+    // Validate form
+    const validation = validateLoginForm(email, password);
+    if (!validation.isValid) {
+      setValidationErrors(validation.errors);
+      return;
+    }
+    
     setLoading(true);
 
     try {
@@ -167,13 +178,33 @@ const LoginPage: React.FC = () => {
                 <input
                   id="email"
                   type="email"
-                  required
+                  aria-label="Email Address"
+                  aria-invalid={hasFieldError(validationErrors, 'email')}
+                  aria-describedby={hasFieldError(validationErrors, 'email') ? "email-error" : undefined}
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setValidationErrors(validationErrors.filter(e => e.field !== 'email'));
+                  }}
+                  className={`w-full pl-11 pr-4 py-3 bg-white/5 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                    hasFieldError(validationErrors, 'email')
+                      ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50'
+                      : 'border-white/10 focus:ring-purple-500/50 focus:border-purple-500/50'
+                  }`}
                   placeholder="student@college.edu"
                 />
               </motion.div>
+              {hasFieldError(validationErrors, 'email') && (
+                <motion.p
+                  id="email-error"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-1 text-sm text-red-400 flex items-center gap-1"
+                >
+                  <AlertCircle className="w-3 h-3" />
+                  {getFieldError(validationErrors, 'email')}
+                </motion.p>
+              )}
             </motion.div>
 
             {/* Password Input */}
@@ -194,20 +225,41 @@ const LoginPage: React.FC = () => {
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
-                  required
+                  aria-label="Password"
+                  aria-invalid={hasFieldError(validationErrors, 'password')}
+                  aria-describedby={hasFieldError(validationErrors, 'password') ? "password-error" : undefined}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setValidationErrors(validationErrors.filter(e => e.field !== 'password'));
+                  }}
+                  className={`w-full pl-11 pr-12 py-3 bg-white/5 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                    hasFieldError(validationErrors, 'password')
+                      ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50'
+                      : 'border-white/10 focus:ring-purple-500/50 focus:border-purple-500/50'
+                  }`}
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </motion.div>
+              {hasFieldError(validationErrors, 'password') && (
+                <motion.p
+                  id="password-error"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-1 text-sm text-red-400 flex items-center gap-1"
+                >
+                  <AlertCircle className="w-3 h-3" />
+                  {getFieldError(validationErrors, 'password')}
+                </motion.p>
+              )}
             </motion.div>
 
             {/* Forgot Password Link */}

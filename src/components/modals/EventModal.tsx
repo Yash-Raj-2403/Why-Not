@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, Clock, FileText, Tag, Link as LinkIcon, Trash2, Save } from 'lucide-react';
 import { CalendarEvent, CreateEventRequest, EventType } from '../../types';
@@ -27,6 +27,7 @@ const EventModal: React.FC<EventModalProps> = ({
   const isPlacementOfficer = user?.role === 'PLACEMENT_OFFICER';
   const isEditMode = !!event;
   const isReadOnly = !isPlacementOfficer;
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
   // Form state
   const [title, setTitle] = useState('');
@@ -37,6 +38,24 @@ const EventModal: React.FC<EventModalProps> = ({
   const [endDate, setEndDate] = useState('');
   const [endTime, setEndTime] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Focus management and keyboard support
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => titleInputRef.current?.focus(), 100);
+      document.body.style.overflow = 'hidden';
+      
+      const handleEsc = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      document.addEventListener('keydown', handleEsc);
+      
+      return () => {
+        document.removeEventListener('keydown', handleEsc);
+        document.body.style.overflow = 'unset';
+      };
+    }
+  }, [isOpen, onClose]);
 
   // Initialize form with event data or selected date
   useEffect(() => {

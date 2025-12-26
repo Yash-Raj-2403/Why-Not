@@ -275,6 +275,25 @@ Sentiment: ${explanation.sentiment}
 
           {/* Content */}
           <div className="flex-1 overflow-y-auto">
+            {/* Empty State for No Rejections in Bulk Mode */}
+            {mode === 'bulk' && applications.filter(a => a.status === 'REJECTED').length === 0 && (
+              <div className="flex flex-col items-center justify-center h-full py-16 px-8 text-center">
+                <div className="w-20 h-20 rounded-full bg-slate-800/50 flex items-center justify-center mb-6">
+                  <CheckCircle className="w-10 h-10 text-green-400" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3">Great News!</h3>
+                <p className="text-slate-400 max-w-md mb-6">
+                  You don't have any rejections yet. Keep applying to opportunities and we'll help you analyze patterns if needed.
+                </p>
+                <button
+                  onClick={onClose}
+                  className="px-6 py-3 bg-gradient-to-r from-neon-purple to-neon-purple rounded-lg text-white font-semibold hover:shadow-lg hover:shadow-neon-purple/50 transition-all"
+                >
+                  Browse Opportunities
+                </button>
+              </div>
+            )}
+
             {activeTab === 'analysis' && mode === 'single' && application && (
               <div className="grid grid-cols-1 md:grid-cols-2">
                 {/* Left: Requirements Match */}
@@ -438,7 +457,7 @@ Sentiment: ${explanation.sentiment}
               </div>
             )}
 
-            {activeTab === 'patterns' && mode === 'bulk' && (
+            {activeTab === 'patterns' && mode === 'bulk' && applications.filter(a => a.status === 'REJECTED').length > 0 && (
               <div className="p-8 space-y-8">
                 {loading ? (
                   <div className="space-y-4">
@@ -446,7 +465,7 @@ Sentiment: ${explanation.sentiment}
                     <div className="h-4 bg-white/10 rounded w-3/4 animate-pulse" />
                     <div className="h-4 bg-white/10 rounded w-full animate-pulse" />
                   </div>
-                ) : patternAnalysis && (
+                ) : patternAnalysis ? (
                   <div className="grid gap-6">
                     {/* Common Missing Skills */}
                     <div className="glass-panel p-6 rounded-xl border border-white/10">
@@ -507,6 +526,12 @@ Sentiment: ${explanation.sentiment}
                         </p>
                       </div>
                     )}
+                  </div>
+                ) : (
+                  <div className="text-center py-16 text-slate-400">
+                    <TrendingUp className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg">Unable to generate pattern analysis.</p>
+                    <p className="text-sm mt-2">Please try again later.</p>
                   </div>
                 )}
               </div>

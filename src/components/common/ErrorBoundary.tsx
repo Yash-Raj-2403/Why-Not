@@ -10,6 +10,7 @@ interface State {
   hasError: boolean;
   error: Error | null;
   errorInfo: ErrorInfo | null;
+  retryCount: number;
 }
 
 /**
@@ -19,7 +20,8 @@ class ErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false,
     error: null,
-    errorInfo: null
+    errorInfo: null,
+    retryCount: 0
   };
 
   public static getDerivedStateFromError(error: Error): Partial<State> {
@@ -38,11 +40,19 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   private handleReset = () => {
-    this.setState({ hasError: false, error: null, errorInfo: null });
+    this.setState({ 
+      hasError: false, 
+      error: null, 
+      errorInfo: null,
+      retryCount: this.state.retryCount + 1
+    });
     window.location.href = '/';
   };
 
   private handleReload = () => {
+    this.setState(prevState => ({ 
+      retryCount: prevState.retryCount + 1 
+    }));
     window.location.reload();
   };
 
@@ -72,6 +82,12 @@ class ErrorBoundary extends Component<Props, State> {
               <p className="text-slate-500 text-sm">
                 Try reloading the page or returning to the home page.
               </p>
+              
+              {this.state.retryCount > 0 && (
+                <p className="text-sm text-purple-400 mt-4 font-medium">
+                  Retry attempts: {this.state.retryCount}
+                </p>
+              )}
               
               {this.state.error && process.env.NODE_ENV === 'development' && (
                 <details className="mt-6 text-left">

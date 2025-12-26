@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Cpu, AlertTriangle, CheckCircle, ArrowRight } from 'lucide-react';
 import { Application, StudentProfile } from '../../types';
@@ -15,6 +15,22 @@ interface ExplanationModalProps {
 const ExplanationModal: React.FC<ExplanationModalProps> = ({ isOpen, onClose, application, student }) => {
   const [explanation, setExplanation] = useState<RejectionAnalysis | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Keyboard support and body scroll lock
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      const handleEsc = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      document.addEventListener('keydown', handleEsc);
+      return () => {
+        document.removeEventListener('keydown', handleEsc);
+        document.body.style.overflow = 'unset';
+      };
+    }
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (isOpen && application && application.status === 'REJECTED') {
@@ -45,7 +61,8 @@ const ExplanationModal: React.FC<ExplanationModalProps> = ({ isOpen, onClose, ap
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {isOpen && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="explanation-modal-title">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -61,20 +78,21 @@ const ExplanationModal: React.FC<ExplanationModalProps> = ({ isOpen, onClose, ap
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           className="relative w-full max-w-4xl glass-panel rounded-2xl overflow-hidden shadow-2xl border border-white/10 text-white"
+          role="document"
         >
           {/* Header */}
           <div className="flex justify-between items-center p-6 border-b border-white/10 bg-white/5">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center border border-red-500/50">
-                <AlertTriangle className="w-5 h-5 text-red-400" />
+                <AlertTriangle className="w-5 h-5 text-red-400" aria-hidden="true" />
               </div>
               <div>
-                <h2 className="text-xl font-bold font-mono tracking-tight">Application Analysis</h2>
+                <h2 id="explanation-modal-title" className="text-xl font-bold font-mono tracking-tight">Application Analysis</h2>
                 <p className="text-sm text-slate-400">{application.job.role} @ {application.job.company}</p>
               </div>
             </div>
-            <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-              <X className="w-6 h-6 text-slate-400" />
+            <button ref={closeButtonRef} onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors" aria-label="Close modal">
+              <X className="w-6 h-6 text-slate-400" aria-hidden="true" />
             </button>
           </div>
 
@@ -235,6 +253,7 @@ const ExplanationModal: React.FC<ExplanationModalProps> = ({ isOpen, onClose, ap
           </div>
         </motion.div>
       </div>
+      )}
     </AnimatePresence>
   );
 };

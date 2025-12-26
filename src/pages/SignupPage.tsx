@@ -8,6 +8,7 @@ import { UserRole } from '../types';
 import PageTransition from '../components/common/PageTransition';
 import ParticleBackground from '../components/common/ParticleBackground';
 import ThreeScene from '../components/common/ThreeScene';
+import { validateSignupForm, ValidationError, getFieldError, hasFieldError } from '../utils/validation';
 
 const SignupPage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,29 +28,10 @@ const SignupPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [emailError, setEmailError] = useState('');
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, label: '', color: '' });
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email) {
-      setEmailError('');
-      return false;
-    }
-    if (!emailRegex.test(email)) {
-      setEmailError('Invalid email format');
-      return false;
-    }
-    // Check for educational email (optional but recommended)
-    if (formData.role === UserRole.STUDENT && !email.includes('.edu') && !email.includes('college')) {
-      setEmailError('Please use your college/university email');
-    } else {
-      setEmailError('');
-    }
-    return true;
-  };
 
   const calculatePasswordStrength = (password: string) => {
     let score = 0;
@@ -82,9 +64,9 @@ const SignupPage: React.FC = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     
-    if (name === 'email') {
-      validateEmail(value);
-    }
+    // Clear field-specific validation errors
+    setValidationErrors(validationErrors.filter(err => err.field !== name));
+    
     if (name === 'password') {
       calculatePasswordStrength(value);
     }
@@ -93,9 +75,19 @@ const SignupPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    setValidationErrors([]);
+    
+    // Validate form
+    const validation = validateSignupForm(
+      formData.name,
+      formData.email,
+      formData.password,
+      formData.confirmPassword,
+      formData.role
+    );
+    
+    if (!validation.isValid) {
+      setValidationErrors(validation.errors);
       return;
     }
 
@@ -455,13 +447,30 @@ const SignupPage: React.FC = () => {
                     id="name"
                     name="name"
                     type="text"
-                    required
+                    aria-label="Full Name"
+                    aria-invalid={hasFieldError(validationErrors, 'name')}
+                    aria-describedby={hasFieldError(validationErrors, 'name') ? "name-error" : undefined}
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
+                    className={`w-full pl-11 pr-4 py-3 bg-white/5 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                      hasFieldError(validationErrors, 'name')
+                        ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50'
+                        : 'border-white/10 focus:ring-purple-500/50 focus:border-purple-500/50'
+                    }`}
                     placeholder="John Doe"
                   />
                 </motion.div>
+                {hasFieldError(validationErrors, 'name') && (
+                  <motion.p
+                    id="name-error"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-1 text-xs text-red-400 flex items-center gap-1"
+                  >
+                    <AlertCircle className="w-3 h-3" />
+                    {getFieldError(validationErrors, 'name')}
+                  </motion.p>
+                )}
               </motion.div>
 
               {/* Email Input */}
@@ -483,23 +492,28 @@ const SignupPage: React.FC = () => {
                     id="email"
                     name="email"
                     type="email"
-                    required
+                    aria-label="Email Address"
+                    aria-invalid={hasFieldError(validationErrors, 'email')}
+                    aria-describedby={hasFieldError(validationErrors, 'email') ? "email-error" : undefined}
                     value={formData.email}
                     onChange={handleChange}
-                    className={`w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all ${
-                      emailError ? 'border-red-500/50' : 'focus:border-purple-500/50'
+                    className={`w-full pl-11 pr-4 py-3 bg-white/5 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                      hasFieldError(validationErrors, 'email')
+                        ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50'
+                        : 'border-white/10 focus:ring-purple-500/50 focus:border-purple-500/50'
                     }`}
                     placeholder="john@college.edu"
                   />
                 </motion.div>
-                {emailError && (
-                  <motion.p 
+                {hasFieldError(validationErrors, 'email') && (
+                  <motion.p
+                    id="email-error"
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-xs text-yellow-400 mt-1 flex items-center gap-1"
+                    className="mt-1 text-xs text-red-400 flex items-center gap-1"
                   >
                     <AlertCircle className="w-3 h-3" />
-                    {emailError}
+                    {getFieldError(validationErrors, 'email')}
                   </motion.p>
                 )}
               </motion.div>
@@ -598,21 +612,39 @@ const SignupPage: React.FC = () => {
                     id="password"
                     name="password"
                     type={showPassword ? 'text' : 'password'}
-                    required
+                    aria-label="Password"
+                    aria-invalid={hasFieldError(validationErrors, 'password')}
+                    aria-describedby={hasFieldError(validationErrors, 'password') ? "password-error" : undefined}
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
+                    className={`w-full pl-11 pr-12 py-3 bg-white/5 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                      hasFieldError(validationErrors, 'password')
+                        ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50'
+                        : 'border-white/10 focus:ring-purple-500/50 focus:border-purple-500/50'
+                    }`}
                     placeholder="••••••••"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </motion.div>
-                {formData.password && (
+                {hasFieldError(validationErrors, 'password') && (
+                  <motion.p
+                    id="password-error"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-1 text-xs text-red-400 flex items-center gap-1"
+                  >
+                    <AlertCircle className="w-3 h-3" />
+                    {getFieldError(validationErrors, 'password')}
+                  </motion.p>
+                )}
+                {formData.password && !hasFieldError(validationErrors, 'password') && (
                   <motion.div 
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
@@ -669,20 +701,38 @@ const SignupPage: React.FC = () => {
                     id="confirmPassword"
                     name="confirmPassword"
                     type={showConfirmPassword ? 'text' : 'password'}
-                    required
+                    aria-label="Confirm Password"
+                    aria-invalid={hasFieldError(validationErrors, 'confirmPassword')}
+                    aria-describedby={hasFieldError(validationErrors, 'confirmPassword') ? "confirmPassword-error" : undefined}
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="w-full pl-11 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
+                    className={`w-full pl-11 pr-12 py-3 bg-white/5 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                      hasFieldError(validationErrors, 'confirmPassword')
+                        ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50'
+                        : 'border-white/10 focus:ring-purple-500/50 focus:border-purple-500/50'
+                    }`}
                     placeholder="••••••••"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
                   >
                     {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </motion.div>
+                {hasFieldError(validationErrors, 'confirmPassword') && (
+                  <motion.p
+                    id="confirmPassword-error"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-1 text-xs text-red-400 flex items-center gap-1"
+                  >
+                    <AlertCircle className="w-3 h-3" />
+                    {getFieldError(validationErrors, 'confirmPassword')}
+                  </motion.p>
+                )}
               </motion.div>
             </motion.div>
 
