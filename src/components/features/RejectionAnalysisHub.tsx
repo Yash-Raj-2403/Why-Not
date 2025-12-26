@@ -9,7 +9,8 @@ import {
   generateRejectionExplanation, 
   generateBulkRejectionAnalysis, 
   formatAnalysisForExport,
-  PatternAnalysis 
+  PatternAnalysis,
+  RejectionAnalysis
 } from '../../services/geminiService';
 import { supabase } from '../../services/supabaseClient';
 
@@ -30,7 +31,7 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
   student,
   mode 
 }) => {
-  const [explanation, setExplanation] = useState<string>('');
+  const [explanation, setExplanation] = useState<RejectionAnalysis | null>(null);
   const [patternAnalysis, setPatternAnalysis] = useState<PatternAnalysis | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'analysis' | 'patterns' | 'history'>('analysis');
@@ -46,7 +47,7 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
       }
       fetchAnalysisHistory();
     } else {
-      setExplanation('');
+      setExplanation(null);
       setPatternAnalysis(null);
     }
   }, [isOpen, application, applications, mode]);
@@ -75,10 +76,10 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
       setExplanation(result);
       
       // Save to database
-      await saveAnalysis(result, application.id, 'single');
+      await saveAnalysis(JSON.stringify(result), application.id, 'single');
     } catch (error) {
       console.error('Analysis error:', error);
-      setExplanation('Unable to generate analysis. Please try again.');
+      // setExplanation(null); // Keep null on error
     } finally {
       setLoading(false);
     }
@@ -155,9 +156,25 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
   const handleExport = () => {
     if (!application || !explanation) return;
     
+    // Convert object to string for export
+    const explanationText = `
+Core Mismatch: ${explanation.coreMismatch}
+
+Key Missing Skills:
+${explanation.keyMissingSkills.map(s => `- ${s}`).join('\n')}
+
+Resume Feedback:
+${explanation.resumeFeedback.map(s => `- ${s}`).join('\n')}
+
+Action Plan:
+${explanation.actionPlan.map(s => `- ${s}`).join('\n')}
+
+Sentiment: ${explanation.sentiment}
+    `.trim();
+
     const exportText = formatAnalysisForExport(
       student.name,
-      explanation,
+      explanationText,
       { role: application.job.role, company: application.job.company }
     );
     
@@ -309,7 +326,7 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
                 </div>
 
                 {/* Right: AI Explanation */}
-                <div className="p-8 relative overflow-hidden bg-black/40">
+                <div className="p-8 relative overflow-hidden bg-black/40 overflow-y-auto max-h-[600px]">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-neon-purple/20 blur-[80px] rounded-full pointer-events-none" />
                   <div className="absolute bottom-0 left-0 w-64 h-64 bg-neon-purple/20 blur-[80px] rounded-full pointer-events-none" />
 
@@ -325,23 +342,81 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
                         <div className="h-4 bg-white/10 rounded w-full animate-pulse" />
                         <div className="h-4 bg-white/10 rounded w-5/6 animate-pulse" />
                       </div>
-                    ) : (
+                    ) : explanation ? (
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         className="space-y-6"
                       >
-                        <p className="whitespace-pre-wrap text-slate-300 leading-relaxed">
-                          {explanation}
-                        </p>
+                        {/* Core Mismatch */}
+                        <div className="p-4 bg-white/5 rounded-lg border border-white/10">
+                          <h4 className="text-sm font-semibold text-slate-300 mb-2">Core Mismatch</h4>
+                          <p className="text-white font-medium">{explanation.coreMismatch}</p>
+                        </div>
 
+                        {/* Missing Skills */}
+                        {explanation.keyMissingSkills.length > 0 && (
+                          <div>
+                            <h4 className="text-sm font-semibold text-red-400 mb-2 flex items-center gap-2">
+                              <AlertTriangle className="w-4 h-4" />
+                              Key Missing Skills
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                              {explanation.keyMissingSkills.map((skill, idx) => (
+                                <span key={idx} className="px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full text-sm text-red-300">
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Resume Feedback */}
+                        {explanation.resumeFeedback.length > 0 && (
+                          <div>
+                            <h4 className="text-sm font-semibold text-amber-400 mb-2 flex items-center gap-2">
+                              <FileText className="w-4 h-4" />
+                              Resume Feedback
+                            </h4>
+                            <ul className="space-y-2">
+                              {explanation.resumeFeedback.map((item, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-sm text-slate-300">
+                                  <span className="text-amber-400 mt-1">•</span>
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Action Plan */}
+                        {explanation.actionPlan.length > 0 && (
+                          <div>
+                            <h4 className="text-sm font-semibold text-green-400 mb-2 flex items-center gap-2">
+                              <Target className="w-4 h-4" />
+                              Action Plan
+                            </h4>
+                            <div className="space-y-3">
+                              {explanation.actionPlan.map((step, idx) => (
+                                <div key={idx} className="flex gap-3 p-3 bg-white/5 rounded-lg border border-white/5">
+                                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center text-xs font-bold">
+                                    {idx + 1}
+                                  </span>
+                                  <span className="text-sm text-slate-300">{step}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Sentiment */}
                         <div className="p-4 bg-neon-purple/10 border border-neon-purple/20 rounded-lg">
                           <h4 className="text-xs font-mono uppercase text-neon-purple mb-2 flex items-center gap-2">
-                            <Target className="w-3 h-3" />
-                            Recommended Action
+                            <Sparkles className="w-3 h-3" />
+                            AI Insight
                           </h4>
-                          <p className="text-sm text-slate-300">
-                            Focus on acquiring the missing skills to increase your match rate by up to 45%.
+                          <p className="text-sm text-slate-300 italic">
+                            "{explanation.sentiment}"
                           </p>
                         </div>
 
@@ -353,6 +428,10 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
                           Export Analysis
                         </button>
                       </motion.div>
+                    ) : (
+                      <div className="text-center py-10 text-slate-500">
+                        <p>Unable to generate analysis.</p>
+                      </div>
                     )}
                   </div>
                 </div>

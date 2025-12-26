@@ -63,13 +63,21 @@ const checkRateLimit = (userId: string): boolean => {
   return true;
 };
 
+export interface RejectionAnalysis {
+  coreMismatch: string;
+  keyMissingSkills: string[];
+  resumeFeedback: string[];
+  actionPlan: string[];
+  sentiment: string;
+}
+
 export const generateRejectionExplanation = async (
   data: ExplanationRequest, 
   userId: string = 'anonymous'
-): Promise<string> => {
+): Promise<RejectionAnalysis> => {
   // Check rate limit
   if (!checkRateLimit(userId)) {
-    return "You've reached the maximum number of AI analysis requests (3 per minute). Please wait a moment before trying again.";
+    throw new Error("You've reached the maximum number of AI analysis requests (3 per minute). Please wait a moment before trying again.");
   }
 
   const modelId = "gemini-2.0-flash-exp"; // Latest model
@@ -92,18 +100,19 @@ export const generateRejectionExplanation = async (
     
     Task:
     Analyze the rejection based on the provided context.
-    Provide a structured analysis with the following sections:
-    1. **Core Mismatch**: The primary reason for rejection (e.g., Skill Gap, Experience, CGPA).
-    2. **Key Missing Skills**: Specific skills mentioned in the job description but missing in the profile/resume.
-    3. **Resume Feedback**: Specific improvements for the resume to better align with this role.
-    4. **Action Plan**: 2-3 concrete steps to improve chances for similar roles.
+    Provide a structured analysis in the following JSON format:
+    {
+      "coreMismatch": "The primary reason for rejection (e.g., Skill Gap, Experience, CGPA). Keep it concise.",
+      "keyMissingSkills": ["Skill 1", "Skill 2"],
+      "resumeFeedback": ["Specific improvement 1", "Specific improvement 2"],
+      "actionPlan": ["Step 1", "Step 2", "Step 3"],
+      "sentiment": "A brief, encouraging closing statement."
+    }
     
     Sentiment & Tone Guidelines:
     - Maintain a Constructive and Encouraging sentiment.
     - Be factual about the gaps.
     - Use a professional, yet supportive tone.
-    
-    Format: Markdown.
   `;
 
   try {
@@ -112,24 +121,29 @@ export const generateRejectionExplanation = async (
       contents: prompt,
       config: {
         thinkingConfig: { thinkingBudget: 0 }, // Minimize latency for UI responsiveness
+        responseMimeType: "application/json"
       }
     });
 
-    return response.text || "Unable to generate analysis at this moment.";
+    const text = response.text || '{}';
+    const jsonText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const analysis = JSON.parse(jsonText);
+    
+    return analysis as RejectionAnalysis;
   } catch (error) {
     console.error("Gemini API Error:", error);
     
     // Provide helpful error messages
     if (error instanceof Error) {
       if (error.message.includes('API key')) {
-        return "Invalid API key. Please check your Gemini API configuration.";
+        throw new Error("Invalid API key. Please check your Gemini API configuration.");
       }
       if (error.message.includes('quota') || error.message.includes('rate')) {
-        return "API rate limit exceeded. Please try again in a few moments.";
+        throw new Error("API rate limit exceeded. Please try again in a few moments.");
       }
     }
     
-    return "Our intelligence systems are currently recalibrating. Please try again later.";
+    throw new Error("Our intelligence systems are currently recalibrating. Please try again later.");
   }
 };
 

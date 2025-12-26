@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Cpu, AlertTriangle, CheckCircle, ArrowRight } from 'lucide-react';
 import { Application, StudentProfile } from '../../types';
-import { generateRejectionExplanation } from '../../services/geminiService';
+import { generateRejectionExplanation, RejectionAnalysis } from '../../services/geminiService';
+import { FileText, Target, Sparkles } from 'lucide-react';
 
 interface ExplanationModalProps {
   isOpen: boolean;
@@ -12,7 +13,7 @@ interface ExplanationModalProps {
 }
 
 const ExplanationModal: React.FC<ExplanationModalProps> = ({ isOpen, onClose, application, student }) => {
-  const [explanation, setExplanation] = useState<string>('');
+  const [explanation, setExplanation] = useState<RejectionAnalysis | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const ExplanationModal: React.FC<ExplanationModalProps> = ({ isOpen, onClose, ap
 
       fetchExplanation();
     } else {
-        setExplanation('');
+        setExplanation(null);
     }
   }, [isOpen, application, student]);
 
@@ -129,7 +130,7 @@ const ExplanationModal: React.FC<ExplanationModalProps> = ({ isOpen, onClose, ap
             </div>
 
             {/* Right Col: AI Explanation */}
-            <div className="p-8 relative overflow-hidden bg-black/40 flex flex-col justify-center">
+            <div className="p-8 relative overflow-hidden bg-black/40 flex flex-col justify-center overflow-y-auto max-h-[600px]">
               {/* Background Glow */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-neon-purple/20 blur-[80px] rounded-full pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-neon-purple/20 blur-[80px] rounded-full pointer-events-none" />
@@ -146,25 +147,88 @@ const ExplanationModal: React.FC<ExplanationModalProps> = ({ isOpen, onClose, ap
                      <div className="h-4 bg-white/10 rounded w-full animate-pulse" />
                      <div className="h-4 bg-white/10 rounded w-5/6 animate-pulse" />
                   </div>
-                ) : (
+                ) : explanation ? (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="prose prose-invert prose-p:text-slate-300 prose-p:leading-relaxed"
+                    className="space-y-6"
                   >
-                     <p className="whitespace-pre-wrap font-sans text-lg">
-                        {explanation}
-                     </p>
-                  </motion.div>
-                )}
+                     {/* Core Mismatch */}
+                     <div className="p-4 bg-white/5 rounded-lg border border-white/10">
+                       <h4 className="text-sm font-semibold text-slate-300 mb-2">Core Mismatch</h4>
+                       <p className="text-white font-medium">{explanation.coreMismatch}</p>
+                     </div>
 
-                {!loading && (
-                    <div className="mt-8 p-4 bg-neon-purple/10 border border-neon-purple/20 rounded-lg">
-                        <h4 className="text-xs font-mono uppercase text-neon-purple mb-1">Recommended Action</h4>
-                        <p className="text-sm text-slate-300">
-                             Based on the analysis, focusing on your missing skills will increase your match rate by 45%.
-                        </p>
-                    </div>
+                     {/* Missing Skills */}
+                     {explanation.keyMissingSkills.length > 0 && (
+                       <div>
+                         <h4 className="text-sm font-semibold text-red-400 mb-2 flex items-center gap-2">
+                           <AlertTriangle className="w-4 h-4" />
+                           Key Missing Skills
+                         </h4>
+                         <div className="flex flex-wrap gap-2">
+                           {explanation.keyMissingSkills.map((skill, idx) => (
+                             <span key={idx} className="px-3 py-1 bg-red-500/10 border border-red-500/20 rounded-full text-sm text-red-300">
+                               {skill}
+                             </span>
+                           ))}
+                         </div>
+                       </div>
+                     )}
+
+                     {/* Resume Feedback */}
+                     {explanation.resumeFeedback.length > 0 && (
+                       <div>
+                         <h4 className="text-sm font-semibold text-amber-400 mb-2 flex items-center gap-2">
+                           <FileText className="w-4 h-4" />
+                           Resume Feedback
+                         </h4>
+                         <ul className="space-y-2">
+                           {explanation.resumeFeedback.map((item, idx) => (
+                             <li key={idx} className="flex items-start gap-2 text-sm text-slate-300">
+                               <span className="text-amber-400 mt-1">•</span>
+                               {item}
+                             </li>
+                           ))}
+                         </ul>
+                       </div>
+                     )}
+
+                     {/* Action Plan */}
+                     {explanation.actionPlan.length > 0 && (
+                       <div>
+                         <h4 className="text-sm font-semibold text-green-400 mb-2 flex items-center gap-2">
+                           <Target className="w-4 h-4" />
+                           Action Plan
+                         </h4>
+                         <div className="space-y-3">
+                           {explanation.actionPlan.map((step, idx) => (
+                             <div key={idx} className="flex gap-3 p-3 bg-white/5 rounded-lg border border-white/5">
+                               <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center text-xs font-bold">
+                                 {idx + 1}
+                               </span>
+                               <span className="text-sm text-slate-300">{step}</span>
+                             </div>
+                           ))}
+                         </div>
+                       </div>
+                     )}
+
+                     {/* Sentiment */}
+                     <div className="p-4 bg-neon-purple/10 border border-neon-purple/20 rounded-lg">
+                       <h4 className="text-xs font-mono uppercase text-neon-purple mb-2 flex items-center gap-2">
+                         <Sparkles className="w-3 h-3" />
+                         AI Insight
+                       </h4>
+                       <p className="text-sm text-slate-300 italic">
+                         "{explanation.sentiment}"
+                       </p>
+                     </div>
+                  </motion.div>
+                ) : (
+                  <div className="text-center py-10 text-slate-500">
+                    <p>Unable to generate analysis.</p>
+                  </div>
                 )}
               </div>
             </div>
