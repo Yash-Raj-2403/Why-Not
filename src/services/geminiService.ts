@@ -1,5 +1,10 @@
-import { GoogleGenAI } from "@google/genai";
+/**
+ * Gemini Service (Public Interface)
+ * Internally uses Hugging Face for AI operations
+ * Maintains "Gemini" naming for obfuscation
+ */
 import { ExplanationRequest, Application } from '../types';
+import * as HuggingFaceService from './huggingFaceService';
 
 // Extended type for bulk analysis
 export interface BulkAnalysisRequest {
@@ -26,43 +31,6 @@ export interface PatternAnalysis {
   };
 }
 
-// Get API key from environment variable
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
-// Fail loudly if API key is missing
-if (!apiKey || apiKey === 'your_gemini_api_key_here') {
-  throw new Error(
-    '❌ Missing Gemini API Key!\n' +
-    'Please create a .env file with:\n' +
-    '  VITE_GEMINI_API_KEY=your_actual_api_key\n' +
-    'Get your FREE API key from: https://aistudio.google.com/app/apikey'
-  );
-}
-
-const ai = new GoogleGenAI({ apiKey });
-
-// Rate limiting: Track request timestamps per user
-const requestTracker = new Map<string, number[]>();
-const MAX_REQUESTS_PER_MINUTE = 3;
-const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
-
-const checkRateLimit = (userId: string): boolean => {
-  const now = Date.now();
-  const userRequests = requestTracker.get(userId) || [];
-  
-  // Remove requests older than 1 minute
-  const recentRequests = userRequests.filter(timestamp => now - timestamp < RATE_LIMIT_WINDOW_MS);
-  
-  if (recentRequests.length >= MAX_REQUESTS_PER_MINUTE) {
-    return false; // Rate limit exceeded
-  }
-  
-  // Add current request
-  recentRequests.push(now);
-  requestTracker.set(userId, recentRequests);
-  return true;
-};
-
 export interface RejectionAnalysis {
   coreMismatch: string;
   keyMissingSkills: string[];
@@ -71,156 +39,28 @@ export interface RejectionAnalysis {
   sentiment: string;
 }
 
+/**
+ * Generate rejection explanation
+ * Proxies to Hugging Face backend while maintaining Gemini interface
+ */
 export const generateRejectionExplanation = async (
-  data: ExplanationRequest, 
+  data: ExplanationRequest,
   userId: string = 'anonymous'
 ): Promise<RejectionAnalysis> => {
-  // Check rate limit
-  if (!checkRateLimit(userId)) {
-    throw new Error("You've reached the maximum number of AI analysis requests (3 per minute). Please wait a moment before trying again.");
-  }
-
-  const modelId = "gemini-2.0-flash-exp"; // Latest model
-  
-  const prompt = `
-    You are a Career Intelligence AI for the 'WhyNot' platform.
-    Your goal is to explain a placement rejection to a student in a constructive, factual, and data-driven way.
-    
-    Context:
-    Student: ${data.studentName}
-    Major/CGPA: ${data.studentCgpa}
-    Student Skills: ${data.studentSkills.join(', ')}
-    ${data.resumeText ? `Resume Content: ${data.resumeText.substring(0, 3000)}` : ''}
-    
-    Target Opportunity:
-    Role: ${data.jobRole} at ${data.jobCompany}
-    Required Skills: ${data.jobRequiredSkills.join(', ')}
-    Minimum CGPA: ${data.jobMinCgpa}
-    ${data.jobDescription ? `Job Description: ${data.jobDescription.substring(0, 3000)}` : ''}
-    
-    Task:
-    Analyze the rejection based on the provided context.
-    Provide a structured analysis in the following JSON format:
-    {
-      "coreMismatch": "The primary reason for rejection (e.g., Skill Gap, Experience, CGPA). Keep it concise.",
-      "keyMissingSkills": ["Skill 1", "Skill 2"],
-      "resumeFeedback": ["Specific improvement 1", "Specific improvement 2"],
-      "actionPlan": ["Step 1", "Step 2", "Step 3"],
-      "sentiment": "A brief, encouraging closing statement."
-    }
-    
-    Sentiment & Tone Guidelines:
-    - Maintain a Constructive and Encouraging sentiment.
-    - Be factual about the gaps.
-    - Use a professional, yet supportive tone.
-  `;
-
-  try {
-    const response = await ai.models.generateContent({
-      model: modelId,
-      contents: prompt,
-      config: {
-        thinkingConfig: { thinkingBudget: 0 }, // Minimize latency for UI responsiveness
-        responseMimeType: "application/json"
-      }
-    });
-
-    const text = response.text || '{}';
-    const jsonText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    const analysis = JSON.parse(jsonText);
-    
-    return analysis as RejectionAnalysis;
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    
-    // Provide helpful error messages
-    if (error instanceof Error) {
-      if (error.message.includes('API key')) {
-        throw new Error("Invalid API key. Please check your Gemini API configuration.");
-      }
-      if (error.message.includes('quota') || error.message.includes('rate')) {
-        throw new Error("API rate limit exceeded. Please try again in a few moments.");
-      }
-    }
-    
-    throw new Error("Our intelligence systems are currently recalibrating. Please try again later.");
-  }
+  // Delegate to Hugging Face service
+  return HuggingFaceService.generateRejectionExplanation(data, userId);
 };
 
 /**
  * Bulk Analysis: Analyze multiple rejections at once to identify patterns
+ * Proxies to Hugging Face backend
  */
 export const generateBulkRejectionAnalysis = async (
   data: BulkAnalysisRequest,
   userId: string = 'anonymous'
 ): Promise<PatternAnalysis> => {
-  // Check rate limit
-  if (!checkRateLimit(userId)) {
-    throw new Error("Rate limit exceeded. Please wait a moment.");
-  }
-
-  const modelId = "gemini-2.0-flash-exp";
-
-  const prompt = `
-    You are a Career Intelligence AI analyzing multiple rejection patterns.
-    
-    Student Profile:
-    Name: ${data.studentName}
-    CGPA: ${data.studentCgpa}
-    Current Skills: ${data.studentSkills.join(', ')}
-    
-    Rejection History (${data.rejections.length} applications):
-    ${data.rejections.map((r, i) => `
-    ${i + 1}. ${r.jobRole} at ${r.jobCompany}
-       Required: ${r.jobRequiredSkills.join(', ')}
-       Min CGPA: ${r.jobMinCgpa}
-    `).join('\n')}
-    
-    Task: Analyze all rejections and identify patterns.
-    
-    Respond in this EXACT JSON format:
-    {
-      "commonMissingSkills": [
-        {"skill": "skill name", "frequency": number of times missing}
-      ],
-      "cgpaIssues": true or false (if CGPA is consistently below requirements),
-      "improvementPriorities": [
-        "Priority 1: Most critical skill/area to improve",
-        "Priority 2: Second most important",
-        "Priority 3: Additional improvement area"
-      ],
-      "industryInsights": "A 2-3 sentence insight about the industries/roles they're targeting and what's commonly required"
-    }
-    
-    Focus on actionable insights. Be specific about which skills appear most frequently in rejections.
-  `;
-
-  try {
-    const response = await ai.models.generateContent({
-      model: modelId,
-      contents: prompt,
-      config: {
-        thinkingConfig: { thinkingBudget: 0 },
-        responseMimeType: "application/json"
-      }
-    });
-
-    const text = response.text || '{}';
-    // Clean up the response (remove markdown code blocks if present)
-    const jsonText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    const analysis = JSON.parse(jsonText);
-    
-    return analysis as PatternAnalysis;
-  } catch (error) {
-    console.error("Bulk Analysis Error:", error);
-    // Return a fallback analysis
-    return {
-      commonMissingSkills: [],
-      cgpaIssues: false,
-      improvementPriorities: ["Unable to generate analysis. Please try again."],
-      industryInsights: "Analysis temporarily unavailable."
-    };
-  }
+  // Delegate to Hugging Face service
+  return HuggingFaceService.generateBulkRejectionAnalysis(data, userId);
 };
 
 /**
@@ -266,119 +106,16 @@ WhyNot Platform - Turning Rejections into Opportunities
 // ============================================================================
 
 /**
- * Analyze a resume using Gemini AI
- * Returns comprehensive analysis including ATS compatibility, section scores, and suggestions
+ * Analyze a resume using AI
+ * Proxies to Hugging Face backend while maintaining Gemini interface
  */
 export const analyzeResume = async (
   resumeText: string,
   targetRole: string = 'General',
   userId: string
 ): Promise<any> => {
-  if (!checkRateLimit(userId)) {
-    throw new Error('Rate limit exceeded. Please wait a minute before analyzing another resume.');
-  }
-
-  try {
-    const prompt = `You are an expert resume reviewer and ATS (Applicant Tracking System) specialist. Analyze the following resume and provide a comprehensive evaluation.
-
-RESUME CONTENT:
-${resumeText}
-
-TARGET ROLE: ${targetRole}
-
-Provide a detailed analysis in the following JSON format:
-{
-  "overallScore": <0-100>,
-  "sectionScores": [
-    {
-      "name": "Contact Information",
-      "score": <0-100>,
-      "feedback": "Brief feedback",
-      "strengths": ["strength1", "strength2"],
-      "improvements": ["improvement1", "improvement2"]
-    },
-    {
-      "name": "Professional Summary/Objective",
-      "score": <0-100>,
-      "feedback": "Brief feedback",
-      "strengths": [],
-      "improvements": []
-    },
-    {
-      "name": "Work Experience",
-      "score": <0-100>,
-      "feedback": "Brief feedback",
-      "strengths": [],
-      "improvements": []
-    },
-    {
-      "name": "Education",
-      "score": <0-100>,
-      "feedback": "Brief feedback",
-      "strengths": [],
-      "improvements": []
-    },
-    {
-      "name": "Skills",
-      "score": <0-100>,
-      "feedback": "Brief feedback",
-      "strengths": [],
-      "improvements": []
-    }
-  ],
-  "atsAnalysis": {
-    "score": <0-100>,
-    "isATSFriendly": <true/false>,
-    "issues": ["issue1", "issue2"],
-    "recommendations": ["rec1", "rec2"],
-    "detectedSections": ["Contact", "Experience", "Education", "Skills"],
-    "missingSections": ["Certifications", "Projects"],
-    "keywordDensity": <0-100>
-  },
-  "keywordAnalysis": {
-    "found": ["keyword1", "keyword2"],
-    "missing": ["missing1", "missing2"],
-    "suggestions": ["Add X", "Include Y"]
-  },
-  "grammarIssues": ["issue1", "issue2"],
-  "formattingIssues": ["issue1", "issue2"],
-  "actionVerbs": {
-    "used": ["Led", "Managed", "Developed"],
-    "suggested": ["Orchestrated", "Spearheaded", "Architected"]
-  },
-  "quantifiableAchievements": {
-    "count": <number>,
-    "examples": ["Increased sales by 30%"],
-    "suggestions": ["Add metrics to X", "Quantify Y"]
-  }
-}
-
-EVALUATION CRITERIA:
-1. ATS Compatibility: Check for standard section headers, simple formatting, no tables/graphics
-2. Content Quality: Strong action verbs, quantifiable achievements, relevant experience
-3. Relevance: Keywords matching ${targetRole} position
-4. Formatting: Clean structure, consistent formatting, appropriate length
-5. Grammar: Professional language, no errors
-
-Be specific and actionable in your feedback. Focus on improvements that will have the most impact.`;
-
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-exp',
-      contents: prompt,
-      config: {
-        responseMimeType: 'application/json',
-      }
-    });
-
-    const text = response.text || '{}';
-    // Clean up the response (remove markdown code blocks if present)
-    const jsonText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    const analysis = JSON.parse(jsonText);
-    return analysis;
-  } catch (error: any) {
-    console.error('Error analyzing resume:', error);
-    throw new Error(error.message || 'Failed to analyze resume. Please try again.');
-  }
+  // Delegate to Hugging Face service
+  return HuggingFaceService.analyzeResume(resumeText, targetRole, userId);
 };
 
 /**
@@ -389,23 +126,29 @@ export const generateResumeSuggestions = (analysisData: any): string[] => {
 
   // Overall score-based suggestions
   if (analysisData.overallScore < 60) {
-    suggestions.push('🔴 Overall resume needs significant improvement. Focus on the high-priority items below.');
+    suggestions.push(
+      '🔴 Overall resume needs significant improvement. Focus on the high-priority items below.'
+    );
   } else if (analysisData.overallScore < 80) {
-    suggestions.push('🟡 Good foundation, but several areas need refinement for competitive applications.');
+    suggestions.push(
+      '🟡 Good foundation, but several areas need refinement for competitive applications.'
+    );
   } else {
     suggestions.push('🟢 Strong resume! Minor tweaks will make it excellent.');
   }
 
   // ATS suggestions
   if (analysisData.atsAnalysis.score < 70) {
-    suggestions.push(`⚠️ ATS Score: ${analysisData.atsAnalysis.score}/100 - Your resume may not pass automated screening`);
+    suggestions.push(
+      `⚠️ ATS Score: ${analysisData.atsAnalysis.score}/100 - Your resume may not pass automated screening`
+    );
   }
 
   // Section-specific suggestions
   const weakSections = analysisData.sectionScores
     .filter((s: any) => s.score < 70)
     .map((s: any) => s.name);
-  
+
   if (weakSections.length > 0) {
     suggestions.push(`📋 Weak sections that need work: ${weakSections.join(', ')}`);
   }
@@ -423,8 +166,10 @@ export const generateResumeSuggestions = (analysisData: any): string[] => {
 
   // Action verbs
   if (analysisData.actionVerbs.suggested.length > 0) {
-    suggestions.push('💪 Replace weak verbs with stronger action verbs like: ' + 
-                    analysisData.actionVerbs.suggested.slice(0, 3).join(', '));
+    suggestions.push(
+      '💪 Replace weak verbs with stronger action verbs like: ' +
+        analysisData.actionVerbs.suggested.slice(0, 3).join(', ')
+    );
   }
 
   return suggestions;
