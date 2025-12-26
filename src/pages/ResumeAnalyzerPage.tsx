@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   Upload, FileText, Sparkles, AlertCircle, TrendingUp, 
   CheckCircle, XCircle, Loader 
@@ -15,6 +15,7 @@ import {
   deleteResumeAnalysis,
   compareResumeAnalyses
 } from '../services/resumeAnalyzerService';
+import { exportResumeAnalysisPDF } from '../utils/pdfExport';
 
 const ResumeAnalyzerPage: React.FC = () => {
   const { user } = useAuth();
@@ -137,6 +138,30 @@ const ResumeAnalyzerPage: React.FC = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleExportPDF = (analysis: ResumeAnalysis) => {
+    try {
+      exportResumeAnalysisPDF({
+        userName: user?.name || 'Student',
+        fileName: analysis.file_name,
+        analysisDate: new Date(analysis.analyzed_at).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+        score: analysis.overall_score,
+        strengths: analysis.strengths || [],
+        weaknesses: analysis.weaknesses || [],
+        suggestions: analysis.improvement_suggestions || [],
+        atsScore: analysis.ats_score || 0,
+        keywordMatches: analysis.keyword_analysis || [],
+      });
+      showToast('success', 'Resume analysis exported as PDF!');
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+      showToast('error', 'Failed to export PDF');
+    }
   };
 
   if (loading) {
@@ -362,6 +387,7 @@ const ResumeAnalyzerPage: React.FC = () => {
                   analysis={analysis}
                   onDelete={handleDelete}
                   onDownload={handleDownload}
+                  onExportPDF={handleExportPDF}
                   showComparison={showComparison && idx < analyses.length - 1}
                   previousAnalysis={idx < analyses.length - 1 ? analyses[idx + 1] : undefined}
                 />

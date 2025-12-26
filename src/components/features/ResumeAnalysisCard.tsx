@@ -10,6 +10,7 @@ interface ResumeAnalysisCardProps {
   analysis: ResumeAnalysis;
   onDelete?: (id: string) => void;
   onDownload?: (url: string, fileName: string) => void;
+  onExportPDF?: (analysis: ResumeAnalysis) => void;
   showComparison?: boolean;
   previousAnalysis?: ResumeAnalysis;
 }
@@ -18,8 +19,9 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
   analysis,
   onDelete,
   onDownload,
-  showComparison,
-  previousAnalysis
+  onExportPDF,
+  showComparison: _showComparison,
+  previousAnalysis: _previousAnalysis
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -29,7 +31,7 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
     return 'text-red-400';
   };
 
-  const getScoreGradient = (score: number): string => {
+  const _getScoreGradient = (score: number): string => {
     if (score >= 80) return 'from-green-500 to-emerald-500';
     if (score >= 60) return 'from-yellow-500 to-amber-500';
     return 'from-red-500 to-rose-500';
@@ -179,6 +181,15 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
                 title="Download Resume"
               >
                 <Download className="w-4 h-4" />
+              </button>
+            )}
+            {onExportPDF && (
+              <button
+                onClick={() => onExportPDF(analysis)}
+                className="p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-400 transition-colors"
+                title="Export Analysis as PDF"
+              >
+                <FileText className="w-4 h-4" />
               </button>
             )}
             {onDelete && (

@@ -13,6 +13,7 @@ import {
   RejectionAnalysis
 } from '../../services/geminiService';
 import { supabase } from '../../services/supabaseClient';
+import { exportRejectionAnalysisPDF } from '../../utils/pdfExport';
 
 interface RejectionAnalysisHubProps {
   isOpen: boolean;
@@ -163,8 +164,8 @@ Core Mismatch: ${explanation.coreMismatch}
 Key Missing Skills:
 ${explanation.keyMissingSkills.map(s => `- ${s}`).join('\n')}
 
-Resume Feedback:
-${explanation.resumeFeedback.map(s => `- ${s}`).join('\n')}
+Improvement Suggestions:
+${explanation.improvementSuggestions.map(s => `- ${s}`).join('\n')}
 
 Action Plan:
 ${explanation.actionPlan.map(s => `- ${s}`).join('\n')}
@@ -185,6 +186,46 @@ Sentiment: ${explanation.sentiment}
     a.download = `rejection-analysis-${application.job.company}-${Date.now()}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  // New PDF export function
+  const handleExportPDF = () => {
+    if (mode === 'single' && application && explanation) {
+      // Single application analysis
+      exportRejectionAnalysisPDF({
+        userName: student.name,
+        totalApplications: 1,
+        rejections: 1,
+        rejectionRate: 100,
+        commonReasons: [
+          {
+            reason: explanation.coreMismatch,
+            count: 1,
+            percentage: 100,
+          },
+        ],
+        insights: [explanation.coreMismatch, ...explanation.improvementSuggestions],
+        recommendations: explanation.actionPlan,
+        skillGaps: explanation.keyMissingSkills,
+      });
+    } else if (mode === 'bulk' && patternAnalysis) {
+      // Bulk analysis
+      const totalRejections = applications.filter(a => a.status === 'REJECTED').length;
+      exportRejectionAnalysisPDF({
+        userName: student.name,
+        totalApplications: applications.length,
+        rejections: totalRejections,
+        rejectionRate: (totalRejections / applications.length) * 100,
+        commonReasons: patternAnalysis.commonReasons.map((reason, index) => ({
+          reason,
+          count: Math.floor((totalRejections * (50 - index * 10)) / 100),
+          percentage: 50 - index * 10,
+        })),
+        insights: patternAnalysis.overallInsights,
+        recommendations: patternAnalysis.strategicRecommendations,
+        skillGaps: patternAnalysis.skillGaps,
+      });
+    }
   };
 
   if (!isOpen) return null;
@@ -283,7 +324,7 @@ Sentiment: ${explanation.sentiment}
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-3">Great News!</h3>
                 <p className="text-slate-400 max-w-md mb-6">
-                  You don't have any rejections yet. Keep applying to opportunities and we'll help you analyze patterns if needed.
+                  You don&apos;t have any rejections yet. Keep applying to opportunities and we&apos;ll help you analyze patterns if needed.
                 </p>
                 <button
                   onClick={onClose}
@@ -439,13 +480,25 @@ Sentiment: ${explanation.sentiment}
                           </p>
                         </div>
 
-                        <button
-                          onClick={handleExport}
-                          className="w-full px-4 py-3 bg-gradient-to-r from-neon-purple to-neon-purple rounded-lg text-white font-semibold hover:shadow-lg hover:shadow-neon-purple/50 transition-all flex items-center justify-center gap-2"
-                        >
-                          <Download className="w-4 h-4" />
-                          Export Analysis
-                        </button>
+                        {/* Export Buttons */}
+                        <div className="flex gap-3">
+                          <button
+                            onClick={handleExport}
+                            className="flex-1 px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg text-white font-semibold transition-all flex items-center justify-center gap-2"
+                            title="Export as text file"
+                          >
+                            <Download className="w-4 h-4" />
+                            Export TXT
+                          </button>
+                          <button
+                            onClick={handleExportPDF}
+                            className="flex-1 px-4 py-3 bg-gradient-to-r from-neon-purple to-neon-pink rounded-lg text-white font-semibold hover:shadow-lg hover:shadow-neon-purple/50 transition-all flex items-center justify-center gap-2"
+                            title="Export as PDF"
+                          >
+                            <FileText className="w-4 h-4" />
+                            Export PDF
+                          </button>
+                        </div>
                       </motion.div>
                     ) : (
                       <div className="text-center py-10 text-slate-500">

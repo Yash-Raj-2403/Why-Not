@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FileText, Calendar, Building, MapPin, CheckCircle, XCircle, Clock, AlertCircle, Brain, ArrowRight } from 'lucide-react';
+import { FileText, Calendar, Building, MapPin, CheckCircle, XCircle, Clock, AlertCircle, Brain, ArrowRight, Download } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import PageTransition from '../components/common/PageTransition';
 import RejectionAnalysisHub from '../components/features/RejectionAnalysisHub';
 import { useToast } from '../contexts/ToastContext';
+import { exportApplicationHistoryPDF } from '../utils/pdfExport';
 
 const ApplicationsPage: React.FC = () => {
   const { user } = useAuth();
@@ -60,6 +61,34 @@ const ApplicationsPage: React.FC = () => {
   const openBulkAnalysis = () => {
     setAnalysisMode('bulk');
     setShowAnalysisHub(true);
+  };
+
+  const handleExportPDF = () => {
+    if (applications.length === 0) {
+      showToast('error', 'No applications to export');
+      return;
+    }
+
+    const summary = {
+      total: applications.length,
+      pending: applications.filter(a => a.status === 'PENDING').length,
+      accepted: applications.filter(a => a.status === 'ACCEPTED').length,
+      rejected: applications.filter(a => a.status === 'REJECTED').length,
+    };
+
+    exportApplicationHistoryPDF({
+      userName: user?.name || 'Student',
+      applications: applications.map(app => ({
+        company: app.job?.company || 'N/A',
+        position: app.job?.role || 'N/A',
+        appliedDate: new Date(app.applied_at).toLocaleDateString(),
+        status: app.status,
+        lastUpdate: new Date(app.updated_at || app.applied_at).toLocaleDateString(),
+      })),
+      summary,
+    });
+
+    showToast('success', 'Application history exported successfully!');
   };
 
   const rejectedCount = applications.filter(app => app.status === 'REJECTED').length;
@@ -119,15 +148,27 @@ const ApplicationsPage: React.FC = () => {
               <h1 className="text-3xl md:text-4xl font-black text-white mb-2">My Applications</h1>
               <p className="text-slate-400 text-lg">Track the status of your internship and placement applications</p>
             </div>
-            {rejectedCount > 1 && (
-              <button
-                onClick={openBulkAnalysis}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-rose-500/30 transition-all"
-              >
-                <Brain className="w-5 h-5" />
-                Analyze All Rejections ({rejectedCount})
-              </button>
-            )}
+            <div className="flex flex-wrap gap-3">
+              {applications.length > 0 && (
+                <button
+                  onClick={handleExportPDF}
+                  className="flex items-center gap-2 px-5 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-xl transition-all"
+                  title="Export application history as PDF"
+                >
+                  <Download className="w-5 h-5" />
+                  Export PDF
+                </button>
+              )}
+              {rejectedCount > 1 && (
+                <button
+                  onClick={openBulkAnalysis}
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-purple-600 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-rose-500/30 transition-all"
+                >
+                  <Brain className="w-5 h-5" />
+                  Analyze All Rejections ({rejectedCount})
+                </button>
+              )}
+            </div>
           </div>
 
         {loading ? (
@@ -140,7 +181,7 @@ const ApplicationsPage: React.FC = () => {
           >
             <FileText className="w-16 h-16 text-slate-600 mx-auto mb-4" />
             <h3 className="text-xl font-bold mb-2 text-white">No Applications Yet</h3>
-            <p className="text-slate-400 mb-6">You haven't applied to any opportunities yet</p>
+            <p className="text-slate-400 mb-6">You haven&apos;t applied to any opportunities yet</p>
             <a href="/opportunities" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-500 text-white font-bold rounded-xl hover:shadow-lg hover:shadow-purple-500/50 transition-all">
               Browse Opportunities
               <ArrowRight className="w-4 h-4" />
