@@ -149,17 +149,17 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl border border-white/10 overflow-hidden shadow-xl"
+      className="backdrop-blur-xl bg-gradient-to-br from-purple-900/20 via-black/40 to-pink-900/20 rounded-2xl border border-purple-500/20 hover:border-purple-500/40 overflow-hidden shadow-2xl transition-all"
     >
       {/* Header */}
-      <div className="p-6 border-b border-white/10">
+      <div className="p-6 border-b border-purple-500/10">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-neon-purple/20 to-neon-purple/20 border border-neon-purple/30 flex items-center justify-center">
-              <FileText className="w-6 h-6 text-neon-purple" />
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center shadow-lg shadow-purple-500/20">
+              <FileText className="w-6 h-6 text-purple-400" />
             </div>
             <div>
-              <h3 className="font-bold text-lg">{analysis.file_name}</h3>
+              <h3 className="font-bold text-lg text-white">{analysis.file_name}</h3>
               <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
                 <Calendar className="w-3 h-3" />
                 {new Date(analysis.analyzed_at).toLocaleDateString('en-US', {
@@ -207,7 +207,7 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
         {/* Score Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Overall Score */}
-          <div className="flex flex-col items-center p-4 rounded-xl bg-white/5">
+          <div className="flex flex-col items-center p-4 rounded-xl backdrop-blur-sm bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
             {renderScoreCircle(analysis.overall_score)}
             <div className="text-center mt-2">
               <div className="text-sm font-semibold">Overall Score</div>
@@ -216,7 +216,7 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
           </div>
 
           {/* ATS Score */}
-          <div className="flex flex-col items-center p-4 rounded-xl bg-white/5">
+          <div className="flex flex-col items-center p-4 rounded-xl backdrop-blur-sm bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20">
             {renderScoreCircle(analysis.ats_score)}
             <div className="text-center mt-2">
               <div className="text-sm font-semibold">ATS Score</div>
@@ -225,9 +225,9 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
           </div>
 
           {/* Quick Stats */}
-          <div className="flex flex-col justify-center p-4 rounded-xl bg-white/5 space-y-2">
+          <div className="flex flex-col justify-center p-4 rounded-xl backdrop-blur-sm bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 space-y-2">
             <div className="flex items-center gap-2">
-              <Target className="w-4 h-4 text-neon-purple" />
+              <Target className="w-4 h-4 text-purple-400" />
               <span className="text-sm">
                 {analysis.analysis_data.sectionScores.filter(s => s.score >= 80).length} / {analysis.analysis_data.sectionScores.length} sections strong
               </span>
@@ -247,17 +247,20 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
       </div>
 
       {/* Top Suggestions */}
-      <div className="p-6 border-b border-white/10 bg-gradient-to-r from-amber-500/5 to-rose-500/5">
-        <h4 className="font-semibold mb-3 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-amber-400" />
+      <div className="p-6 border-b border-purple-500/10 bg-gradient-to-r from-purple-500/5 via-pink-500/5 to-rose-500/5">
+        <h4 className="font-semibold mb-3 flex items-center gap-2 text-white">
+          <div className="p-1.5 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30">
+            <AlertCircle className="w-4 h-4 text-amber-400" />
+          </div>
           Top Suggestions
         </h4>
         <div className="space-y-2">
           {analysis.suggestions.slice(0, 3).map((suggestion, idx) => (
             <div
               key={idx}
-              className="p-3 rounded-lg bg-white/5 border border-white/10 text-sm"
+              className="p-3 rounded-lg backdrop-blur-sm bg-white/5 border border-purple-500/20 text-sm text-slate-300 hover:border-purple-500/40 transition-all"
             >
+              <span className="text-amber-400 mr-2">●</span>
               {suggestion}
             </div>
           ))}
@@ -265,7 +268,7 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
         {analysis.suggestions.length > 3 && !isExpanded && (
           <button
             onClick={() => setIsExpanded(true)}
-            className="mt-3 text-sm text-neon-purple hover:text-neon-purple transition-colors flex items-center gap-1"
+            className="mt-3 text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1 font-medium"
           >
             View all {analysis.suggestions.length} suggestions
             <ChevronDown className="w-4 h-4" />

@@ -161,15 +161,15 @@ const EventModal: React.FC<EventModalProps> = ({
   const getEventTypeColor = (type: EventType): string => {
     switch (type) {
       case EventType.DEADLINE:
-        return 'bg-rose-500/20 border-rose-500 text-rose-400';
+        return 'bg-gradient-to-br from-rose-500/20 to-pink-500/20 border-rose-500 text-rose-300';
       case EventType.INTERVIEW:
-        return 'bg-neon-purple/20 border-neon-purple text-neon-purple';
+        return 'bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-500 text-purple-300';
       case EventType.DRIVE:
-        return 'bg-neon-purple/20 border-neon-purple text-neon-purple';
+        return 'bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border-purple-500 text-purple-300';
       case EventType.ANNOUNCEMENT:
-        return 'bg-amber-500/20 border-amber-500 text-amber-400';
+        return 'bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-amber-500 text-amber-300';
       default:
-        return 'bg-slate-500/20 border-slate-500 text-slate-400';
+        return 'bg-gradient-to-br from-slate-500/20 to-slate-600/20 border-slate-500 text-slate-300';
     }
   };
 
@@ -211,23 +211,29 @@ const EventModal: React.FC<EventModalProps> = ({
             onClick={e => e.target === e.currentTarget && onClose()}
           >
             <div
-              className={`relative w-full bg-gradient-to-br from-slate-900 to-slate-800 border border-white/10 shadow-2xl overflow-y-auto ${
+              className={`relative w-full backdrop-blur-xl bg-gradient-to-br from-purple-900/40 via-black/60 to-pink-900/40 border border-purple-500/20 shadow-2xl overflow-y-auto ${
                 isMobile ? 'h-full max-w-none rounded-none' : 'max-w-2xl rounded-2xl max-h-[90vh]'
               }`}
             >
               {/* Header */}
               <div
-                className={`sticky top-0 bg-slate-900/95 backdrop-blur-sm border-b border-white/10 flex items-center justify-between ${isMobile ? 'p-4' : 'p-6'}`}
+                className={`sticky top-0 backdrop-blur-xl bg-gradient-to-r from-purple-900/80 via-black/80 to-pink-900/80 border-b border-purple-500/20 flex items-center justify-between ${
+                  isMobile ? 'p-4' : 'p-6'
+                }`}
               >
                 <h2
-                  className={`font-bold flex items-center gap-3 ${isMobile ? 'text-lg' : 'text-2xl'}`}
+                  className={`font-bold flex items-center gap-3 text-white ${
+                    isMobile ? 'text-lg' : 'text-2xl'
+                  }`}
                 >
-                  <Calendar className={`text-neon-purple ${isMobile ? 'w-5 h-5' : 'w-7 h-7'}`} />
+                  <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30">
+                    <Calendar className={`text-purple-400 ${isMobile ? 'w-4 h-4' : 'w-6 h-6'}`} />
+                  </div>
                   {isReadOnly ? 'Event Details' : isEditMode ? 'Edit Event' : 'Create Event'}
                 </h2>
                 <button
                   onClick={onClose}
-                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                  className="p-2 rounded-lg hover:bg-white/10 transition-colors text-slate-300 hover:text-white"
                 >
                   <X className={isMobile ? 'w-5 h-5' : 'w-6 h-6'} />
                 </button>
@@ -237,15 +243,17 @@ const EventModal: React.FC<EventModalProps> = ({
               <form onSubmit={handleSubmit} className={`space-y-6 ${isMobile ? 'p-4' : 'p-6'}`}>
                 {/* Event Type */}
                 <div>
-                  <label className="block text-sm font-semibold mb-3">
-                    <Tag className="w-4 h-4 inline mr-2" />
+                  <label className="block text-sm font-semibold mb-3 text-white flex items-center gap-2">
+                    <div className="p-1 rounded bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30">
+                      <Tag className="w-3 h-3 text-purple-400" />
+                    </div>
                     Event Type
                   </label>
                   {studentInterviewMode ? (
-                    <div className="p-4 rounded-lg border-2 bg-purple-500/20 border-purple-500 text-purple-400">
+                    <div className="p-4 rounded-xl border-2 backdrop-blur-sm bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-500 shadow-lg shadow-purple-500/20">
                       <div className="text-2xl mb-1">🎯</div>
-                      <div className="text-sm font-medium">Interview</div>
-                      <div className="text-xs text-slate-400 mt-1">Add your scheduled interview to the calendar</div>
+                      <div className="text-sm font-medium text-purple-300">Interview</div>
+                      <div className="text-xs text-slate-300 mt-1">Add your scheduled interview to the calendar</div>
                     </div>
                   ) : (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -255,10 +263,10 @@ const EventModal: React.FC<EventModalProps> = ({
                           type="button"
                           disabled={isReadOnly}
                           onClick={() => setEventType(type)}
-                          className={`p-3 rounded-lg border-2 transition-all ${
+                          className={`p-3 rounded-xl border-2 transition-all ${
                             eventType === type
-                              ? getEventTypeColor(type)
-                              : 'bg-white/5 border-white/10 text-slate-400 hover:border-white/20'
+                              ? getEventTypeColor(type) + ' shadow-lg'
+                              : 'backdrop-blur-sm bg-white/5 border-purple-500/20 text-slate-300 hover:border-purple-500/40 hover:bg-purple-500/10'
                           } ${isReadOnly ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
                         >
                           <div className="text-2xl mb-1">{getEventTypeIcon(type)}</div>
@@ -271,8 +279,10 @@ const EventModal: React.FC<EventModalProps> = ({
 
                 {/* Title */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">
-                    <FileText className="w-4 h-4 inline mr-2" />
+                  <label className="block text-sm font-semibold mb-2 text-white flex items-center gap-2">
+                    <div className="p-1 rounded bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30">
+                      <FileText className="w-3 h-3 text-purple-400" />
+                    </div>
                     Event Title *
                   </label>
                   <input
@@ -281,29 +291,31 @@ const EventModal: React.FC<EventModalProps> = ({
                     onChange={e => setTitle(e.target.value)}
                     disabled={isReadOnly}
                     placeholder="e.g., Application Deadline - Google"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-neon-purple transition-colors disabled:opacity-60"
+                    className="w-full px-4 py-3 backdrop-blur-sm bg-white/5 border border-purple-500/20 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all disabled:opacity-60 text-white placeholder:text-slate-500"
                     required
                   />
                 </div>
 
                 {/* Description */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2">Description</label>
+                  <label className="block text-sm font-semibold mb-2 text-white">Description</label>
                   <textarea
                     value={description}
                     onChange={e => setDescription(e.target.value)}
                     disabled={isReadOnly}
                     placeholder="Add event details, location, or instructions..."
                     rows={4}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-neon-purple transition-colors resize-none disabled:opacity-60"
+                    className="w-full px-4 py-3 backdrop-blur-sm bg-white/5 border border-purple-500/20 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all resize-none disabled:opacity-60 text-white placeholder:text-slate-500"
                   />
                 </div>
 
                 {/* Start Date & Time */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold mb-2">
-                      <Calendar className="w-4 h-4 inline mr-2" />
+                    <label className="block text-sm font-semibold mb-2 text-white flex items-center gap-2">
+                      <div className="p-1 rounded bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30">
+                        <Calendar className="w-3 h-3 text-purple-400" />
+                      </div>
                       Start Date *
                     </label>
                     <input
@@ -311,13 +323,15 @@ const EventModal: React.FC<EventModalProps> = ({
                       value={startDate}
                       onChange={e => setStartDate(e.target.value)}
                       disabled={isReadOnly}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-neon-purple transition-colors disabled:opacity-60"
+                      className="w-full px-4 py-3 backdrop-blur-sm bg-white/5 border border-purple-500/20 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all disabled:opacity-60 text-white"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-2">
-                      <Clock className="w-4 h-4 inline mr-2" />
+                    <label className="block text-sm font-semibold mb-2 text-white flex items-center gap-2">
+                      <div className="p-1 rounded bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30">
+                        <Clock className="w-3 h-3 text-purple-400" />
+                      </div>
                       Start Time *
                     </label>
                     <input
@@ -325,7 +339,7 @@ const EventModal: React.FC<EventModalProps> = ({
                       value={startTime}
                       onChange={e => setStartTime(e.target.value)}
                       disabled={isReadOnly}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-neon-purple transition-colors disabled:opacity-60"
+                      className="w-full px-4 py-3 backdrop-blur-sm bg-white/5 border border-purple-500/20 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all disabled:opacity-60 text-white"
                       required
                     />
                   </div>
@@ -334,27 +348,27 @@ const EventModal: React.FC<EventModalProps> = ({
                 {/* End Date & Time (Optional) */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold mb-2">
-                      End Date <span className="text-slate-400 text-xs">(Optional)</span>
+                    <label className="block text-sm font-semibold mb-2 text-white">
+                      End Date <span className="text-slate-400 text-xs font-normal">(Optional)</span>
                     </label>
                     <input
                       type="date"
                       value={endDate}
                       onChange={e => setEndDate(e.target.value)}
                       disabled={isReadOnly}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-neon-purple transition-colors disabled:opacity-60"
+                      className="w-full px-4 py-3 backdrop-blur-sm bg-white/5 border border-purple-500/20 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all disabled:opacity-60 text-white"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-2">
-                      End Time <span className="text-slate-400 text-xs">(Optional)</span>
+                    <label className="block text-sm font-semibold mb-2 text-white">
+                      End Time <span className="text-slate-400 text-xs font-normal">(Optional)</span>
                     </label>
                     <input
                       type="time"
                       value={endTime}
                       onChange={e => setEndTime(e.target.value)}
                       disabled={isReadOnly}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-neon-purple transition-colors disabled:opacity-60"
+                      className="w-full px-4 py-3 backdrop-blur-sm bg-white/5 border border-purple-500/20 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all disabled:opacity-60 text-white"
                     />
                   </div>
                 </div>
@@ -365,7 +379,7 @@ const EventModal: React.FC<EventModalProps> = ({
                     <button
                       type="submit"
                       disabled={loading}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-neon-purple to-neon-purple rounded-lg font-semibold hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 rounded-xl font-semibold hover:scale-105 hover:shadow-lg hover:shadow-purple-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-white"
                     >
                       <Save className="w-5 h-5" />
                       {loading ? 'Saving...' : isEditMode ? 'Update Event' : 'Create Event'}
@@ -376,7 +390,7 @@ const EventModal: React.FC<EventModalProps> = ({
                         type="button"
                         onClick={handleDelete}
                         disabled={loading}
-                        className="px-6 py-3 bg-rose-500/20 text-rose-400 border border-rose-500 rounded-lg font-semibold hover:bg-rose-500/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        className="px-6 py-3 backdrop-blur-sm bg-rose-500/20 text-rose-300 border border-rose-500/50 rounded-xl font-semibold hover:bg-rose-500/30 hover:shadow-lg hover:shadow-rose-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                       >
                         <Trash2 className="w-5 h-5" />
                         Delete
@@ -386,7 +400,7 @@ const EventModal: React.FC<EventModalProps> = ({
                 )}
 
                 {isReadOnly && (
-                  <div className="text-center text-sm text-slate-400 bg-white/5 border border-white/10 rounded-lg p-4">
+                  <div className="text-center text-sm text-slate-300 backdrop-blur-sm bg-purple-500/10 border border-purple-500/30 rounded-xl p-4">
                     📋 Read-only view. Use the &quot;Add Interview&quot; button to add your interview dates.
                   </div>
                 )}

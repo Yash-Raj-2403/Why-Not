@@ -182,31 +182,33 @@ const ResumeAnalyzerPage: React.FC = () => {
     <div className="min-h-screen bg-black relative overflow-hidden pt-28">
       <div className="relative z-10 max-w-[1800px] mx-auto p-4 md:p-8">
         {/* Header */}
-        <div
-          className="mb-8"
-        >
+        <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <Sparkles className="w-10 h-10 text-purple-400" />
-            <h1 className="text-3xl md:text-4xl font-black text-white">AI Resume Analyzer</h1>
+            <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30">
+              <Sparkles className="w-8 h-8 text-purple-400" />
+            </div>
+            <h1 className="text-3xl md:text-5xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 bg-clip-text text-transparent">
+              AI Resume Analyzer
+            </h1>
           </div>
-          <p className="text-slate-400 text-lg mb-2">
+          <p className="text-slate-300 text-lg mb-4">
             Upload your resume and get instant AI-powered feedback to improve your chances of passing ATS systems
           </p>
-          <div className="flex items-center gap-2 mt-3 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg inline-block">
-            <AlertCircle className="w-4 h-4 text-blue-400" />
-            <p className="text-sm text-blue-300">
-              <strong>General Guidance:</strong> This provides broad improvement suggestions. 
+          <div className="flex items-center gap-2 mt-3 px-4 py-3 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-xl inline-flex">
+            <AlertCircle className="w-4 h-4 text-purple-400" />
+            <p className="text-sm text-slate-300">
+              <strong className="text-white">General Guidance:</strong> This provides broad improvement suggestions. 
               For specific job rejection analysis, use the Rejection Coach (it takes precedence).
             </p>
           </div>
         </div>
 
         {/* Upload Section */}
-        <div
-          className="mb-8 p-8 rounded-2xl glass-panel border border-white/10 shadow-2xl"
-        >
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-2 text-white">
-            <Upload className="w-6 h-6 text-purple-400" />
+        <div className="mb-8 p-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl hover:border-purple-500/30 transition-all">
+          <h2 className="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30">
+              <Upload className="w-5 h-5 text-purple-400" />
+            </div>
             Upload Resume
           </h2>
 
@@ -303,10 +305,12 @@ const ResumeAnalyzerPage: React.FC = () => {
           )}
 
           {/* Info Banner */}
-          <div className="mt-6 p-4 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
+          <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-rose-500/10 border border-purple-500/30 flex items-start gap-3">
+            <div className="p-1.5 rounded-lg bg-purple-500/20 border border-purple-500/30">
+              <AlertCircle className="w-4 h-4 text-purple-400 flex-shrink-0" />
+            </div>
             <div className="text-sm text-slate-300">
-              <span className="font-semibold text-white">Powered by Google Gemini AI</span>
+              <span className="font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Powered by Google Gemini AI</span>
               <br />
               Your resume will be analyzed for ATS compatibility, keyword optimization, formatting issues, 
               and actionable improvements. The analysis typically takes 10-20 seconds.
@@ -318,10 +322,12 @@ const ResumeAnalyzerPage: React.FC = () => {
         {analyses.length > 0 && (
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold flex items-center gap-2">
-                <TrendingUp className="w-6 h-6 text-neon-purple" />
+              <h2 className="text-2xl font-bold flex items-center gap-3 text-white">
+                <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30">
+                  <TrendingUp className="w-5 h-5 text-purple-400" />
+                </div>
                 Your Analyses
-                <span className="px-3 py-1 rounded-full bg-neon-purple/20 text-neon-purple text-sm font-semibold">
+                <span className="px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-purple-300 text-sm font-semibold">
                   {analyses.length}
                 </span>
               </h2>
@@ -329,7 +335,7 @@ const ResumeAnalyzerPage: React.FC = () => {
               {analyses.length >= 2 && (
                 <button
                   onClick={() => setShowComparison(!showComparison)}
-                  className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 transition-all text-sm font-medium"
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500/10 to-pink-500/10 hover:from-purple-500/20 hover:to-pink-500/20 border border-purple-500/30 transition-all text-sm font-medium text-white"
                 >
                   {showComparison ? 'Hide' : 'Show'} Comparison
                 </button>
@@ -342,10 +348,10 @@ const ResumeAnalyzerPage: React.FC = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-                className="mb-6 p-6 rounded-2xl bg-gradient-to-br from-neon-purple/10 to-neon-purple/10 border-2 border-neon-purple/30"
+                className="mb-6 p-6 rounded-2xl backdrop-blur-xl bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-rose-500/10 border-2 border-purple-500/30 shadow-lg"
               >
-                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-neon-purple" />
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2 text-white">
+                  <TrendingUp className="w-5 h-5 text-purple-400" />
                   Progress Comparison
                 </h3>
                 {(() => {
