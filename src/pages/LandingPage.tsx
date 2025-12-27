@@ -53,18 +53,20 @@ const LandingPage: React.FC = () => {
       <section className="relative z-10 min-h-screen flex flex-col justify-start pt-32 px-6 md:px-12 lg:px-24">
         <div className="max-w-4xl w-full">
             <motion.div
-                initial={{ opacity: 0, y: 30, scale: 0.98 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+                style={{ willChange: 'opacity, transform' }}
             >
                 <div className="inline-block px-4 py-2 bg-neon-purple/10 border border-neon-purple/20 rounded-full mb-6">
                   <span className="text-neon-purple text-sm font-semibold">Campus Internship & Placement Platform</span>
                 </div>
                 
                 <motion.h1 
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                  transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+                  style={{ willChange: 'opacity, transform' }}
                   className="text-6xl md:text-8xl font-bold leading-[1.1] tracking-tight mb-8"
                 >
                     Turning silent <br />
@@ -78,9 +80,10 @@ const LandingPage: React.FC = () => {
                 </motion.h1>
 
                 <motion.p 
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+                  transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+                  style={{ willChange: 'opacity, transform' }}
                   className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl leading-relaxed font-light"
                 >
                     Stop wondering why you got rejected. Get AI-powered explanations that reveal skill gaps, 
@@ -89,9 +92,10 @@ const LandingPage: React.FC = () => {
                 </motion.p>
                 
                 <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+                  transition={{ duration: 0.5, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                  style={{ willChange: 'opacity, transform' }}
                   className="flex flex-wrap gap-4"
                 >
                   <Link to="/login">
@@ -119,10 +123,11 @@ const LandingPage: React.FC = () => {
             {/* Core Features Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
                 <motion.div 
-                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.15, margin: "50px" }}
+                  transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+                  style={{ willChange: 'opacity, transform' }}
                   className="relative group p-8 rounded-2xl h-full backdrop-blur-xl bg-white/5 border border-purple-500/30 hover:border-purple-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/30 hover:-translate-y-3"
                 >
                     <div className="absolute -top-3 -right-3 px-3 py-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-xs font-bold animate-pulse">
@@ -143,10 +148,11 @@ const LandingPage: React.FC = () => {
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.15, margin: "50px" }}
+                  transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1], delay: 0.1 }}
+                  style={{ willChange: 'opacity, transform' }}
                   className="relative group p-8 rounded-2xl h-full  backdrop-blur-xl bg-white/5 border border-white/10 hover:border-indigo-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/20 hover:-translate-y-2"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -163,10 +169,11 @@ const LandingPage: React.FC = () => {
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.15, margin: "50px" }}
+                  transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
+                  style={{ willChange: 'opacity, transform' }}
                   className="relative group p-8 rounded-2xl h-full  backdrop-blur-xl bg-white/5 border border-white/10 hover:border-indigo-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/20 hover:-translate-y-2"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -183,10 +190,11 @@ const LandingPage: React.FC = () => {
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.15, margin: "50px" }}
+                  transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1], delay: 0.1 }}
+                  style={{ willChange: 'opacity, transform' }}
                   className="relative group p-8 rounded-2xl h-full  backdrop-blur-xl bg-white/5 border border-white/10 hover:border-pink-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/20 hover:-translate-y-2"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
