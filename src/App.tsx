@@ -18,13 +18,11 @@ const SignupPage = lazy(() => import('./pages/SignupPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
 const ProfileSetupPage = lazy(() => import('./pages/ProfileSetupPage'));
 const OpportunitiesPage = lazy(() => import('./pages/OpportunitiesPage'));
-const ApplicationsPage = lazy(() => import('./pages/ApplicationsPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const PlacementDashboard = lazy(() => import('./pages/PlacementDashboard'));
 const PostOpportunityPage = lazy(() => import('./pages/PostOpportunityPage'));
 const ManageOpportunitiesPage = lazy(() => import('./pages/ManageOpportunitiesPage'));
-const ApplicationsManagementPage = lazy(() => import('./pages/ApplicationsManagementPage'));
 const CalendarPage = lazy(() => import('./pages/CalendarPage'));
 const ResumeAnalyzerPage = lazy(() => import('./pages/ResumeAnalyzerPage'));
 const HelpCenterPage = lazy(() => import('./pages/HelpCenterPage'));
@@ -136,15 +134,6 @@ const App: React.FC = () => {
                   />
 
                   <Route
-                    path="/applications"
-                    element={
-                      <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
-                        <ApplicationsPage />
-                      </ProtectedRoute>
-                    }
-                  />
-
-                  <Route
                     path="/profile"
                     element={
                       <ProtectedRoute userRole={user?.role}>
@@ -198,18 +187,6 @@ const App: React.FC = () => {
                       </ProtectedRoute>
                     }
                   />
-                  <Route
-                    path="/placement/applications"
-                    element={
-                      <ProtectedRoute
-                        userRole={user?.role}
-                        requiredRole={UserRole.PLACEMENT_OFFICER}
-                      >
-                        <ApplicationsManagementPage />
-                      </ProtectedRoute>
-                    }
-                  />
-
                   {/* Profile Route - accessible to all authenticated users */}
                   <Route
                     path="/profile"

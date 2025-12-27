@@ -16,14 +16,12 @@ const Footer: React.FC = () => {
       case UserRole.STUDENT:
         return [
           { label: 'Opportunities', path: '/opportunities' },
-          { label: 'My Applications', path: '/applications' },
           { label: 'Settings', path: '/settings' },
         ];
       
       case UserRole.PLACEMENT_OFFICER:
         return [
           { label: 'Post Opportunity', path: '/placement/post' },
-          { label: 'Applications', path: '/placement/applications' },
         ];
       
       default:

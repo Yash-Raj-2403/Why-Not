@@ -75,12 +75,6 @@ const NotFoundPage: React.FC = () => {
                 Opportunities
               </button>
               <button
-                onClick={() => navigate('/applications')}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition-colors"
-              >
-                Applications
-              </button>
-              <button
                 onClick={() => navigate('/profile')}
                 className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition-colors"
               >

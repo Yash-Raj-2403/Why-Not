@@ -6,7 +6,6 @@ import {
   Home,
   Briefcase,
   Users,
-  FileText,
   Settings,
   LogOut,
   Bell,
@@ -59,7 +58,6 @@ const Header: React.FC<HeaderProps> = ({
         return [
           { label: 'Dashboard', path: '/dashboard', icon: Home },
           { label: 'Opportunities', path: '/opportunities', icon: Briefcase },
-          { label: 'Applications', path: '/applications', icon: FileText },
           { label: 'Calendar', path: '/calendar', icon: Calendar },
           { label: 'Resume AI', path: '/resume-analyzer', icon: BarChart3 },
         ];
@@ -68,7 +66,6 @@ const Header: React.FC<HeaderProps> = ({
         return [
           { label: 'Dashboard', path: '/placement/dashboard', icon: Home },
           { label: 'Opportunities', path: '/placement/opportunities', icon: Briefcase },
-          { label: 'Applications', path: '/placement/applications', icon: FileText },
         ];
 
       default:

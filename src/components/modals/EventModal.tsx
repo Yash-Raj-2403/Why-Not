@@ -14,6 +14,7 @@ interface EventModalProps {
   selectedDate?: Date;
   onSave: (eventData: CreateEventRequest) => Promise<void>;
   onDelete?: (eventId: string) => Promise<void>;
+  studentInterviewMode?: boolean; // New prop for student interview creation
 }
 
 const EventModal: React.FC<EventModalProps> = ({
@@ -23,19 +24,23 @@ const EventModal: React.FC<EventModalProps> = ({
   selectedDate,
   onSave,
   onDelete,
+  studentInterviewMode = false,
 }) => {
   const { user } = useAuth();
   const { showToast } = useToast();
   const { isMobile } = useResponsive();
   const isPlacementOfficer = user?.role === 'PLACEMENT_OFFICER';
+  const isStudent = user?.role === 'STUDENT';
   const isEditMode = !!event;
-  const isReadOnly = !isPlacementOfficer;
+  // Students can create/edit their own interview events
+  const canEdit = isPlacementOfficer || (isStudent && studentInterviewMode);
+  const isReadOnly = !canEdit;
   const titleInputRef = useRef<HTMLInputElement>(null);
 
   // Form state
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [eventType, setEventType] = useState<EventType>(EventType.ANNOUNCEMENT);
+  const [eventType, setEventType] = useState<EventType>(studentInterviewMode ? EventType.INTERVIEW : EventType.ANNOUNCEMENT);
   const [startDate, setStartDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -97,8 +102,8 @@ const EventModal: React.FC<EventModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isPlacementOfficer) {
-      showToast('error', 'Only placement officers can create/edit events');
+    if (!canEdit) {
+      showToast('error', 'You do not have permission to create/edit events');
       return;
     }
 
@@ -236,24 +241,32 @@ const EventModal: React.FC<EventModalProps> = ({
                     <Tag className="w-4 h-4 inline mr-2" />
                     Event Type
                   </label>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {Object.values(EventType).map(type => (
-                      <button
-                        key={type}
-                        type="button"
-                        disabled={isReadOnly}
-                        onClick={() => setEventType(type)}
-                        className={`p-3 rounded-lg border-2 transition-all ${
-                          eventType === type
-                            ? getEventTypeColor(type)
-                            : 'bg-white/5 border-white/10 text-slate-400 hover:border-white/20'
-                        } ${isReadOnly ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
-                      >
-                        <div className="text-2xl mb-1">{getEventTypeIcon(type)}</div>
-                        <div className="text-xs font-medium capitalize">{type.toLowerCase()}</div>
-                      </button>
-                    ))}
-                  </div>
+                  {studentInterviewMode ? (
+                    <div className="p-4 rounded-lg border-2 bg-purple-500/20 border-purple-500 text-purple-400">
+                      <div className="text-2xl mb-1">🎯</div>
+                      <div className="text-sm font-medium">Interview</div>
+                      <div className="text-xs text-slate-400 mt-1">Add your scheduled interview to the calendar</div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {Object.values(EventType).map(type => (
+                        <button
+                          key={type}
+                          type="button"
+                          disabled={isReadOnly}
+                          onClick={() => setEventType(type)}
+                          className={`p-3 rounded-lg border-2 transition-all ${
+                            eventType === type
+                              ? getEventTypeColor(type)
+                              : 'bg-white/5 border-white/10 text-slate-400 hover:border-white/20'
+                          } ${isReadOnly ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
+                        >
+                          <div className="text-2xl mb-1">{getEventTypeIcon(type)}</div>
+                          <div className="text-xs font-medium capitalize">{type.toLowerCase()}</div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Title */}
@@ -374,7 +387,7 @@ const EventModal: React.FC<EventModalProps> = ({
 
                 {isReadOnly && (
                   <div className="text-center text-sm text-slate-400 bg-white/5 border border-white/10 rounded-lg p-4">
-                    📋 Read-only view. Only placement officers can create or edit events.
+                    📋 Read-only view. Use the &quot;Add Interview&quot; button to add your interview dates.
                   </div>
                 )}
               </form>

@@ -20,6 +20,7 @@ const CalendarPage: React.FC = () => {
   const { user } = useAuth();
   const { showToast } = useToast();
   const isPlacementOfficer = user?.role === 'PLACEMENT_OFFICER';
+  const isStudent = user?.role === 'STUDENT';
 
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [todaysEvents, setTodaysEvents] = useState<CalendarEvent[]>([]);
@@ -27,6 +28,7 @@ const CalendarPage: React.FC = () => {
   const [showEventModal, setShowEventModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [studentInterviewMode, setStudentInterviewMode] = useState(false);
 
   // Load events
   useEffect(() => {
@@ -55,6 +57,7 @@ const CalendarPage: React.FC = () => {
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
     setSelectedDate(undefined);
+    setStudentInterviewMode(false);
     setShowEventModal(true);
   };
 
@@ -62,6 +65,7 @@ const CalendarPage: React.FC = () => {
     if (isPlacementOfficer) {
       setSelectedEvent(null);
       setSelectedDate(date);
+      setStudentInterviewMode(false);
       setShowEventModal(true);
     }
   };
@@ -69,6 +73,14 @@ const CalendarPage: React.FC = () => {
   const handleCreateEvent = () => {
     setSelectedEvent(null);
     setSelectedDate(new Date());
+    setStudentInterviewMode(false);
+    setShowEventModal(true);
+  };
+
+  const handleAddStudentInterview = () => {
+    setSelectedEvent(null);
+    setSelectedDate(new Date());
+    setStudentInterviewMode(true);
     setShowEventModal(true);
   };
 
@@ -176,6 +188,16 @@ const CalendarPage: React.FC = () => {
                 <Download className="w-5 h-5" />
                 Export
               </button>
+
+              {isStudent && (
+                <button
+                  onClick={handleAddStudentInterview}
+                  className="px-5 py-3 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 hover:scale-105 transition-transform flex items-center gap-2 font-semibold shadow-lg shadow-purple-500/30 text-white"
+                >
+                  <Plus className="w-5 h-5" />
+                  Add Interview
+                </button>
+              )}
 
               {isPlacementOfficer && (
                 <button
@@ -312,11 +334,13 @@ const CalendarPage: React.FC = () => {
           setShowEventModal(false);
           setSelectedEvent(null);
           setSelectedDate(undefined);
+          setStudentInterviewMode(false);
         }}
         event={selectedEvent}
         selectedDate={selectedDate}
         onSave={handleSaveEvent}
         onDelete={handleDeleteEvent}
+        studentInterviewMode={studentInterviewMode}
       />
     </div>
     </PageTransition>

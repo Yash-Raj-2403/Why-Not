@@ -76,7 +76,9 @@ export async function getUpcomingEvents(days: number = 7): Promise<CalendarEvent
 }
 
 /**
- * Create a new calendar event (Placement Officer only)
+ * Create a new calendar event
+ * - Placement Officers can create any event type
+ * - Students can only create INTERVIEW events for themselves
  */
 export async function createCalendarEvent(
   eventData: CreateEventRequest

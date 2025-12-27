@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Home, Briefcase, FileText, Settings, LogOut, 
+  Home, Briefcase, Settings, LogOut, 
   Calendar, BarChart3, Users, Sparkles, Zap, Menu, X
 } from 'lucide-react';
 import { UserRole } from '../../types';
@@ -39,7 +39,6 @@ const Sidebar: React.FC<SidebarProps> = ({
         return [
           { label: 'Dashboard', path: '/dashboard', icon: Home, gradient: 'from-cyan-400 to-blue-500' },
           { label: 'Opportunities', path: '/opportunities', icon: Briefcase, gradient: 'from-purple-400 to-pink-500' },
-          { label: 'Applications', path: '/applications', icon: FileText, gradient: 'from-orange-400 to-red-500' },
           { label: 'Calendar', path: '/calendar', icon: Calendar, gradient: 'from-green-400 to-emerald-500' },
           { label: 'Resume AI', path: '/resume-analyzer', icon: BarChart3, gradient: 'from-yellow-400 to-orange-500' },
           { label: 'Profile', path: '/profile', icon: Users, gradient: 'from-indigo-400 to-purple-500' },
@@ -49,7 +48,6 @@ const Sidebar: React.FC<SidebarProps> = ({
         return [
           { label: 'Dashboard', path: '/placement/dashboard', icon: Home, gradient: 'from-cyan-400 to-blue-500' },
           { label: 'Opportunities', path: '/placement/opportunities', icon: Briefcase, gradient: 'from-purple-400 to-pink-500' },
-          { label: 'Applications', path: '/placement/applications', icon: FileText, gradient: 'from-orange-400 to-red-500' },
           { label: 'Calendar', path: '/calendar', icon: Calendar, gradient: 'from-green-400 to-emerald-500' },
           { label: 'Settings', path: '/settings', icon: Settings, gradient: 'from-indigo-400 to-purple-500' },
         ];

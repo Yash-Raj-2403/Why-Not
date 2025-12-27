@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Briefcase, Users, TrendingUp, Calendar, PlusCircle, Clock, 
-  CheckCircle, XCircle, FileText, ArrowRight, Award, Search,
+  Briefcase, Users, TrendingUp, Calendar, PlusCircle, 
+  CheckCircle, XCircle, Award, Search,
   User, HelpCircle
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -20,7 +20,6 @@ const PlacementDashboard: React.FC = () => {
     totalStudents: 0,
     placedStudents: 0
   });
-  const [recentApplications, setRecentApplications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -71,9 +70,6 @@ const PlacementDashboard: React.FC = () => {
         totalStudents: studentCount || 0,
         placedStudents: placedCount || 0
       });
-
-      // Get recent applications
-      setRecentApplications(applications?.slice(0, 5) || []);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -115,17 +111,6 @@ const PlacementDashboard: React.FC = () => {
       change: 'Registered'
     }
   ];
-
-  const getStatusBadge = (status: string) => {
-    const styles: any = {
-      PENDING: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
-      SHORTLISTED: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-      INTERVIEW_SCHEDULED: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-      REJECTED: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-      ACCEPTED: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-    };
-    return styles[status] || 'bg-slate-500/10 text-slate-400 border-slate-500/20';
-  };
 
   return (
     <PageTransition>
@@ -207,69 +192,8 @@ const PlacementDashboard: React.FC = () => {
                 </div>
               ))}
 
-              {/* Recent Applications - Large Card */}
-              <div className="col-span-12 lg:col-span-8">
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.4 }}
-                  className="glass-panel rounded-2xl p-6 h-full border border-white/10 bg-slate-900/60"
-                >
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                      <Clock className="w-5 h-5 text-purple-400" />
-                      Recent Applications
-                    </h2>
-                    <Link to="/placement/applications" className="flex items-center gap-1 text-purple-400 hover:text-purple-300 transition-colors text-sm font-semibold group">
-                      View All <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-
-                  {recentApplications.length === 0 ? (
-                    <div className="text-center py-12">
-                      <FileText className="w-16 h-16 text-slate-700 mx-auto mb-4" />
-                      <p className="text-slate-400">No applications received yet</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {recentApplications.map((app, index) => (
-                        <motion.div
-                          key={app.id}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all border border-white/5 hover:border-purple-500/30 group"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white font-bold text-sm">
-                              {app.student?.name?.charAt(0) || 'S'}
-                            </div>
-                            <div>
-                              <h4 className="font-semibold text-white group-hover:text-purple-400 transition-colors">
-                                {app.student?.name || 'Unknown Student'}
-                              </h4>
-                              <p className="text-sm text-slate-400">
-                                Applied for <span className="text-slate-300">{app.opportunity?.title}</span>
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusBadge(app.status)}`}>
-                              {app.status.replace('_', ' ')}
-                            </span>
-                            <span className="text-xs text-slate-500 hidden sm:block">
-                              {new Date(app.created_at).toLocaleDateString()}
-                            </span>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              </div>
-
-              {/* Quick Actions - Side Panel */}
-              <div className="col-span-12 lg:col-span-4">
+              {/* Quick Actions - Full Width Panel */}
+              <div className="col-span-12">
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}

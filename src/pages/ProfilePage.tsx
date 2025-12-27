@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   User, Mail, Phone, Book, Award, FileText, Edit, MapPin, 
   Save, X, Plus, Trash2, Briefcase, Target, Calendar,
-  GraduationCap, Code, Star, TrendingUp, CheckCircle
+  GraduationCap, Code, Star, TrendingUp, CheckCircle, Building2, Users, Shield
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
@@ -13,6 +13,7 @@ import { supabase } from '../services/supabaseClient';
 const ProfilePage: React.FC = () => {
   const { user, refreshUser } = useAuth();
   const { showToast } = useToast();
+  const isPlacementOfficer = user?.role === 'PLACEMENT_OFFICER';
   const [editMode, setEditMode] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,6 +25,7 @@ const ProfilePage: React.FC = () => {
     year: user?.year || 0,
     semester: user?.semester || 0,
     skills: user?.skills || [],
+    placementStatus: user?.placementStatus || 'unplaced' as 'unplaced' | 'placed' | 'in-process',
     preferences: {
       roles: user?.preferences?.roles || [],
       locations: user?.preferences?.locations || [],
@@ -46,6 +48,7 @@ const ProfilePage: React.FC = () => {
         year: user.year || 0,
         semester: user.semester || 0,
         skills: user.skills || [],
+        placementStatus: user.placementStatus || 'unplaced',
         preferences: {
           roles: user.preferences?.roles || [],
           locations: user.preferences?.locations || [],
@@ -69,19 +72,23 @@ const ProfilePage: React.FC = () => {
 
       if (profileError) throw profileError;
 
-      const { error: studentError } = await supabase
-        .from('student_profiles')
-        .upsert({
-          id: user!.id,
-          cgpa: formData.cgpa,
-          major: formData.major,
-          year: formData.year,
-          semester: formData.semester,
-          skills: formData.skills,
-          preferences: formData.preferences
-        }, { onConflict: 'id' });
+      // Only update student_profiles if user is a student
+      if (!isPlacementOfficer) {
+        const { error: studentError } = await supabase
+          .from('student_profiles')
+          .upsert({
+            id: user!.id,
+            cgpa: formData.cgpa,
+            major: formData.major,
+            year: formData.year,
+            semester: formData.semester,
+            skills: formData.skills,
+            preferences: formData.preferences,
+            placement_status: formData.placementStatus
+          }, { onConflict: 'id' });
 
-      if (studentError) throw studentError;
+        if (studentError) throw studentError;
+      }
 
       await refreshUser();
       showToast('success', 'Profile updated successfully');
@@ -104,6 +111,7 @@ const ProfilePage: React.FC = () => {
       year: user?.year || 0,
       semester: user?.semester || 0,
       skills: user?.skills || [],
+      placementStatus: user?.placementStatus || 'unplaced',
       preferences: {
         roles: user?.preferences?.roles || [],
         locations: user?.preferences?.locations || [],
@@ -202,6 +210,244 @@ const ProfilePage: React.FC = () => {
 
   if (!user) return null;
 
+  // Placement Officer Profile - Simplified version
+  if (isPlacementOfficer) {
+    return (
+      <div className="min-h-screen bg-black relative overflow-hidden pt-28">
+        <div className="relative z-10 max-w-[1400px] mx-auto p-4 md:p-8">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
+          >
+            <div>
+              <h1 className="text-3xl md:text-4xl font-black text-white mb-2">
+                Officer Profile
+              </h1>
+              <p className="text-slate-400 text-lg">Manage your placement officer account</p>
+            </div>
+            
+            {!editMode ? (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setEditMode(true)}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold hover:shadow-lg hover:shadow-purple-500/30 transition-all"
+              >
+                <Edit className="w-5 h-5" />
+                Edit Profile
+              </motion.button>
+            ) : (
+              <div className="flex gap-3">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleCancel}
+                  disabled={saving}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl glass-panel border border-white/10 hover:border-white/20 text-white font-semibold transition-all"
+                >
+                  <X className="w-5 h-5" />
+                  Cancel
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold hover:shadow-lg hover:shadow-green-500/50 transition-all disabled:opacity-50"
+                >
+                  <Save className="w-5 h-5" />
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </motion.button>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Profile Grid */}
+          <div className="grid grid-cols-12 gap-6">
+            {/* Profile Header Card - Full Width */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+              className="col-span-12"
+            >
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                
+                <div className="relative glass-panel rounded-3xl p-8 border border-white/10 group-hover:border-white/20 transition-all">
+                  <div className="flex flex-col md:flex-row items-center gap-8">
+                    {/* Avatar */}
+                    <motion.div 
+                      whileHover={{ scale: 1.05 }}
+                      className="relative"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full blur-xl opacity-60" />
+                      <div className="relative w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full p-1">
+                        <div className="w-full h-full rounded-full bg-slate-900 overflow-hidden flex items-center justify-center">
+                          {user.avatar ? (
+                            <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-5xl font-bold text-white">
+                              {user.name.charAt(0).toUpperCase()}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center border-4 border-slate-900">
+                        <Shield className="w-5 h-5 text-white" />
+                      </div>
+                    </motion.div>
+
+                    {/* User Info */}
+                    <div className="flex-1 text-center md:text-left">
+                      {editMode ? (
+                        <input 
+                          type="text"
+                          value={formData.name}
+                          onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          className="text-3xl md:text-4xl font-black bg-white/5 border border-white/20 rounded-lg px-4 py-2 w-full md:w-auto mb-2"
+                        />
+                      ) : (
+                        <h2 className="text-3xl md:text-4xl font-black text-white mb-2">{user.name}</h2>
+                      )}
+                      <p className="text-slate-400 text-lg flex items-center justify-center md:justify-start gap-2">
+                        <Mail className="w-5 h-5" />
+                        {user.email}
+                      </p>
+                      <div className="mt-4 flex flex-wrap items-center justify-center md:justify-start gap-3">
+                        <span className="px-4 py-2 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 text-sm font-semibold flex items-center gap-2">
+                          <Building2 className="w-4 h-4" />
+                          Placement Officer
+                        </span>
+                        <span className="px-4 py-2 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30 text-sm font-semibold">
+                          {user.department || 'All Departments'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Contact Information */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+              className="col-span-12 md:col-span-6"
+            >
+              <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
+                <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                  <User className="w-6 h-6 text-indigo-400" />
+                  Contact Information
+                </h3>
+                
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center py-3 border-b border-white/5">
+                    <span className="text-slate-400 flex items-center gap-2">
+                      <Mail className="w-4 h-4" />
+                      Email
+                    </span>
+                    <span className="font-semibold text-white">{user.email}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center py-3 border-b border-white/5">
+                    <span className="text-slate-400 flex items-center gap-2">
+                      <Phone className="w-4 h-4" />
+                      Phone
+                    </span>
+                    {editMode ? (
+                      <input 
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        className="font-semibold bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm w-48 text-right"
+                        placeholder="+91 9876543210"
+                      />
+                    ) : (
+                      <span className="font-semibold text-white">{user.phone || 'Not set'}</span>
+                    )}
+                  </div>
+
+                  <div className="flex justify-between items-center py-3 border-b border-white/5">
+                    <span className="text-slate-400 flex items-center gap-2">
+                      <Building2 className="w-4 h-4" />
+                      Department
+                    </span>
+                    {editMode ? (
+                      <input 
+                        type="text"
+                        value={formData.department}
+                        onChange={(e) => setFormData({...formData, department: e.target.value})}
+                        className="font-semibold bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm w-48 text-right"
+                        placeholder="Computer Science"
+                      />
+                    ) : (
+                      <span className="font-semibold text-white">{user.department || 'Not set'}</span>
+                    )}
+                  </div>
+
+                  <div className="flex justify-between items-center py-3">
+                    <span className="text-slate-400 flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      Officer ID
+                    </span>
+                    <span className="font-mono text-white font-semibold">{user.id.substring(0, 8).toUpperCase()}</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Quick Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
+              className="col-span-12 md:col-span-6"
+            >
+              <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
+                <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                  <TrendingUp className="w-6 h-6 text-purple-400" />
+                  Your Role
+                </h3>
+                
+                <div className="space-y-4">
+                  <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Briefcase className="w-5 h-5 text-indigo-400" />
+                      <span className="font-semibold text-white">Post Opportunities</span>
+                    </div>
+                    <p className="text-sm text-slate-400">Create and manage internship and placement postings for students</p>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Users className="w-5 h-5 text-purple-400" />
+                      <span className="font-semibold text-white">Monitor Students</span>
+                    </div>
+                    <p className="text-sm text-slate-400">Track student placement status and interview progress</p>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                    <div className="flex items-center gap-3 mb-2">
+                      <Calendar className="w-5 h-5 text-emerald-400" />
+                      <span className="font-semibold text-white">Manage Calendar</span>
+                    </div>
+                    <p className="text-sm text-slate-400">Schedule campus drives, deadlines, and announcements</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Student Profile - Original version
   return (
     <div className="min-h-screen bg-black relative overflow-hidden pt-28">
       {/* Pure black background */}
@@ -517,6 +763,36 @@ const ProfilePage: React.FC = () => {
                     Student ID
                   </span>
                   <span className="font-mono text-white font-semibold">{user.id.substring(0, 8).toUpperCase()}</span>
+                </div>
+
+                <div className="flex justify-between items-center py-3 border-t border-white/5 mt-2">
+                  <span className="text-slate-400 flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    Placement Status
+                  </span>
+                  {editMode ? (
+                    <select
+                      value={formData.placementStatus || 'unplaced'}
+                      onChange={(e) => setFormData({...formData, placementStatus: e.target.value as 'unplaced' | 'placed' | 'in-process'})}
+                      className="font-semibold bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm"
+                    >
+                      <option value="unplaced">Not Placed</option>
+                      <option value="in-process">In Process</option>
+                      <option value="placed">Placed</option>
+                    </select>
+                  ) : (
+                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                      user.placementStatus === 'placed' 
+                        ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                        : user.placementStatus === 'in-process'
+                        ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                        : 'bg-slate-500/20 text-slate-400 border border-slate-500/30'
+                    }`}>
+                      {user.placementStatus === 'placed' ? '✓ Placed' : 
+                       user.placementStatus === 'in-process' ? '⏳ In Process' : 
+                       'Not Placed'}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

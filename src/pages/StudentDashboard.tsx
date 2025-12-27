@@ -309,80 +309,12 @@ const StudentDashboard: React.FC = () => {
             </div>
           ))}
 
-          {/* Recent Applications - Large Card */}
-          <div
-            className="col-span-12 md:col-span-7"
-          >
-            <div className="relative glass-panel rounded-2xl p-6 h-full overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-              
-              <div className="relative z-10 flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <FileText className="w-6 h-6 text-rose-400" />
-                  Recent Applications
-                </h2>
-                <Link to="/applications" className="flex items-center gap-1 text-rose-400 hover:text-purple-400 transition-colors text-sm font-semibold group">
-                  View All <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-
-              {loading ? (
-                <div className="space-y-3">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="h-20 bg-slate-800/50 rounded-xl animate-pulse" />
-                  ))}
-                </div>
-              ) : applications.length === 0 ? (
-                <div className="text-center py-12">
-                  <FileText className="w-16 h-16 text-slate-700 mx-auto mb-4" />
-                  <p className="text-slate-400 mb-4">No applications yet</p>
-                  <Link to="/opportunities" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-purple-500 rounded-xl text-white font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all">
-                    <Briefcase className="w-5 h-5" />
-                    Browse Opportunities
-                  </Link>
-                </div>
-              ) : (
-                <div className="space-y-3 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent pr-2">
-                  {applications.slice(0, 6).map((app, index) => (
-                    <motion.div
-                      key={app.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      whileHover={{ scale: 1.02, x: 5 }}
-                      className="bg-white/5 rounded-xl p-4 border border-white/5 hover:border-purple-500/30 transition-all cursor-pointer group"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <h3 className="text-white font-semibold mb-1 group-hover:text-purple-400 transition-colors">
-                            {app.job?.role || 'Position'}
-                          </h3>
-                          <p className="text-slate-400 text-sm">{app.job?.company || 'Company'}</p>
-                        </div>
-                        <span className={`px-4 py-2 rounded-full text-xs font-semibold ${
-                          app.status === 'PENDING' ? 'bg-purple-500/20 text-purple-300' :
-                          app.status === 'SHORTLISTED' ? 'bg-purple-500/20 text-purple-300' :
-                          app.status === 'INTERVIEW_SCHEDULED' ? 'bg-purple-500/20 text-purple-300' :
-                          app.status === 'ACCEPTED' ? 'bg-purple-500/20 text-purple-300' :
-                          app.status === 'REJECTED' ? 'bg-red-500/20 text-red-400' :
-                          'bg-slate-500/20 text-slate-400'
-                        }`}>
-                          {app.status.replace('_', ' ')}
-                        </span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Activity Feed - Medium Card */}
+          {/* Activity Feed - Full Width Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.6, ease: "easeOut" }}
-            className="col-span-12 md:col-span-5"
+            className="col-span-12"
           >
             <div className="relative glass-panel rounded-2xl p-6 h-full overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
