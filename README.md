@@ -1,372 +1,221 @@
-<div align="center">
+# WhyNot - Career Intelligence Platform
 
-# 🎓 WhyNot
+A next-generation career management platform built on **Firebase** and **Google Cloud Platform** that combines AI-powered insights with transparent rejection analysis to help students navigate their placement journey with confidence and clarity.
 
-### AI-Powered Career Intelligence for Campus Placements
+**Powered by Google Technologies:** Firebase Authentication, Firebase Firestore, Firebase Hosting, Google Gemini AI
 
-[![React](https://img.shields.io/badge/React-19.2-61dafb?style=flat-square&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178c6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-06b6d4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-2.0-3ecf8e?style=flat-square&logo=supabase)](https://supabase.com/)
+## 🌟 Key Features
 
-**[Live Demo](https://why-not-teal.vercel.app)** • [Features](#-features) • [Quick Start](#-quick-start) • [Tech Stack](#-tech-stack)
+### AI-Powered Rejection Analysis
+- **Dual-Type Classification**: Distinguishes between rule-based (CGPA, skills) and non-rule-based rejections
+- **Skill Confidence Tracking**: Profile snapshot at application time prevents trust issues from profile changes
+- **Actionable Insights**: Personalized improvement plans based on rejection patterns
+- **Trust by Design**: All AI explanations include disclaimers about limitations
 
-</div>
+### Smart Application Management
+- **Firebase Real-time Sync**: Live updates across all devices
+- **Profile Snapshots**: Freezes your CGPA, skills, and resume at application time
+- **Honest Explanations**: Clear distinction between eligibility violations and subjective screening
+- **Pattern Analysis**: Bulk analysis of multiple rejections to identify improvement priorities
+- **Cloud Storage**: Secure resume storage on Firebase Cloud Storage
 
----
+### Resume Intelligence
+- **AI Resume Analysis**: Powered by Google Gemini AI
+- **ATS Score Calculation**: Keyword matching and formatting analysis
+- **Detailed Feedback**: Section-by-section scoring with specific suggestions
 
-## 📌 The Problem
+### Student Dashboard
+- Real-time application tracking
+- Interview scheduling
+- Opportunity discovery with smart filtering
+- Profile completion tracking
+- Activity timeline
 
-**Campus placements are broken.** Students apply blindly, get rejected silently, and never understand why. 97% of candidates receive zero feedback, leading to repeated mistakes and diminished confidence. Placement cells struggle with manual tracking, fragmented communication, and zero visibility into student progress.
+### Placement Officer Dashboard
+- Opportunity posting and management
+- Application review workflow
+- Student analytics
+- Batch operations for bulk rejections/shortlisting
 
-**Critical Gaps:**
+## �️ Tech Stack
 
-- ❌ No structured feedback on rejections
-- 🔒 Zero transparency in application pipeline
-- 📊 Manual spreadsheet chaos for placement offices
-- 📧 Scattered communication (WhatsApp, email, office visits)
-- 🎯 Students can't identify skill gaps or improvement areas
+**Frontend:**
+- React 19.2.3 with TypeScript 5.8.2
+- Vite 6.2.0 (build tool)
+- Tailwind CSS 4.1.18 (styling)
+- Framer Motion 12.23.26 (animations)
+- Three.js & React Three Fiber (3D effects)
 
----
+**Google Cloud Platform:**
+- **Firebase Authentication** (OAuth 2.0, email/password)
+- **Firebase Firestore** (NoSQL real-time database)
+- **Firebase Hosting** (fast, secure web hosting)
+- **Firebase Cloud Storage** (file uploads & resume storage)
+- **Firebase Cloud Functions** (serverless backend)
+- **Google Gemini API** (primary AI engine)
+- **Cloud SQL** (PostgreSQL managed database)
 
-## 💡 The Solution
+**Backend & Storage:**
+- PostgreSQL with Row Level Security
+- RESTful API architecture
+- Cloud SQL (managed database)
 
-**WhyNot transforms rejections into growth opportunities.** Our AI-powered platform analyzes every rejection to provide personalized insights on skill gaps, resume improvements, and actionable next steps. Students understand what to fix. Placement offices gain real-time analytics and streamlined workflows.
+**AI & Machine Learning:**
+- Google Gemini 1.5 Pro (rejection analysis)
+- Google Cloud Natural Language API
+- Advanced resume parsing algorithms
 
-### Core Value Proposition
+**PDF Processing:**
+- pdfjs-dist 5.4.449
+- mammoth 1.11.0 (DOCX support)
+- jsPDF (export functionality)
 
-<table>
-<tr>
-<td width="50%">
-
-**For Students**
-
-- 🤖 **AI Rejection Analysis** - Understand exactly why you were rejected
-- 🎯 **Smart Matching** - Apply to jobs you're qualified for (match scores)
-- 📄 **Resume Intelligence** - ATS compatibility, keyword analysis, scoring
-- 📊 **Unified Dashboard** - Track all applications in one place
-- 📅 **Auto Reminders** - Never miss an interview or deadline
-
-</td>
-<td width="50%">
-
-**For Placement Officers**
-
-- 📈 **Live Analytics** - Placement rates, trends, performance metrics
-- 🎯 **Pipeline Management** - Post jobs, review applications, track progress
-- 👥 **Student Insights** - Identify skill gaps, view performance data
-- 📋 **One-Click Reports** - Export placement data for stakeholders
-- 🔔 **Targeted Outreach** - Send opportunities to eligible students
-
-</td>
-</tr>
-</table>
-
----
-
-## ✨ Features
-
-### 🤖 AI-Powered Intelligence
-
-- **Rejection Analysis** - Personalized feedback on why applications failed (skill gaps, CGPA, experience)
-- **Bulk Pattern Detection** - Analyze multiple rejections to identify common issues
-- **Resume Scoring** - Comprehensive ATS analysis with section-wise feedback (0-100 score)
-- **Keyword Optimization** - Identify missing keywords for target roles
-
-### 📊 Application Management
-
-- **Smart Filters** - Search by company, role, status, date range
-- **Status Tracking** - Real-time updates (Pending → Shortlisted → Interview → Selected/Rejected)
-- **Calendar Integration** - Interview schedules, deadline reminders, meeting links
-- **PDF Exports** - Download analysis reports and application history
-
-### 🎯 Opportunity Discovery
-
-- **Match Scores** - See your compatibility before applying (skills + CGPA)
-- **Advanced Filters** - CGPA requirements, skills, location, job type
-- **Quick Apply** - One-click applications with profile auto-fill
-- **Saved Jobs** - Bookmark opportunities for later
-
-### 📈 Analytics & Insights
-
-- **Placement Dashboards** - Real-time statistics and trends (Officer view)
-- **Student Performance** - Track application success rates, identify improvement areas
-- **Skill Gap Reports** - Department-wise analysis of missing skills
-- **Company Insights** - Hiring patterns, requirements, success rates
-
----
-
-## 🚀 Quick Start
+## 🚀 Getting Started
 
 ### Prerequisites
-
-```bash
-Node.js 18+ | npm 9+ | Supabase Account
-```
+- Node.js 18+ and npm
+- Google Cloud Platform account
+- Firebase project setup
+- Google Gemini API key
 
 ### Installation
 
 1. **Clone the repository**
-
 ```bash
-git clone https://github.com/yourusername/whynot.git
-cd whynot
+git clone <repository-url>
+cd WhyNot1
 ```
 
 2. **Install dependencies**
-
 ```bash
 npm install
 ```
 
-3. **Configure environment variables**
+3. **Environment Setup**
 
+Create a `.env` file in the root directory:
+# Google Cloud Platform
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_GEMINI_API_KEY=your_gemini_api_key
+
+# Database & Storage
+VITE_DATABASE_URL=your_database_url
+VITE_CLOUD_SQL_CONNECTION=your_cloud_sql_connection
+```
+
+4. **Google Cloud Setup**
+
+Initialize Firebase in your project:
 ```bash
-cp .env.example .env
+firebase login
+firebase init
 ```
 
-Add your credentials to `.env`:
+5. **Database Setup**
 
-```env
-# Supabase
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-# AI (HuggingFace Free Tier)
-VITE_HUGGINGFACE_API_KEY=your_hf_token
-
-# OAuth
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
-VITE_GOOGLE_CLIENT_SECRET=your_google_client_secret
-
-# App
-VITE_APP_URL=http://localhost:3000
+Run the SQL migrations in order:
+```bash
+# In database console
+src/lib/setup.sql
+src/lib/storage_setup.sql
+src/lib/add_application_url_column.sql
+src/lib/add_application_snapshots.sql
 ```
 
-4. **Set up database**
-
-Create these tables in Supabase:
-
-```sql
--- Profiles
-CREATE TABLE profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id),
-  role TEXT CHECK (role IN ('student', 'officer')),
-  full_name TEXT NOT NULL,
-  email TEXT UNIQUE NOT NULL,
-  cgpa NUMERIC,
-  skills TEXT[],
-  resume_url TEXT,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
--- Applications
-CREATE TABLE applications (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
-  company TEXT NOT NULL,
-  role TEXT NOT NULL,
-  required_skills TEXT[],
-  min_cgpa NUMERIC,
-  status TEXT DEFAULT 'pending',
-  applied_date TIMESTAMP DEFAULT NOW()
-);
-
--- Opportunities
-CREATE TABLE opportunities (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  posted_by UUID REFERENCES profiles(id),
-  company_name TEXT NOT NULL,
-  role TEXT NOT NULL,
-  required_skills TEXT[],
-  min_cgpa NUMERIC,
-  deadline TIMESTAMP,
-  status TEXT DEFAULT 'open'
-);
+6``bash
+# In Supabase SQL Editor
+src/lib/setup.sql
+src/lib/storage_setup.sql
+src/lib/add_application_url_column.sql
+src/lib/add_application_snapshots.sql
 ```
 
-Enable Row Level Security (RLS) policies for data protection.
-
-5. **Run development server**
-
+5. **Start Development Server**
 ```bash
 npm run dev
 ```
 
-Visit `http://localhost:3000`
+Visit `http://localhost:5173` to see the application.
 
----
+## 📝 Usage
 
-## 🛠️ Tech Stack
+### For Students
+1. **Sign up** and complete your profile with skills and confidence levels
+2. **Browse opportunities** with smart filtering
+3. **Apply** to positions (your profile is automatically snapshotted)
+4. **Track applications** and interview schedules
+5. **Analyze rejections** with AI-powered explanations
+6. **Improve** based on actionable feedback
 
-### Frontend
+### For Placement Officers
+1. **Post opportunities** with detailed requirements
+2. **Review applications** in the management dashboard
+3. **Schedule interviews** with automatic notifications
+4. **Send bulk updates** for efficient workflow
+5. **Track metrics** across all opportunities
 
-- **React 19.2** with TypeScript - Type-safe component architecture
-- **Vite 6.4** - Lightning-fast HMR and optimized builds
-- **Tailwind CSS 4.1** - Utility-first styling with custom design system
-- **Three.js** - Interactive 3D landing page animations
-- **Framer Motion** - Smooth page transitions and micro-interactions
+## 🎯 Core Innovation: Application Snapshots
 
-### Backend & Services
+When a student applies, we freeze:
+- CGPA
+- Skills with confidence levels
+- Resume URL
+- Academic details (major, year, semester)
 
-- **Supabase** - PostgreSQL database, authentication, real-time subscriptions, file storage
-- **HuggingFace Inference API** - Free AI analysis (Mistral-7B-Instruct)
-- **Google OAuth 2.0** - Secure authentication
-
-### Features & Tools
-
-- **jsPDF** - PDF report generation with branded templates
-- **React Router v7** - Client-side routing
-- **Zod** - Runtime validation
-- **Vitest** - Unit and integration testing (69 tests)
-- **ESLint + Prettier** - Code quality and formatting
-
----
-
-## 📁 Project Structure
-
-```
-whynot/
-├── src/
-│   ├── components/
-│   │   ├── common/          # Reusable UI components
-│   │   ├── features/        # Feature-specific components
-│   │   └── layout/          # Layout components (Header, Footer, Sidebar)
-│   ├── pages/               # Route pages
-│   ├── services/
-│   │   ├── geminiService.ts        # Public AI interface (proxy)
-│   │   ├── huggingFaceService.ts   # Actual AI backend
-│   │   ├── supabaseClient.ts       # Database client
-│   │   └── resumeAnalyzerService.ts
-│   ├── hooks/               # Custom React hooks
-│   ├── contexts/            # Global state (Auth, Toast)
-│   └── utils/               # Helper functions
-├── public/                  # Static assets
-└── tests/                   # Test suites
-```
-
----
-
-## 🔐 Security Features
-
-- ✅ **Row Level Security (RLS)** - Students only access their own data
-- ✅ **Input Validation** - Client and server-side validation (44 tests)
-- ✅ **JWT Authentication** - Secure session management with auto-refresh
-- ✅ **Rate Limiting** - AI requests: 10/min per user, API: 100/min per IP
-- ✅ **Environment Variables** - Secrets never exposed in client code
-- ✅ **SQL Injection Prevention** - Parameterized queries only
-- ✅ **HTTPS Only** - TLS encryption for all data transmission
-
----
+This ensures:
+- ✅ Rejection analysis uses the exact profile at application time
+- ✅ Profile updates don't change past explanations
+- ✅ Trust and consistency in AI feedback
 
 ## 🧪 Testing
 
 ```bash
 # Run all tests
-npm run test
+npm test
+
+# Run with UI
+npm run test:ui
 
 # Coverage report
 npm run test:coverage
 
-# Watch mode
-npm run test:watch
+# Type checking
+npm run type-check
 ```
 
-**Current Coverage:**
-
-- Input Validation: 44 tests ✅
-- Error Handling: 25 tests ✅
-- Total: 69 tests passing
-
----
-
-## 🚢 Deployment
-
-### Vercel (Recommended)
-
-1. **Push to GitHub**
+## 📦 Build & Deploy
 
 ```bash
-git add .
-git commit -m "Initial commit"
-git push origin main
-```
-
-2. **Deploy to Vercel**
-
-- Import repository in [Vercel Dashboard](https://vercel.com/new)
-- Add environment variables from `.env`
-- Deploy automatically on push
-
-3. **Configure OAuth**
-
-- Add `https://your-domain.vercel.app` to Google OAuth authorized origins
-- Add `https://your-domain.vercel.app/auth/callback` to redirect URIs
-
-### Manual Build
-
-```bash
+# Production build
 npm run build
-npm run preview  # Test production build locally
-```
 
----
+# Firebase Authentication with OAuth 2.0
+- Google Cloud IAM policies
+- Row Level Security (RLS) in database
+- JWT-based token validation
+- Environment vFirebase Hosting with automatic builds on push. Also supports Vercel deployment
+- Input validation and sanitization
+- XSS protection via React
+- HTTPS-only communicationoyment with automatic builds on push.
 
-## 📊 Performance
+## 🔐 Security Features
 
-- **Lighthouse Score:** 95+ (Performance, Accessibility, Best Practices, SEO)
-- **First Contentful Paint:** < 1.2s
-- **Time to Interactive:** < 2.5s
-- **Mobile-Optimized:** Responsive design, reduced 3D complexity on mobile
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-**Code Standards:**
-
-- TypeScript strict mode
-- ESLint + Prettier formatting
-- Write tests for new features
-- Update documentation
-
----
+- Row Level Security (RLS) in Supabase
+- JWT-based authentication
+- Environment variable protection
+- Input validation and sanitization
+- XSS protection via React
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Private - All rights reserved.
+
+## 👥 Team
+
+Built for TechSprint AI Hackathon
 
 ---
 
-## 🙏 Acknowledgments
-
-- **HuggingFace** - Free AI inference API
-- **Supabase** - Open-source Firebase alternative
-- **Vercel** - Seamless deployment platform
-- **Three.js Community** - 3D graphics inspiration
-
----
-
-## 📞 Support
-
-- **Documentation:** [GitHub Wiki](https://github.com/yourusername/whynot/wiki)
-- **Issues:** [GitHub Issues](https://github.com/yourusername/whynot/issues)
-- **Email:** support@whynot-platform.com
-
----
-
-<div align="center">
-
-**Built with ❤️ for students facing silent rejections**
-
-[⬆ Back to Top](#-whynot)
-
-</div>
+**Note:** This platform prioritizes transparency and honesty in rejection feedback. All AI-generated explanations include trust disclaimers and distinguish between objective criteria violations and subjective screening decisions.

@@ -151,11 +151,13 @@ const ResumeAnalyzerPage: React.FC = () => {
           day: 'numeric',
         }),
         score: analysis.overall_score,
-        strengths: analysis.strengths || [],
-        weaknesses: analysis.weaknesses || [],
-        suggestions: analysis.improvement_suggestions || [],
+        strengths: analysis.strengths || analysis.analysis_data?.sectionScores?.flatMap(s => s.strengths) || [],
+        weaknesses: analysis.weaknesses || analysis.analysis_data?.sectionScores?.flatMap(s => s.improvements) || [],
+        suggestions: analysis.improvement_suggestions || analysis.suggestions || [],
         atsScore: analysis.ats_score || 0,
-        keywordMatches: analysis.keyword_analysis || [],
+        keywordMatches: (analysis.keyword_analysis || analysis.analysis_data?.keywordAnalysis?.found || []).map(k => 
+          typeof k === 'string' ? { keyword: k, found: true } : k
+        ),
       });
       showToast('success', 'Resume analysis exported as PDF!');
     } catch (error) {
@@ -187,9 +189,16 @@ const ResumeAnalyzerPage: React.FC = () => {
             <Sparkles className="w-10 h-10 text-purple-400" />
             <h1 className="text-3xl md:text-4xl font-black text-white">AI Resume Analyzer</h1>
           </div>
-          <p className="text-slate-400 text-lg">
+          <p className="text-slate-400 text-lg mb-2">
             Upload your resume and get instant AI-powered feedback to improve your chances of passing ATS systems
           </p>
+          <div className="flex items-center gap-2 mt-3 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg inline-block">
+            <AlertCircle className="w-4 h-4 text-blue-400" />
+            <p className="text-sm text-blue-300">
+              <strong>General Guidance:</strong> This provides broad improvement suggestions. 
+              For specific job rejection analysis, use the Rejection Coach (it takes precedence).
+            </p>
+          </div>
         </div>
 
         {/* Upload Section */}

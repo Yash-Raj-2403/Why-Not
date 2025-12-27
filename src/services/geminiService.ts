@@ -96,6 +96,11 @@ This analysis is powered by Google's Gemini 2.0 AI model
 and is designed to provide constructive, data-driven 
 insights to help you improve your future applications.
 
+⚠️ IMPORTANT DISCLAIMER:
+This explanation is based on declared profile data and 
+listed eligibility criteria. Final hiring decisions may 
+include additional factors.
+
 WhyNot Platform - Turning Rejections into Opportunities
 ═══════════════════════════════════════════════════════
   `.trim();

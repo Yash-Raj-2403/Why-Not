@@ -2,8 +2,8 @@ import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, BrainCircuit, SearchX, LineChart, Users, FileCheck, Calendar, Award, TrendingUp, Shield, Target, Zap, CheckCircle2, Star } from 'lucide-react';
 import ThreeScene from '../components/ThreeScene';
-import Footer from '../components/Footer';
-import SEO from '../components/SEO';
+import Footer from '../src/components/layout/Footer';
+import SEO from '../src/components/common/SEO';
 import { Link } from 'react-router-dom';
 
 const LandingPage: React.FC = () => {

@@ -15,7 +15,7 @@ export { default as SEO } from './common/SEO';
 export { default as ErrorBoundary } from './common/ErrorBoundary';
 export { default as ProtectedRoute } from './common/ProtectedRoute';
 export { default as PageTransition } from './common/PageTransition';
-export { default as LoadingSkeleton } from './common/LoadingSkeleton';
+export { LoadingGrid, CardSkeleton } from './common/LoadingSkeleton';
 export { default as ParticleBackground } from './common/ParticleBackground';
 export { default as ThreeScene } from './common/ThreeScene';
 

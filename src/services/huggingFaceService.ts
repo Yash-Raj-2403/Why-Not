@@ -2,6 +2,23 @@
  * Hugging Face Service
  * Uses FREE Mistral-7B-Instruct-v0.2 for AI analysis
  * This is the actual AI backend (obfuscated as Gemini in public API)
+ * 
+ * IMPORTANT: PRECEDENCE RULE
+ * ===========================
+ * Resume Analyzer = General guidance (broad suggestions)
+ * Rejection Coach = Decision-specific explanation (takes priority)
+ * 
+ * The Rejection Coach's analysis always takes precedence over Resume Analyzer
+ * because it's contextual to a specific job rejection. Resume Analyzer provides
+ * general improvement suggestions, while Rejection Coach explains why a specific
+ * application was rejected.
+ * 
+ * Example:
+ * - Resume Analyzer might say: "Your SQL skills look fine"
+ * - Rejection Coach might say: "SQL proficiency insufficient for this role"
+ * 
+ * In this case, the Rejection Coach is correct because it's analyzing a specific
+ * job requirement vs. the student's skill confidence level for that particular role.
  */
 
 import { ExplanationRequest } from '../types';
@@ -134,11 +151,26 @@ const extractJSON = (text: string): any => {
 };
 
 export interface RejectionAnalysis {
+  type: 'RULE_BASED' | 'NON_RULE_BASED';
   coreMismatch: string;
   keyMissingSkills: string[];
   resumeFeedback: string[];
   actionPlan: string[];
   sentiment: string;
+  // For rule-based rejections
+  violations?: Array<{
+    category: 'CGPA' | 'SKILLS' | 'DEADLINE' | 'ELIGIBILITY';
+    description: string;
+    expected: string;
+    actual: string;
+  }>;
+  // For skill confidence mismatches
+  skillGaps?: Array<{
+    skill: string;
+    required: string;
+    studentLevel?: 'Beginner' | 'Intermediate' | 'Advanced';
+    suggestion: string;
+  }>;
 }
 
 /**
@@ -155,14 +187,25 @@ export const generateRejectionExplanation = async (
     );
   }
 
+  // Build skill confidence context
+  const skillConfidenceContext = data.skillConfidenceData
+    ? `\nStudent Skill Confidence Levels:\n${data.skillConfidenceData
+        .map(s => `- ${s.name}: ${s.confidence}${s.evidence ? ` (Evidence: ${s.evidence.join(', ')})` : ''}`)
+        .join('\n')}`
+    : '';
+
   const prompt = `<s>[INST] You are a Career Intelligence AI for the 'WhyNot' placement platform.
 
-Analyze this job rejection and provide constructive feedback in JSON format.
+Analyze this job rejection and determine if it's RULE-BASED or NON-RULE-BASED, then provide feedback.
+
+IMPORTANT CLASSIFICATION:
+- RULE_BASED: Clear violations (CGPA below threshold, missing required skills, deadline passed, eligibility criteria not met)
+- NON_RULE_BASED: Student met all requirements but still rejected (limited slots, internal preferences, subjective screening)
 
 Student Profile:
 - Name: ${data.studentName}
 - CGPA: ${data.studentCgpa}
-- Skills: ${data.studentSkills.join(', ')}
+- Skills: ${data.studentSkills.join(', ')}${skillConfidenceContext}
 ${data.resumeText ? `- Resume: ${data.resumeText.substring(0, 2000)}` : ''}
 
 Target Job:
@@ -173,25 +216,34 @@ ${data.jobDescription ? `- Description: ${data.jobDescription.substring(0, 2000)
 
 Provide your analysis in this exact JSON format:
 {
+  "type": "RULE_BASED" or "NON_RULE_BASED",
   "coreMismatch": "Primary reason for rejection (1 sentence)",
-  "keyMissingSkills": ["skill1", "skill2", "skill3"],
-  "resumeFeedback": ["improvement1", "improvement2", "improvement3"],
-  "actionPlan": ["step1", "step2", "step3"],
-  "sentiment": "Brief encouraging statement"
+  "keyMissingSkills": ["skill1", "skill2"],
+  "resumeFeedback": ["improvement1", "improvement2"],
+  "actionPlan": ["step1", "step2"],
+  "sentiment": "Brief encouraging statement",
+  "violations": [{"category": "CGPA" or "SKILLS" or "DEADLINE" or "ELIGIBILITY", "description": "...", "expected": "...", "actual": "..."}],
+  "skillGaps": [{"skill": "skill_name", "required": "Intermediate", "studentLevel": "Beginner", "suggestion": "..."}]
 }
 
-Be constructive, specific, and actionable. Focus on what the student can improve. [/INST]</s>`;
+For RULE_BASED rejections: List specific violations. Be honest about skill confidence mismatches.
+For NON_RULE_BASED rejections: Acknowledge they met requirements and explain: "You met the listed eligibility criteria. The rejection may be due to limited openings or company-side screening preferences."
+
+IMPORTANT: Always end your sentiment with: "This explanation is based on declared profile data and listed eligibility criteria. Final hiring decisions may include additional factors."
+
+Be constructive, specific, and honest. Consider skill confidence levels when analyzing skill gaps. [/INST]</s>`;
 
   try {
     const response = await callHuggingFace(prompt, DEFAULT_MODEL, {
       temperature: 0.7,
-      max_new_tokens: 800,
+      max_new_tokens: 1000,
     });
 
     const analysis = extractJSON(response);
 
     // Validate required fields
     if (
+      !analysis.type ||
       !analysis.coreMismatch ||
       !analysis.keyMissingSkills ||
       !analysis.resumeFeedback ||
@@ -210,30 +262,52 @@ Be constructive, specific, and actionable. Focus on what the student can improve
       throw error; // Let user know model is loading
     }
 
-    // Generate basic analysis as fallback
+    // Generate basic analysis as fallback - determine type
     const missingSkills = data.jobRequiredSkills.filter(
       required =>
         !data.studentSkills.some(student => student.toLowerCase().includes(required.toLowerCase()))
     );
 
     const cgpaGap = data.studentCgpa < data.jobMinCgpa;
+    const hasViolations = cgpaGap || missingSkills.length > 0;
+
+    const violations: any[] = [];
+    if (cgpaGap) {
+      violations.push({
+        category: 'CGPA',
+        description: 'CGPA requirement not met',
+        expected: `${data.jobMinCgpa}`,
+        actual: `${data.studentCgpa}`
+      });
+    }
 
     return {
-      coreMismatch: cgpaGap
-        ? `CGPA requirement not met (${data.jobMinCgpa} required vs ${data.studentCgpa})`
-        : `Skill gaps identified in key requirements`,
-      keyMissingSkills: missingSkills.slice(0, 5),
+      type: hasViolations ? 'RULE_BASED' : 'NON_RULE_BASED',
+      coreMismatch: hasViolations
+        ? cgpaGap
+          ? `CGPA requirement not met (${data.jobMinCgpa} required vs ${data.studentCgpa})`
+          : `Skill gaps identified in key requirements`
+        : 'You met the listed eligibility criteria. The rejection may be due to limited openings or company-side screening preferences.',
+      keyMissingSkills: hasViolations ? missingSkills.slice(0, 5) : [],
       resumeFeedback: [
         'Highlight relevant projects and coursework',
         'Add quantifiable achievements',
         'Include relevant certifications',
       ],
-      actionPlan: [
-        `Focus on learning: ${missingSkills.slice(0, 2).join(', ')}`,
+      actionPlan: hasViolations ? [
+        `Focus on learning: ${missingSkills.slice(0, 2).join(', ') || 'core skills'}`,
         'Build a portfolio project demonstrating these skills',
         'Obtain certifications in required technologies',
+      ] : [
+        'Continue applying to similar roles',
+        'Network with professionals in the industry',
+        'Consider reaching out for feedback if possible'
       ],
-      sentiment: 'Keep improving your skills. Every rejection is a learning opportunity!',
+      sentiment: hasViolations 
+        ? 'Keep improving your skills. Every rejection is a learning opportunity! This explanation is based on declared profile data and listed eligibility criteria. Final hiring decisions may include additional factors.'
+        : 'You\'re on the right track! Keep applying and stay positive. This explanation is based on declared profile data and listed eligibility criteria. Final hiring decisions may include additional factors.',
+      violations: hasViolations ? violations : undefined,
+      skillGaps: undefined
     };
   }
 };
@@ -305,7 +379,9 @@ Analyze all rejections and identify patterns. Respond in this exact JSON format:
   "industryInsights": "2-3 sentence insight about target industries"
 }
 
-Focus on actionable, data-driven insights. [/INST]</s>`;
+Focus on actionable, data-driven insights.
+
+IMPORTANT: End your industryInsights with: "This analysis is based on declared profile data and listed eligibility criteria. Final hiring decisions may include additional factors." [/INST]</s>`;
 
   try {
     const response = await callHuggingFace(prompt, DEFAULT_MODEL, {
@@ -349,7 +425,7 @@ Focus on actionable, data-driven insights. [/INST]</s>`;
           ? 'Focus on improving academic performance'
           : 'Gain practical experience through internships',
       ],
-      industryInsights: `Based on ${data.rejections.length} applications, focus on strengthening your technical skills in the most demanded areas.`,
+      industryInsights: `Based on ${data.rejections.length} applications, focus on strengthening your technical skills in the most demanded areas. This analysis is based on declared profile data and listed eligibility criteria. Final hiring decisions may include additional factors.`,
     };
   }
 };
@@ -480,7 +556,9 @@ Provide comprehensive analysis in this exact JSON format:
   }
 }
 
-Be specific and actionable. [/INST]</s>`;
+Be specific and actionable.
+
+IMPORTANT: Add this disclaimer to formattingIssues array: "This analysis is based on the submitted resume. Final hiring decisions may include additional factors." [/INST]</s>`;
 
   try {
     const response = await callHuggingFace(prompt, DEFAULT_MODEL, {

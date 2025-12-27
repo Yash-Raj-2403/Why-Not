@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lock, Mail, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import PageTransition from '../components/PageTransition';
+import { useAuth } from '../src/contexts/AuthContext';
+import PageTransition from '../src/components/common/PageTransition';
 import ThreeScene from '../components/ThreeScene';
 
 const LoginPage: React.FC = () => {

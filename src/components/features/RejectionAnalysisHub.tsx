@@ -61,16 +61,31 @@ const RejectionAnalysisHub: React.FC<RejectionAnalysisHubProps> = ({
       const job = application.job || (application as any).opportunity;
       if (!job) throw new Error('Job details not found');
 
+      // Use snapshot data from application if available (for trust/consistency)
+      // Fallback to current profile if snapshot not available (legacy applications)
+      const useSnapshot = application.snapshot_cgpa !== undefined;
+      const snapshotSkills = application.snapshot_skills || student.skills || [];
+      const snapshotCgpa = application.snapshot_cgpa ?? student.cgpa;
+
+      // Prepare skill confidence data from snapshot
+      const skillConfidenceData = snapshotSkills.map((s: any) => ({
+        name: s.name,
+        confidence: s.confidence || s.level || 'Beginner',
+        evidence: s.evidence?.map((e: any) => e.type) || []
+      }));
+
       const reqData = {
         studentName: student.name,
-        studentSkills: student.skills?.map(s => s.name) || [],
-        studentCgpa: student.cgpa,
+        studentSkills: snapshotSkills.map((s: any) => s.name),
+        studentCgpa: snapshotCgpa,
         jobRole: job.role || job.title,
         jobCompany: job.company || job.company_name,
         jobRequiredSkills: (job.requiredSkills || job.required_skills || []).map((s: any) => typeof s === 'string' ? s : s.name),
         jobMinCgpa: job.minCgpa || job.min_cgpa,
         jobDescription: job.description,
-        resumeText: student.resume
+        resumeText: student.resume,
+        skillConfidenceData: skillConfidenceData,
+        isSnapshot: useSnapshot // Flag to indicate snapshot data is being used
       };
       
       const result = await generateRejectionExplanation(reqData, student.id);
@@ -262,6 +277,20 @@ Sentiment: ${explanation.sentiment}
                     ? `Analyzing ${applications.filter(a => a.status === 'REJECTED').length} rejections` 
                     : application ? `${application.job.role} @ ${application.job.company}` : ''}
                 </p>
+                {mode === 'single' && application && (
+                  <>
+                    <div className="mt-1 flex items-center gap-1 text-xs text-purple-400">
+                      <CheckCircle className="w-3 h-3" />
+                      <span>Decision-specific analysis (takes precedence over general resume feedback)</span>
+                    </div>
+                    {application.snapshot_cgpa !== undefined && (
+                      <div className="mt-1 flex items-center gap-1 text-xs bg-green-500/10 text-green-400 px-2 py-0.5 rounded">
+                        <Target className="w-3 h-3" />
+                        <span>Based on your profile at time of application</span>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
             <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
@@ -408,6 +437,81 @@ Sentiment: ${explanation.sentiment}
                         animate={{ opacity: 1 }}
                         className="space-y-6"
                       >
+                        {/* Rejection Type Badge */}
+                        <div className="flex items-center gap-3 mb-4">
+                          <span className={`px-4 py-2 rounded-full text-xs font-bold ${
+                            explanation.type === 'RULE_BASED' 
+                              ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                              : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                          }`}>
+                            {explanation.type === 'RULE_BASED' ? '⚠️ Rule-Based Rejection' : 'ℹ️ Non-Rule-Based Rejection'}
+                          </span>
+                        </div>
+
+                        {/* Type Explanation */}
+                        {explanation.type === 'NON_RULE_BASED' && (
+                          <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                            <h4 className="text-sm font-semibold text-blue-400 mb-2">About this rejection</h4>
+                            <p className="text-sm text-slate-300">
+                              You met the listed eligibility criteria. The rejection may be due to limited openings, 
+                              internal preferences, or company-side screening processes. This is subjective and doesn't 
+                              necessarily reflect your qualifications.
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Rule Violations (if any) */}
+                        {explanation.violations && explanation.violations.length > 0 && (
+                          <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+                            <h4 className="text-sm font-semibold text-red-400 mb-3 flex items-center gap-2">
+                              <AlertTriangle className="w-4 h-4" />
+                              Eligibility Issues
+                            </h4>
+                            <div className="space-y-2">
+                              {explanation.violations.map((violation, idx) => (
+                                <div key={idx} className="p-3 bg-black/30 rounded-lg">
+                                  <div className="text-xs text-slate-400 mb-1">{violation.category}</div>
+                                  <div className="text-sm text-white font-medium mb-1">{violation.description}</div>
+                                  <div className="flex items-center gap-4 text-xs">
+                                    <span className="text-slate-400">Expected: <span className="text-green-400">{violation.expected}</span></span>
+                                    <span className="text-slate-400">Actual: <span className="text-red-400">{violation.actual}</span></span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Skill Gaps with Confidence Levels */}
+                        {explanation.skillGaps && explanation.skillGaps.length > 0 && (
+                          <div>
+                            <h4 className="text-sm font-semibold text-amber-400 mb-3 flex items-center gap-2">
+                              <Target className="w-4 h-4" />
+                              Skill Confidence Mismatches
+                            </h4>
+                            <div className="space-y-2">
+                              {explanation.skillGaps.map((gap, idx) => (
+                                <div key={idx} className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                                  <div className="flex items-center justify-between mb-1">
+                                    <span className="font-medium text-white">{gap.skill}</span>
+                                    <div className="flex items-center gap-2 text-xs">
+                                      {gap.studentLevel && (
+                                        <span className="px-2 py-1 bg-amber-500/20 rounded">
+                                          Your Level: {gap.studentLevel}
+                                        </span>
+                                      )}
+                                      <span className="px-2 py-1 bg-green-500/20 rounded">
+                                        Required: {gap.required}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <p className="text-xs text-slate-300">{gap.suggestion}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
                         {/* Core Mismatch */}
                         <div className="p-4 bg-white/5 rounded-lg border border-white/10">
                           <h4 className="text-sm font-semibold text-slate-300 mb-2">Core Mismatch</h4>
@@ -477,6 +581,13 @@ Sentiment: ${explanation.sentiment}
                           </h4>
                           <p className="text-sm text-slate-300 italic">
                             "{explanation.sentiment}"
+                          </p>
+                        </div>
+
+                        {/* Trust Disclaimer */}
+                        <div className="p-3 bg-slate-800/50 border border-slate-700/50 rounded-lg">
+                          <p className="text-xs text-slate-400 italic text-center">
+                            This explanation is based on declared profile data and listed eligibility criteria. Final hiring decisions may include additional factors.
                           </p>
                         </div>
 

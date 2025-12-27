@@ -111,10 +111,10 @@ const SEO: React.FC<SEOProps> = ({
     canonical.href = fullUrl;
 
     // Structured Data (JSON-LD)
-    let script = document.querySelector('script[type="application/ld+json"]');
+    let script = document.querySelector('script[type="application/ld+json"]') as HTMLScriptElement | null;
     if (!script) {
       script = document.createElement('script');
-      script.type = 'application/ld+json';
+      (script as HTMLScriptElement).type = 'application/ld+json';
       document.head.appendChild(script);
     }
     script.textContent = JSON.stringify(structuredData || defaultStructuredData);

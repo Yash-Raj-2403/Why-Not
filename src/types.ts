@@ -40,6 +40,11 @@ export interface Skill {
   name: string;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
   verified?: boolean;
+  confidence?: 'Beginner' | 'Intermediate' | 'Advanced';
+  evidence?: {
+    type: 'Course' | 'Project' | 'Internship' | 'Job' | 'Certification' | 'Self-taught';
+    details?: string;
+  }[];
 }
 
 export interface StudentProfile {
@@ -125,6 +130,13 @@ export interface Application {
     joiningDate: string;
     duration: string;
   };
+  // Snapshot: Profile data frozen at application time
+  snapshot_cgpa?: number;
+  snapshot_skills?: Skill[];
+  snapshot_resume_url?: string;
+  snapshot_major?: string;
+  snapshot_year?: number;
+  snapshot_semester?: number;
 }
 
 export interface ExplanationRequest {
@@ -137,6 +149,45 @@ export interface ExplanationRequest {
   jobMinCgpa: number;
   resumeText?: string;
   jobDescription?: string;
+  // New: Skill confidence data for better explanations
+  skillConfidenceData?: {
+    name: string;
+    confidence: 'Beginner' | 'Intermediate' | 'Advanced';
+    evidence?: string[];
+  }[];
+}
+
+export enum RejectionType {
+  RULE_BASED = 'RULE_BASED',  // Type A: Clear violations (CGPA, skills, deadline)
+  NON_RULE_BASED = 'NON_RULE_BASED'  // Type B: Subjective rejections (limited slots, screening)
+}
+
+export interface RejectionExplanation {
+  type: RejectionType;
+  reasons: string[];
+  improvements: string[];
+  message: string;
+  // For rule-based rejections
+  violations?: {
+    category: 'CGPA' | 'SKILLS' | 'DEADLINE' | 'ELIGIBILITY';
+    description: string;
+    expected: string;
+    actual: string;
+  }[];
+  // For skill-based rejections with confidence consideration
+  skillGaps?: {
+    skill: string;
+    required: string;
+    studentLevel?: 'Beginner' | 'Intermediate' | 'Advanced';
+    suggestion: string;
+  }[];
+}
+
+export interface NoMatchReason {
+  category: 'CGPA' | 'SKILLS' | 'LOCATION' | 'STIPEND' | 'ROLE' | 'DEADLINE' | 'MULTIPLE';
+  description: string;
+  details: string[];
+  suggestions: string[];
 }
 
 // ============================================================================
@@ -241,6 +292,11 @@ export interface ResumeAnalysis {
   ats_score: number;
   analyzed_at: string;
   created_at: string;
+  // Legacy fields for backward compatibility
+  strengths?: string[];
+  weaknesses?: string[];
+  improvement_suggestions?: string[];
+  keyword_analysis?: string[];
 }
 
 export interface AnalyzeResumeRequest {

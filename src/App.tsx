@@ -100,7 +100,7 @@ const App: React.FC = () => {
           <Suspense fallback={<LoadingSpinner fullScreen message="Loading page..." />}>
             <main id="main-content" role="main">
               <AnimatePresence mode="wait">
-                <Routes location={location} key={location.pathname}>
+                <Routes location={location}>
                   {/* Public Routes */}
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/login" element={<LoginPage />} />

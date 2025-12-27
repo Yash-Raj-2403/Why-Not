@@ -4,8 +4,17 @@ import { analyzeResume, generateResumeSuggestions } from './geminiService';
 import * as pdfjsLib from 'pdfjs-dist';
 import mammoth from 'mammoth';
 
-// Configure PDF.js worker - use CDN for reliability
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+// Configure PDF.js worker with multiple fallback options
+try {
+  // Try using local worker first
+  pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url
+  ).toString();
+} catch (e) {
+  // Fallback to unpkg CDN if local fails
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+}
 
 // ============================================================================
 // RESUME FILE HANDLING
@@ -16,24 +25,67 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs
  */
 export async function extractTextFromPDF(file: File): Promise<string> {
   try {
+    // Validate file type
+    if (!file.type.includes('pdf') && !file.name.toLowerCase().endsWith('.pdf')) {
+      throw new Error('Invalid file type. Please upload a PDF file.');
+    }
+
     const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    
+    // Validate arrayBuffer
+    if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+      throw new Error('PDF file is empty or corrupted.');
+    }
+
+    const loadingTask = pdfjsLib.getDocument({ 
+      data: arrayBuffer,
+      useWorkerFetch: false,
+      isEvalSupported: false,
+      useSystemFonts: true
+    });
+    
+    const pdf = await loadingTask.promise;
+    
+    if (!pdf || pdf.numPages === 0) {
+      throw new Error('PDF has no pages or is corrupted.');
+    }
     
     let fullText = '';
     
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      const page = await pdf.getPage(pageNum);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items
-        .map((item: any) => item.str)
-        .join(' ');
-      fullText += pageText + '\n';
+      try {
+        const page = await pdf.getPage(pageNum);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items
+          .map((item: any) => item.str || '')
+          .join(' ');
+        fullText += pageText + '\n';
+      } catch (pageError) {
+        console.warn(`Error extracting page ${pageNum}:`, pageError);
+        // Continue with other pages
+      }
     }
     
-    return fullText.trim();
-  } catch (error) {
+    const trimmedText = fullText.trim();
+    
+    if (!trimmedText || trimmedText.length < 50) {
+      throw new Error('PDF appears to be empty or contains no readable text. Try a different PDF or ensure it\'s not image-based.');
+    }
+    
+    return trimmedText;
+  } catch (error: any) {
     console.error('Error extracting PDF text:', error);
-    throw new Error('Failed to extract text from PDF. Please ensure it\'s a valid PDF file.');
+    
+    // Provide specific error messages
+    if (error.message?.includes('Invalid PDF')) {
+      throw new Error('Invalid PDF file format. Please ensure the file is not corrupted.');
+    } else if (error.message?.includes('password')) {
+      throw new Error('PDF is password-protected. Please upload an unprotected PDF.');
+    } else if (error.message) {
+      throw error;
+    } else {
+      throw new Error('Failed to extract text from PDF. The file may be corrupted or image-based. Try converting it to text-based PDF first.');
+    }
   }
 }
 

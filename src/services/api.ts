@@ -107,13 +107,33 @@ export const api = {
   },
 
   async applyToOpportunity(opportunityId: string, studentId: string, coverLetter?: string) {
+    // Fetch current student profile to create snapshot
+    const { data: studentProfile, error: profileError } = await supabase
+      .from('student_profiles')
+      .select('cgpa, skills, resume_url, major, year, semester')
+      .eq('id', studentId)
+      .single();
+
+    if (profileError) {
+      console.error('Failed to fetch student profile for snapshot:', profileError);
+      throw profileError;
+    }
+
+    // Create application with profile snapshot
     const { data, error } = await supabase
       .from('applications')
       .insert({
         opportunity_id: opportunityId,
         student_id: studentId,
         cover_letter: coverLetter,
-        status: 'PENDING'
+        status: 'PENDING',
+        // Snapshot: freeze profile data at application time
+        snapshot_cgpa: studentProfile?.cgpa,
+        snapshot_skills: studentProfile?.skills || [],
+        snapshot_resume_url: studentProfile?.resume_url,
+        snapshot_major: studentProfile?.major,
+        snapshot_year: studentProfile?.year,
+        snapshot_semester: studentProfile?.semester
       })
       .select()
       .single();

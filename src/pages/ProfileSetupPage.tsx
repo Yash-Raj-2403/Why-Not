@@ -22,9 +22,16 @@ const ProfileSetupPage: React.FC = () => {
     cgpa: user?.cgpa || 0,
     
     // Skills
-    skills: [] as { name: string; level: string }[],
+    skills: [] as { 
+      name: string; 
+      level: string;
+      confidence?: 'Beginner' | 'Intermediate' | 'Advanced';
+      evidence?: { type: string; details?: string }[];
+    }[],
     newSkill: '',
     newSkillLevel: 'Beginner',
+    newSkillConfidence: 'Beginner' as 'Beginner' | 'Intermediate' | 'Advanced',
+    newSkillEvidence: [] as { type: string; details: string }[],
     
     // Preferences
     preferences: {
@@ -43,9 +50,16 @@ const ProfileSetupPage: React.FC = () => {
     if (formData.newSkill) {
       setFormData(prev => ({
         ...prev,
-        skills: [...prev.skills, { name: prev.newSkill, level: prev.newSkillLevel }],
+        skills: [...prev.skills, { 
+          name: prev.newSkill, 
+          level: prev.newSkillLevel,
+          confidence: prev.newSkillConfidence,
+          evidence: prev.newSkillEvidence.length > 0 ? prev.newSkillEvidence : undefined
+        }],
         newSkill: '',
-        newSkillLevel: 'Beginner'
+        newSkillLevel: 'Beginner',
+        newSkillConfidence: 'Beginner',
+        newSkillEvidence: []
       }));
     }
   };
@@ -215,34 +229,111 @@ const ProfileSetupPage: React.FC = () => {
 
         {step === 3 && (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-            <h2 className="text-xl font-semibold mb-4">Skills</h2>
+            <h2 className="text-xl font-semibold mb-4">Skills & Confidence</h2>
+            <p className="text-sm text-slate-400 mb-4">
+              Add your skills with honest confidence levels. This helps provide better feedback on rejections.
+            </p>
             <div className="space-y-4">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  name="newSkill"
-                  value={formData.newSkill}
-                  onChange={handleInputChange}
-                  placeholder="Add a skill (e.g. React, Python)"
-                  className="flex-1 bg-slate-800 border border-slate-700 rounded p-2"
-                />
-                <select
-                  name="newSkillLevel"
-                  value={formData.newSkillLevel}
-                  onChange={handleInputChange}
-                  className="bg-slate-800 border border-slate-700 rounded p-2"
-                >
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
-                </select>
-                <button onClick={handleAddSkill} className="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Add</button>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-xs font-medium mb-1 text-slate-300">Skill Name</label>
+                  <input
+                    type="text"
+                    name="newSkill"
+                    value={formData.newSkill}
+                    onChange={handleInputChange}
+                    placeholder="e.g., React, Python, SQL"
+                    className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium mb-1 text-slate-300">
+                    Confidence Level <span className="text-purple-400">*</span>
+                  </label>
+                  <select
+                    name="newSkillConfidence"
+                    value={formData.newSkillConfidence}
+                    onChange={handleInputChange}
+                    className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm"
+                  >
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                  </select>
+                </div>
               </div>
+              
+              <div>
+                <label className="block text-xs font-medium mb-1 text-slate-300">
+                  Evidence (Optional) - How did you learn this?
+                </label>
+                <div className="flex gap-2">
+                  <select
+                    className="bg-slate-800 border border-slate-700 rounded p-2 text-sm"
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        const newEvidence = { type: e.target.value, details: '' };
+                        setFormData(prev => ({
+                          ...prev,
+                          newSkillEvidence: [...prev.newSkillEvidence, newEvidence]
+                        }));
+                        e.target.value = '';
+                      }
+                    }}
+                  >
+                    <option value="">Add evidence...</option>
+                    <option value="Course">Course</option>
+                    <option value="Project">Project</option>
+                    <option value="Internship">Internship</option>
+                    <option value="Job">Job</option>
+                    <option value="Certification">Certification</option>
+                    <option value="Self-taught">Self-taught</option>
+                  </select>
+                </div>
+                {formData.newSkillEvidence.length > 0 && (
+                  <div className="mt-2 space-y-1">
+                    {formData.newSkillEvidence.map((ev, idx) => (
+                      <div key={idx} className="flex items-center gap-2 text-xs bg-slate-800/50 p-2 rounded">
+                        <span className="text-purple-400">{ev.type}</span>
+                        <button 
+                          onClick={() => {
+                            setFormData(prev => ({
+                              ...prev,
+                              newSkillEvidence: prev.newSkillEvidence.filter((_, i) => i !== idx)
+                            }));
+                          }}
+                          className="ml-auto text-red-400 hover:text-red-300"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <button 
+                onClick={handleAddSkill} 
+                className="w-full bg-green-600 px-4 py-2 rounded hover:bg-green-700 text-sm font-medium"
+              >
+                Add Skill
+              </button>
+
               <div className="flex flex-wrap gap-2 mt-4">
                 {formData.skills.map((skill, index) => (
-                  <div key={index} className="bg-slate-700 px-3 py-1 rounded-full flex items-center gap-2">
-                    <span>{skill.name} ({skill.level})</span>
-                    <button onClick={() => handleRemoveSkill(index)} className="text-red-400 hover:text-red-300">×</button>
+                  <div key={index} className="bg-slate-700 px-3 py-2 rounded-lg flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{skill.name}</span>
+                      <button onClick={() => handleRemoveSkill(index)} className="text-red-400 hover:text-red-300 ml-2">×</button>
+                    </div>
+                    <div className="text-xs text-slate-300">
+                      Confidence: <span className="text-purple-400">{skill.confidence || skill.level}</span>
+                    </div>
+                    {skill.evidence && skill.evidence.length > 0 && (
+                      <div className="text-xs text-slate-400">
+                        Evidence: {skill.evidence.map(e => e.type).join(', ')}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

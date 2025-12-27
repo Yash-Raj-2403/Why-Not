@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, Filter, MapPin, DollarSign, Briefcase, 
-  Building, Clock, ChevronRight, Zap, Star
+  Building, Clock, ChevronRight, Zap, Star, AlertCircle, Lightbulb
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -91,6 +91,52 @@ const OpportunitiesPage: React.FC = () => {
       .length;
     
     return Math.round((matchCount / requiredSkills.length) * 100);
+  };
+
+  // Analyze why no jobs are matching based on user profile
+  const analyzeNoMatchReasons = () => {
+    if (!user || opportunities.length > 0) return null;
+
+    const reasons: string[] = [];
+    const suggestions: string[] = [];
+    
+    // Check CGPA
+    const avgCgpaRequired = 7.0; // You might want to calculate this from actual opportunities
+    if (user.cgpa && user.cgpa < avgCgpaRequired) {
+      reasons.push(`Your CGPA (${user.cgpa}) may be below typical requirements (≥ ${avgCgpaRequired})`);
+      suggestions.push('Focus on improving your academic performance');
+    }
+    
+    // Check skills
+    if (!user.skills || user.skills.length < 3) {
+      reasons.push('Limited skills listed in your profile');
+      suggestions.push('Add more relevant technical and soft skills to your profile');
+    }
+    
+    // Check filters
+    if (filters.minStipend > 0) {
+      reasons.push(`Minimum stipend filter set to ₹${filters.minStipend.toLocaleString()}`);
+      suggestions.push('Try lowering your minimum stipend expectation');
+    }
+    
+    if (filters.location) {
+      reasons.push(`Location filter active: "${filters.location}"`);
+      suggestions.push('Try searching for remote opportunities or different locations');
+    }
+    
+    if (filters.type) {
+      reasons.push(`Opportunity type filter: ${filters.type}`);
+      suggestions.push('Consider both internships and placements');
+    }
+    
+    // If no specific reason found
+    if (reasons.length === 0) {
+      reasons.push('No opportunities currently match your profile and preferences');
+      suggestions.push('Check back later for new opportunities');
+      suggestions.push('Consider broadening your search criteria');
+    }
+    
+    return { reasons, suggestions };
   };
 
   return (
@@ -194,11 +240,65 @@ const OpportunitiesPage: React.FC = () => {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center py-20 glass-panel rounded-2xl border border-white/10"
+              className="text-center py-12 glass-panel rounded-2xl border border-white/10"
             >
-              <Briefcase className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-white mb-2">No Opportunities Found</h3>
-              <p className="text-slate-400">Try adjusting your filters to find what you're looking for.</p>
+              <div className="max-w-2xl mx-auto px-6">
+                <div className="w-20 h-20 rounded-full bg-slate-800/50 flex items-center justify-center mx-auto mb-6">
+                  <Briefcase className="w-10 h-10 text-slate-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3">No Opportunities Found</h3>
+                
+                {(() => {
+                  const analysis = analyzeNoMatchReasons();
+                  return analysis ? (
+                    <div className="text-left mt-8 space-y-6">
+                      {/* Why no matches */}
+                      <div className="p-5 bg-red-500/10 border border-red-500/20 rounded-xl">
+                        <h4 className="font-semibold text-red-400 mb-3 flex items-center gap-2">
+                          <AlertCircle className="w-4 h-4" />
+                          Possible Reasons
+                        </h4>
+                        <ul className="space-y-2">
+                          {analysis.reasons.map((reason, idx) => (
+                            <li key={idx} className="text-sm text-slate-300 flex items-start gap-2">
+                              <span className="text-red-400 mt-1">•</span>
+                              <span>{reason}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      
+                      {/* Suggestions */}
+                      <div className="p-5 bg-green-500/10 border border-green-500/20 rounded-xl">
+                        <h4 className="font-semibold text-green-400 mb-3 flex items-center gap-2">
+                          <Lightbulb className="w-4 h-4" />
+                          What You Can Do
+                        </h4>
+                        <ul className="space-y-2">
+                          {analysis.suggestions.map((suggestion, idx) => (
+                            <li key={idx} className="text-sm text-slate-300 flex items-start gap-2">
+                              <span className="text-green-400 mt-1">•</span>
+                              <span>{suggestion}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 justify-center mt-6">
+                        <button
+                          onClick={() => setFilters({ search: '', type: '', location: '', minStipend: 0 })}
+                          className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-semibold transition-colors"
+                        >
+                          Clear All Filters
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-slate-400">Try adjusting your filters to find what you're looking for.</p>
+                  );
+                })()}
+              </div>
             </motion.div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
